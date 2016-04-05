@@ -1,0 +1,4 @@
+extends: stylelint-config-standard
+rules:
+    # PEP8 uses 4 spaces, it's just easier this way.
+    indentation: 4
