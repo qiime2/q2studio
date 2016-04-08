@@ -19,6 +19,9 @@ module.exports = function extendConfig(override, isDev) {
             filename: 'js/bundle.js'
         },
         plugins: [],
+        resolve: {
+            extensions: ['', '.js', '.jsx']
+        },
         module: {
             loaders: [
                 {

@@ -1,7 +1,7 @@
 import React from 'react';
-import Footer from './Footer.jsx';
-import AddTodo from '../containers/AddTodo.jsx';
-import VisibleTodoList from '../containers/VisibleTodoList.jsx';
+import Footer from './Footer';
+import AddTodo from '../containers/AddTodo';
+import VisibleTodoList from '../containers/VisibleTodoList';
 
 import style from './App.css';
 import examplePic from '../../img/Example.png';
