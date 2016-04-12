@@ -11,3 +11,9 @@ rules:
     # There are edge cases such as (x) => { foo: [] } which are syntactically
     # ambiguous, does it return an object or is that a labeled block?
     arrow-body-style: [off, always]
+    # Immutable.js breaks linting without this rule
+    # usage will require import { Map as ImmutableMap, List as ImmutableList }
+    # as allowing just Map will also exempt the built-in JS Map object
+    new-cap:
+      - 1
+      - capIsNewExceptions: [ImmutableList, ImmutableMap]
