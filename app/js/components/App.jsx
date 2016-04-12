@@ -1,17 +1,14 @@
 import React from 'react';
-import Footer from './Footer';
-import AddTodo from '../containers/AddTodo';
-import VisibleTodoList from '../containers/VisibleTodoList';
-
-import style from './App.css';
-import examplePic from '../../img/Example.png';
+import PluginContainer from '../containers/PluginContainer';
+import ArtifactsContainer from '../containers/ArtifactsContainer';
 
 const App = () => (
-    <div className={style.center}>
-        <img src={examplePic} />
-        <AddTodo />
-        <VisibleTodoList />
-        <Footer />
+    <div className="container">
+        <div className="page-header">
+            <h1>analysis-dir</h1>
+        </div>
+        <PluginContainer />
+        <ArtifactsContainer />
     </div>
 );
 

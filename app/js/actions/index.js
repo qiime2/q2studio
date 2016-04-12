@@ -1,23 +1,10 @@
-let nextTodoId = 0;
-
-export const addTodo = (text) => {
-    return {
-        type: 'ADD_TODO',
-        id: nextTodoId++,
-        text
-    };
-};
-
-export const setVisibilityFilter = (filter) => {
-    return {
-        type: 'SET_VISIBILITY_FILTER',
-        filter
-    };
-};
-
-export const toggleTodo = (id) => {
-    return {
-        type: 'TOGGLE_TODO',
-        id
-    };
-};
+// NEW_ARTIFACT
+// EXPECTING_ARTIFACT
+// DELETE_ARTIFACT
+// REFRESH_ARTIFACTS
+//
+// LOAD_PLUGINS
+// LOAD_WORKFLOWS
+//
+// CREATE_JOB
+// START_JOB
