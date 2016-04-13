@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
-import todos from './todos';
-import visibilityFilter from './visibilityFilter';
+import plugins from './plugins';
+import artifacts from './artifacts';
 
-const todoApp = combineReducers({
-    todos,
-    visibilityFilter
+const reducer = combineReducers({
+    plugins,
+    artifacts
 });
 
-export default todoApp;
+export default reducer;

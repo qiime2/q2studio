@@ -13,7 +13,7 @@
     "lint:css": "stylelint 'app/**/*.css' --config config/stylelint.yaml",
     "lint:js": "eslint app/ config/ --ext .js,.jsx --config config/eslint.yaml",
     "pretest": "npm run lint --silent",
-    "test": "mocha --compilers js:babel-core/register --recursive",
+    "test": "mocha --compilers js:babel-core/register --require ./test/test-helper.js --recursive",
     "start": "webpack-dev-server --config config/webpack.dev.config.js --host localhost --port 4242 --inline",
     "build": "webpack --config config/webpack.prod.config.js"
   },
