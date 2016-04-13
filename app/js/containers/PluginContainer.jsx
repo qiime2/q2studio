@@ -13,7 +13,9 @@ const PluginContainer = ({ plugins }) => {
     let data;
     if (!plugins.count()) {
         data = (
-            <Error error="No Plugins Found" />
+            <Error>
+                No Plugins Found
+            </Error>
         );
     } else {
         data = (

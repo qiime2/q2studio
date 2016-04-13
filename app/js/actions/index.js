@@ -5,7 +5,7 @@ export function deleteArtifact(id) {
     return {
         type: 'DELETE_ARTIFACT',
         id
-    }
+    };
 }
 
 // REFRESH_ARTIFACTS

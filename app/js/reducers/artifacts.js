@@ -1,4 +1,4 @@
-import { Map as ImmutableMap, toJS } from 'immutable';
+import { Map as ImmutableMap } from 'immutable';
 
 const initialState = {
     0: {
@@ -23,7 +23,7 @@ const artifacts = (state = initialState, action) => {
         });
         return state.set(action.artifact.id, nextState);
     }
-    case 'DELETE_ARTIFACT':{
+    case 'DELETE_ARTIFACT': {
         // TODO, make it actually do something
         const newState = ImmutableMap(state);
         return newState.delete(action.id).toJS();
