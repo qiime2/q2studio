@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Map as ImmutableMap } from 'immutable';
 import Artifact from '../components/Artifact';
+import { deleteArtifact } from '../actions';
 
 const mapStateToProps = (state) => ({
     artifacts: state.artifacts
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onArtifactClick: (id) => {
-        dispatch({ type: 'DELETE_ARTIFACT', id });
-    }
+    onArtifactClick: (id) => dispatch(deleteArtifact(id))
 });
 
 const ArtifactsContainer = ({ artifacts, onArtifactClick }) => {

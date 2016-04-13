@@ -1,6 +1,13 @@
 // NEW_ARTIFACT
 // EXPECTING_ARTIFACT
-// DELETE_ARTIFACT
+
+export function deleteArtifact(id) {
+    return {
+        type: 'DELETE_ARTIFACT',
+        id
+    }
+}
+
 // REFRESH_ARTIFACTS
 //
 // LOAD_PLUGINS
