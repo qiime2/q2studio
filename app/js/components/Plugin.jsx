@@ -4,10 +4,10 @@ import Workflow from './Workflow';
 const Plugin = ({ plugin }) => (
     <div>
         <h4>
-            { plugin.get('name') }
+            { plugin.name }
         </h4>
         <ul className="list-group">
-            { plugin.get('workflows').map((workflow, id) =>
+            { plugin.workflows.map((workflow, id) =>
                 <Workflow
                     key={id}
                     flow={workflow}

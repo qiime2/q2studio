@@ -1,5 +1,3 @@
-import { Map as ImmutableMap } from 'immutable';
-
 const initialState = {
     0: {
         name: 'table',
@@ -15,18 +13,11 @@ const initialState = {
 
 const artifacts = (state = initialState, action) => {
     switch (action.type) {
-    case 'ADD_ARTIFACT': {
-        const nextState = ImmutableMap({
-            name: action.artifact.name,
-            uuid: action.artifact.uuid,
-            type: action.artifact.type
-        });
-        return state.set(action.artifact.id, nextState);
-    }
     case 'DELETE_ARTIFACT': {
         // TODO, make it actually do something
-        const newState = ImmutableMap(state);
-        return newState.delete(action.id).toJS();
+        const newState = Object.assign({}, state);
+        delete newState[action.id];
+        return newState;
     }
     default:
         break;

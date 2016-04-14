@@ -1,12 +1,28 @@
 import React from 'react';
 
-const Error = ({ children }) => (
-    <div className="page-header">
-        <h1>{ children }</h1>
-    </div>
-);
+const Error = ({ type, children }) => {
+    switch (type) {
+    case 'table-row': {
+        return (
+            <tr>
+                { children }
+            </tr>
+        );
+    }
+    default: {
+        return (
+            <div>
+                <h4>
+                    { children }
+                </h4>
+            </div>
+        );
+    }
+    }
+};
 
 Error.propTypes = {
+    type: React.PropTypes.string,
     children: React.PropTypes.element.isRequired
 };
 

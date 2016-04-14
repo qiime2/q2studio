@@ -3,10 +3,10 @@ import React from 'react';
 const Workflow = ({ flow }) => (
     <button type="button" className="list-group-item">
         <span className="col-md-7">
-            { flow.get('name') }
+            { flow.name }
         </span>
         <span className="col-md-5">
-            { flow.get('info') }
+            { flow.info }
         </span>
     </button>
 );
