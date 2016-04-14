@@ -21,17 +21,17 @@ describe('reducer', () => {
     it('handles DELETE_ARTIFACT', () => {
         const initialState = {
             plugins: undefined,
-            artifacts: {
-                '0' : {
+            artifacts: [
+                {
                     name: 'table',
                     uuid: 'f16ca3d0-fe83-4b1e-8eea-7e35db3f6b0f',
                     type: 'FeatureTable[Frequency]'
                 }
-            }
+            ]
         };
         const action = {
             type: 'DELETE_ARTIFACT',
-            id: '0' // Hmm, keys are auto-strings, so we have to send in ints as strings, must be another way
+            id: 0
         };
 
         const nextState = reducer(initialState, action);
