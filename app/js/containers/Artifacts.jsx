@@ -42,7 +42,6 @@ const Artifacts = ({ artifacts, boundDeleteArtifact }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            { data }
                             { artifacts.map((artifact, index) =>
                                 <Artifact
                                     key={index}
@@ -52,6 +51,7 @@ const Artifacts = ({ artifacts, boundDeleteArtifact }) => {
                             )}
                         </tbody>
                     </table>
+                    { data }
                 </div>
             </div>
         </div>

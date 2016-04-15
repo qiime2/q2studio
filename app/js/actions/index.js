@@ -3,7 +3,9 @@ export const newArtifact = (artifact) => ({
     artifact
 });
 
-// EXPECTING_ARTIFACT
+export const expectingArtifact = () => ({
+    type: 'EXPECTING_ARTIFACT'
+});
 
 export const deleteArtifact = (index) => ({
     type: 'DELETE_ARTIFACT',
@@ -18,8 +20,9 @@ export const loadPlugins = () => ({
     type: 'LOAD_PLUGINS'
 });
 
-export const loadWorkflows = () => ({
-    type: 'LOAD_WORKFLOWS'
+export const loadWorkflows = (plugin) => ({
+    type: 'LOAD_WORKFLOWS',
+    plugin
 });
 
 export const createJob = (job) => ({
@@ -27,5 +30,7 @@ export const createJob = (job) => ({
     job
 });
 
-
-// START_JOB
+export const startJob = (job) => ({
+    type: 'START_JOB',
+    job
+});
