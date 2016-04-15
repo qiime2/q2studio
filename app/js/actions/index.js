@@ -1,12 +1,10 @@
 // NEW_ARTIFACT
 // EXPECTING_ARTIFACT
 
-export function deleteArtifact(id) {
-    return {
-        type: 'DELETE_ARTIFACT',
-        id
-    };
-}
+export const deleteArtifact = (id) => ({
+    type: 'DELETE_ARTIFACT',
+    id
+});
 
 // REFRESH_ARTIFACTS
 //
