@@ -9,20 +9,18 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onArtifactClick: (id) => dispatch(deleteArtifact(id))
+    boundDeleteArtifact: (id) => dispatch(deleteArtifact(id))
 });
 
-const Artifacts = ({ artifacts, onArtifactClick }) => {
+const Artifacts = ({ artifacts, boundDeleteArtifact }) => {
     let data;
 
     if (!artifacts.length) {
         data = (
-            <Error type="table-row">
-                <td>
-                    <h4>
-                        No Available Artifacts
-                    </h4>
-                </td>
+            <Error>
+                <h4>
+                    No Available Artifacts
+                </h4>
             </Error>
         );
     }
@@ -49,7 +47,7 @@ const Artifacts = ({ artifacts, onArtifactClick }) => {
                                 <Artifact
                                     key={index}
                                     data={artifact}
-                                    onClick={() => onArtifactClick(index)}
+                                    onClick={() => boundDeleteArtifact(index)}
                                 />
                             )}
                         </tbody>
@@ -62,7 +60,7 @@ const Artifacts = ({ artifacts, onArtifactClick }) => {
 
 Artifacts.propTypes = {
     artifacts: React.PropTypes.array,
-    onArtifactClick: React.PropTypes.func
+    boundDeleteArtifact: React.PropTypes.func
 };
 
 export default connect(

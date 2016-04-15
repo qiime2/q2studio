@@ -14,17 +14,10 @@ const Plugins = ({ plugins }) => {
     if (!plugins.length) {
         data = (
             <Error>
-                No Plugins Found
+                <h4>
+                    No Plugins Found
+                </h4>
             </Error>
-        );
-    } else {
-        data = (
-            plugins.map(plugin =>
-                <Plugin
-                    key={ plugin.name }
-                    plugin={ plugin }
-                />
-            )
         );
     }
 
@@ -35,6 +28,12 @@ const Plugins = ({ plugins }) => {
             </div>
             <div className="panel-body">
                 { data }
+                { plugins.map(plugin =>
+                    <Plugin
+                        key={ plugin.name }
+                        plugin={ plugin }
+                    />
+                )}
             </div>
         </div>
     );
