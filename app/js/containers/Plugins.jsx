@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Plugin from '../components/Plugin';
+import Workflows from './Workflows';
 import Error from '../components/Error';
 
 const mapStateToProps = (state) => {
@@ -28,11 +29,17 @@ const Plugins = ({ plugins }) => {
             </div>
             <div className="panel-body">
                 { data }
-                { plugins.map(plugin =>
-                    <Plugin
-                        key={ plugin.name }
-                        plugin={ plugin }
-                    />
+                { plugins.map((plugin, id) =>
+                    <div key={ id }>
+                        <Plugin
+                            key={ id }
+                            plugin={ plugin }
+                        />
+                        <Workflows
+                            key={ plugin.name + id }
+                            workflows={ plugin.workflows }
+                        />
+                    </div>
                 )}
             </div>
         </div>
