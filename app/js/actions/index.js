@@ -7,9 +7,9 @@ export const expectingArtifact = () => ({
     type: 'EXPECTING_ARTIFACT'
 });
 
-export const deleteArtifact = (index) => ({
+export const deleteArtifact = (uuid) => ({
     type: 'DELETE_ARTIFACT',
-    index
+    uuid
 });
 
 export const refreshArtifacts = () => ({

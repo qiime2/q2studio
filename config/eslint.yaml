@@ -6,7 +6,6 @@ extends: airbnb
 parserOptions:
     ecmaFeatures:
         experimentalObjectRestSpread: true
-        
 # Override a couple of rules because no style guide is perfect.
 rules:
     comma-dangle: [error, never]

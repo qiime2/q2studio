@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Plugin from '../components/Plugin';
 import Workflows from './Workflows';
 import Error from '../components/Error';
 
@@ -29,14 +28,13 @@ const Plugins = ({ plugins }) => {
             </div>
             <div className="panel-body">
                 { data }
-                { plugins.map((plugin, id) =>
-                    <div key={ id }>
-                        <Plugin
-                            key={ id }
-                            plugin={ plugin }
-                        />
+                { plugins.map(plugin =>
+                    <div key={ plugin.name }>
+                        <h4>
+                            { plugin.name }
+                        </h4>
                         <Workflows
-                            key={ plugin.name + id }
+                            key={ `${plugin.name}-workflows` }
                             workflows={ plugin.workflows }
                         />
                     </div>

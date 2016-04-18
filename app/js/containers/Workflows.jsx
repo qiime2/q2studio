@@ -1,18 +1,17 @@
 import React from 'react';
 import Workflow from '../components/Workflow';
 
-const Workflows = ({ workflows }) => {
-    return (
-        <div>
-        { workflows.map((workflow, id) =>
+const Workflows = ({ workflows }) => (
+    <div>
+        { workflows.map(workflow => (
             <Workflow
-                key={ id }
+                key={workflow.name}
                 flow={workflow}
             />
-        )}
-        </div>
-    );
-};
+        ))}
+    </div>
+);
+
 
 Workflows.propTypes = {
     workflows: React.PropTypes.array

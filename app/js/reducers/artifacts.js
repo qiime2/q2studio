@@ -15,7 +15,7 @@ const artifacts = (state = initialState, action) => {
     switch (action.type) {
     case 'DELETE_ARTIFACT': {
         // TODO, make it actually do something
-        const newState = state.filter((_, index) => index !== action.index);
+        const newState = state.filter(artifact => artifact.uuid !== action.uuid);
         return newState;
     }
     default:
