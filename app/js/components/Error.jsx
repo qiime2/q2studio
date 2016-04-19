@@ -1,14 +1,13 @@
 import React from 'react';
 
-
-const Error = ({ error }) => (
-    <div className="page-header">
-        <h1>{error}</h1>
+const Error = ({ children }) => (
+    <div>
+        { children }
     </div>
 );
 
 Error.propTypes = {
-    error: React.PropTypes.string.isRequired
+    children: React.PropTypes.element.isRequired
 };
 
 export default Error;

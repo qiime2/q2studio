@@ -1,14 +1,14 @@
 import React from 'react';
-import PluginContainer from '../containers/PluginContainer';
-import ArtifactsContainer from '../containers/ArtifactsContainer';
+import Plugins from '../containers/Plugins';
+import Artifacts from '../containers/Artifacts';
 
 const App = () => (
     <div className="container">
         <div className="page-header">
             <h1>analysis-dir</h1>
         </div>
-        <PluginContainer />
-        <ArtifactsContainer />
+        <Plugins />
+        <Artifacts />
     </div>
 );
 

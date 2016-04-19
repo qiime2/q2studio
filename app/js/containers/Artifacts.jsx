@@ -1,18 +1,30 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Artifact from '../components/Artifact';
+import { deleteArtifact } from '../actions';
+import Error from '../components/Error';
 
 const mapStateToProps = (state) => ({
     artifacts: state.artifacts
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onArtifactClick: (id) => {
-        dispatch({ type: 'DELETE_ARTIFACT', id });
-    }
+    dispatchDeleteArtifact: (id) => dispatch(deleteArtifact(id))
 });
 
-const ArtifactsContainer = ({ artifacts, onArtifactClick }) => {
+const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
+    let data;
+
+    if (!artifacts.length) {
+        data = (
+            <Error>
+                <h4>
+                    No Available Artifacts
+                </h4>
+            </Error>
+        );
+    }
+
     return (
         <div>
             <div className="panel panel-default">
@@ -30,27 +42,28 @@ const ArtifactsContainer = ({ artifacts, onArtifactClick }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            { Object.keys(artifacts).map(id =>
+                            { artifacts.map(artifact => (
                                 <Artifact
-                                    key={id}
-                                    data={artifacts[id]}
-                                    onClick={() => onArtifactClick(id)}
+                                    key={artifact.uuid}
+                                    data={artifact}
+                                    onClick={() => dispatchDeleteArtifact(artifact.uuid)}
                                 />
-                            )}
+                            ))}
                         </tbody>
                     </table>
+                    { data }
                 </div>
             </div>
         </div>
     );
 };
 
-ArtifactsContainer.propTypes = {
-    artifacts: React.PropTypes.object,
-    onArtifactClick: React.PropTypes.func
+Artifacts.propTypes = {
+    artifacts: React.PropTypes.array,
+    dispatchDeleteArtifact: React.PropTypes.func
 };
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ArtifactsContainer);
+)(Artifacts);
