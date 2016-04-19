@@ -1,6 +1,6 @@
-import * as artifactActionCreators from './Artifacts';
-import * as jobsActionCreators from './Jobs';
-import * as pluginActionCreators from './Plugins';
+import * as artifactActionCreators from './artifacts';
+import * as jobsActionCreators from './jobs';
+import * as pluginActionCreators from './plugins';
 
 const actions = {
     ...artifactActionCreators,

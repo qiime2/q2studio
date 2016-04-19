@@ -1,20 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import Artifact from '../components/Artifact';
-import * as actionCreators from '../actions/Artifacts';
-import Error from '../components/Error';
-
-const mapStateToProps = (state) => ({
-    artifacts: state.artifacts
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    dispatchDeleteArtifact: (id) => dispatch(actionCreators.deleteArtifact(id))
-});
+import Error from './Error';
+import Artifact from './Artifact';
 
 const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
-
-    let data, table;
+    let data;
+    let table;
     if (!artifacts.length) {
         data = (
             <Error>
@@ -32,7 +22,7 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
                     onClick={() => dispatchDeleteArtifact(artifact.uuid)}
                 />
             ))
-        )
+        );
     }
 
     return (
@@ -62,16 +52,9 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
     );
 };
 
-Artifacts.contextTypes = {
-    store: React.PropTypes.object.isRequired
-}
-
 Artifacts.propTypes = {
     artifacts: React.PropTypes.array,
     dispatchDeleteArtifact: React.PropTypes.func
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Artifacts);
+export default Artifacts;

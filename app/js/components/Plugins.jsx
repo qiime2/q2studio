@@ -1,13 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import Workflows from './Workflows';
-import Error from '../components/Error';
-
-const mapStateToProps = (state) => {
-    return {
-        plugins: state.plugins
-    };
-};
+import Workflows from '../containers/Workflows';
+import Error from './Error';
 
 const Plugins = ({ plugins }) => {
     let data;
@@ -48,6 +41,4 @@ Plugins.propTypes = {
     plugins: React.PropTypes.array
 };
 
-export default connect(
-    mapStateToProps
-)(Plugins);
+export default Plugins;
