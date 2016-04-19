@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import reducer from '../app/js/reducers';
 
-import * as actionCreators from '../app/js/actions';
+import actions from '../app/js/actions';
 
 describe('reducer', () => {
     it('contains a plugins reducer', () => {
@@ -31,7 +31,7 @@ describe('reducer', () => {
                 }
             ]
         };
-        const action = actionCreators.deleteArtifact('f16ca3d0-fe83-4b1e-8eea-7e35db3f6b0f');
+        const action = actions.deleteArtifact('f16ca3d0-fe83-4b1e-8eea-7e35db3f6b0f');
 
         const nextState = reducer(initialState, action);
         expect(nextState.artifacts).to.be.empty;

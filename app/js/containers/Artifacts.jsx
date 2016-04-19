@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Artifact from '../components/Artifact';
-import { deleteArtifact } from '../actions';
+import * as actionCreators from '../actions/Artifacts';
 import Error from '../components/Error';
 
 const mapStateToProps = (state) => ({
@@ -9,12 +9,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    dispatchDeleteArtifact: (id) => dispatch(deleteArtifact(id))
+    dispatchDeleteArtifact: (id) => dispatch(actionCreators.deleteArtifact(id))
 });
 
 const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
-    let data;
 
+    let data, table;
     if (!artifacts.length) {
         data = (
             <Error>
@@ -23,6 +23,16 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
                 </h4>
             </Error>
         );
+    } else {
+        table = (
+            artifacts.map(artifact => (
+                <Artifact
+                    key={artifact.uuid}
+                    data={artifact}
+                    onClick={() => dispatchDeleteArtifact(artifact.uuid)}
+                />
+            ))
+        )
     }
 
     return (
@@ -42,13 +52,7 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            { artifacts.map(artifact => (
-                                <Artifact
-                                    key={artifact.uuid}
-                                    data={artifact}
-                                    onClick={() => dispatchDeleteArtifact(artifact.uuid)}
-                                />
-                            ))}
+                            { table }
                         </tbody>
                     </table>
                     { data }
@@ -57,6 +61,10 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
         </div>
     );
 };
+
+Artifacts.contextTypes = {
+    store: React.PropTypes.object.isRequired
+}
 
 Artifacts.propTypes = {
     artifacts: React.PropTypes.array,
