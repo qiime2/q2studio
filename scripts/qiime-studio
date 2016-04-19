@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+import os
+
+import click
+
+from qiime_studio import start_server
+
+@click.group()
+def cli():
+    pass
+
+@cli.command()
+@click.option('-p', '--port', default=21143, type=int)
+@click.option('-h', '--host', default="localhost")
+@click.option('-d', '--in-dev', is_flag=True)
+@click.option('-l', '--run-local', is_flag=True)
+@click.option('--skip-open', is_flag=True)
+def serve(port, host, in_dev, run_local, skip_open):
+    start_server(port, host, in_dev, run_local, skip_open)
+
+if __name__ == '__main__':
+    cli()
