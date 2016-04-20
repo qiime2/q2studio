@@ -179,7 +179,7 @@ const initialState = [
     }
 ];
 
-const main = (state = initialState, action) => {
+const pluginsReducer = (state = initialState, action) => {
     switch (action.type) {
     case 'DELETE_ARTIFACT':
         break;
@@ -189,4 +189,4 @@ const main = (state = initialState, action) => {
     return state;
 };
 
-export default main;
+export default pluginsReducer;

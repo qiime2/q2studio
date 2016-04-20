@@ -11,7 +11,7 @@ const initialState = [
     }
 ];
 
-const artifacts = (state = initialState, action) => {
+const artifactsReducer = (state = initialState, action) => {
     switch (action.type) {
     case 'DELETE_ARTIFACT': {
         // TODO, make it actually do something
@@ -24,4 +24,4 @@ const artifacts = (state = initialState, action) => {
     return state;
 };
 
-export default artifacts;
+export default artifactsReducer;

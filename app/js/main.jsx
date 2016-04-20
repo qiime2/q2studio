@@ -4,6 +4,8 @@ import { createStore, applyMiddleware } from 'redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
+import { Router, Route, hashHistory } from 'react-router';
+import actions from './actions';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import App from './components/pages/App';
@@ -19,6 +21,7 @@ let store = createStore(
       logger
     )
 );
+
 
 const history = syncHistoryWithStore(browserHistory, store);
 
