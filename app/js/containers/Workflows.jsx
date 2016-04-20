@@ -1,20 +1,10 @@
-import React from 'react';
-import Workflow from '../components/Workflow';
+import { connect } from 'react-redux';
+import Workflows from '../components/Workflows';
 
-const Workflows = ({ workflows }) => (
-    <div>
-        { workflows.map(workflow => (
-            <Workflow
-                key={workflow.name}
-                flow={workflow}
-            />
-        ))}
-    </div>
-);
+const mapStateToProps = (state) => ({
+    plugins: state.plugins
+});
 
-
-Workflows.propTypes = {
-    workflows: React.PropTypes.array
-};
-
-export default Workflows;
+export default connect(
+    mapStateToProps
+)(Workflows);

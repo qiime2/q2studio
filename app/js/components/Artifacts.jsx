@@ -1,20 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import Artifact from '../components/Artifact';
-import { deleteArtifact } from '../actions';
-import Error from '../components/Error';
-
-const mapStateToProps = (state) => ({
-    artifacts: state.artifacts
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    dispatchDeleteArtifact: (id) => dispatch(deleteArtifact(id))
-});
+import Error from './Error';
+import Artifact from './Artifact';
 
 const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
     let data;
-
+    let table;
     if (!artifacts.length) {
         data = (
             <Error>
@@ -22,6 +12,16 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
                     No Available Artifacts
                 </h4>
             </Error>
+        );
+    } else {
+        table = (
+            artifacts.map(artifact => (
+                <Artifact
+                    key={artifact.uuid}
+                    data={artifact}
+                    onClick={() => dispatchDeleteArtifact(artifact.uuid)}
+                />
+            ))
         );
     }
 
@@ -42,13 +42,7 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            { artifacts.map(artifact => (
-                                <Artifact
-                                    key={artifact.uuid}
-                                    data={artifact}
-                                    onClick={() => dispatchDeleteArtifact(artifact.uuid)}
-                                />
-                            ))}
+                            { table }
                         </tbody>
                     </table>
                     { data }
@@ -63,7 +57,4 @@ Artifacts.propTypes = {
     dispatchDeleteArtifact: React.PropTypes.func
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Artifacts);
+export default Artifacts;
