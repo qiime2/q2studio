@@ -4,6 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = function extendConfig(override, isDev) {
     var cssLoader = 'css-loader?modules&importLoaders=1' + // eslint-disable-line no-var
                     '&localIdentName=[name]--[local]-[hash:base64:5]!postcss-loader';
+    const autoprefixer = require('autoprefixer');
     if (!isDev) {
         cssLoader = ExtractTextPlugin.extract('style-loader', cssLoader);
     } else {
@@ -39,7 +40,8 @@ module.exports = function extendConfig(override, isDev) {
                     loader: cssLoader
                 }
             ]
-        }
+        },
+        postcss: [autoprefixer]
     };
 
     return Object.assign({}, defaultConfig, override(defaultConfig));

@@ -1,4 +1,4 @@
-const connectionReducer = (state = {}, action) => {
+const connectionReducer = (state = { connected: true }, action) => {
     switch (action.type) {
     case 'ESTABLISH_CONNECTION': {
         const newState = {
@@ -11,7 +11,8 @@ const connectionReducer = (state = {}, action) => {
     case 'ESTABLISH_API_LIST': {
         const newState = {
             ...state,
-            availableApis: action.availableApis
+            availableApis: action.availableApis,
+            connected: true
         };
         return newState;
     }

@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import actions from './actions';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import App from './components/pages/App';
+import App from './containers/App';
 import reducer from './reducers';
 import Flow from './components/pages/Flow';
 import queryString from 'query-string';

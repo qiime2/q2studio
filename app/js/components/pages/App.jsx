@@ -1,15 +1,23 @@
 import React from 'react';
 import PluginsList from '../../containers/PluginsList';
 import ArtifactsList from '../../containers/ArtifactsList';
+import Loading from '../Loading';
 
-const App = () => (
-    <div className="container">
-        <div className="page-header">
-            <h1>analysis-dir</h1>
+const App = ({ connected }) => (
+    <div>
+        <Loading loaded={connected} />
+        <div className="container">
+            <div className="page-header">
+                <h1>analysis-dir</h1>
+            </div>
+            <PluginsList />
+            <ArtifactsList />
         </div>
-        <PluginsList />
-        <ArtifactsList />
     </div>
 );
+
+App.propTypes = {
+    connected: React.PropTypes.bool.isRequired
+};
 
 export default App;
