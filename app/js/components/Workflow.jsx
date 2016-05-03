@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Workflow = ({ flow }) => (
-    <button type="button" className="list-group-item">
+const Workflow = ({ flow, onClick }) => (
+    <button type="button" className="list-group-item" onClick={ onClick }>
         <span className="col-md-7">
             { flow.name }
         </span>
@@ -12,7 +12,8 @@ const Workflow = ({ flow }) => (
 );
 
 Workflow.propTypes = {
-    flow: React.PropTypes.object
+    flow: React.PropTypes.object,
+    onClick: React.PropTypes.func
 };
 
 export default Workflow;

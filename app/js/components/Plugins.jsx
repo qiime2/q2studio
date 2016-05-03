@@ -28,7 +28,7 @@ const Plugins = ({ plugins }) => {
                         </h4>
                         <Workflows
                             key={ `${plugin.name}-workflows` }
-                            workflows={ plugin.workflows }
+                            plugin={ plugin }
                         />
                     </div>
                 )}
@@ -40,5 +40,9 @@ const Plugins = ({ plugins }) => {
 Plugins.propTypes = {
     plugins: React.PropTypes.array
 };
+
+Plugins.contextTypes = {
+    router: React.PropTypes.object
+}
 
 export default Plugins;
