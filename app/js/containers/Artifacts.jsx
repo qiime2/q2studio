@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
 import Artifact from '../components/Artifact';
 import { deleteArtifact } from '../actions';
 import Error from '../components/Error';

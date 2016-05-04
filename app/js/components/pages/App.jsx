@@ -1,6 +1,7 @@
 import React from 'react';
-import PluginsList from '../../containers/PluginsList';
+
 import ArtifactsList from '../../containers/ArtifactsList';
+import PluginsList from '../../containers/PluginsList';
 import Loading from '../Loading';
 
 const App = ({ connected }) => (

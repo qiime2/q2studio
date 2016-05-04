@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Workflow from './Workflow';
 
 const Workflows = ({ plugin }, { router }) => (

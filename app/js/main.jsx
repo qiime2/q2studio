@@ -4,13 +4,14 @@ import { createStore, applyMiddleware } from 'redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
-import actions from './actions';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import App from './containers/App';
-import reducer from './reducers';
-import Flow from './components/pages/Flow';
 import queryString from 'query-string';
+
+import actions from './actions';
+import App from './containers/App';
+import Flow from './components/pages/Flow';
+import reducer from './reducers';
 
 const logger = createLogger();
 

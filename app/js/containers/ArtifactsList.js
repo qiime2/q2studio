@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+
 import Artifacts from '../components/Artifacts';
 import actions from '../actions';
 

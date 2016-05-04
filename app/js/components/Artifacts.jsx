@@ -1,6 +1,7 @@
 import React from 'react';
-import Error from './Error';
+
 import Artifact from './Artifact';
+import Error from './Error';
 
 const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
     let data;

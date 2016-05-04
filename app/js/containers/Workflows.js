@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+
 import Workflows from '../components/Workflows';
 
 const mapStateToProps = (state) => ({

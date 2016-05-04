@@ -42,13 +42,16 @@ describe('reducer', () => {
     });
 
     it('handles DELETE_ARTIFACT', () => {
+        const initialState = {
+            artifacts: []
+        };
         const artifact = {
             name: 'table',
             uuid: 'f16ca3d0-fe83-4b1e-8eea-7e35db3f6b0f',
             type: 'FeatureTable[Frequency]'
         };
         var action = actions.newArtifact(artifact);
-        const state = reducer(undefined, action);
+        const state = reducer(initialState, action);
         action = actions.deleteArtifact(artifact.uuid);
 
         const nextState = reducer(state, action);
