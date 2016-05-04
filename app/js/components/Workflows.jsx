@@ -15,11 +15,11 @@ const Workflows = ({ plugin }, { router }) => (
 
 
 Workflows.propTypes = {
-    plugin: React.PropTypes.object,
+    plugin: React.PropTypes.object
 };
 
 Workflows.contextTypes = {
     router: React.PropTypes.object
-}
+};
 
 export default Workflows;

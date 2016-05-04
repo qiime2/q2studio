@@ -80,7 +80,7 @@ const initialState = [
                         type: 'Artifact',
                         sub_type: 'table',
                         input_type: 'Dropdown',
-                        input_choices: 'Artifacts',
+                        input_choices: 'Artifacts'
                     }
                 ],
                 output: [

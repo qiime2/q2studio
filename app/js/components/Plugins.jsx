@@ -43,6 +43,6 @@ Plugins.propTypes = {
 
 Plugins.contextTypes = {
     router: React.PropTypes.object
-}
+};
 
 export default Plugins;

@@ -30,16 +30,16 @@ const Plugins = ({ plugins }) => {
             <div className="panel-body">
                 { data }
                 { plugins.map((plugin, id) =>
-                  <div key={ id }>
-                    <Plugin
-                        key={ id }
-                        plugin={ plugin }
-                    />
-                    <Workflows
-                        key={ plugin.name + id }
-                        workflows={ plugin.workflows }
-                    />
-                  </div>
+                    <div key={ id }>
+                        <Plugin
+                            key={ id }
+                            plugin={ plugin }
+                        />
+                        <Workflows
+                            key={ plugin.name + id }
+                            workflows={ plugin.workflows }
+                        />
+                    </div>
                 )}
             </div>
         </div>
