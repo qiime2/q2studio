@@ -4,13 +4,15 @@ import os
 import urllib
 import collections
 
-from flask import request
+from flask import request, abort
 
 __KEY = os.urandom(33)
 
 
 def validate_request_authentication():
-    pass
+    message = b"test"
+    if (request.args['signature'].replace(' ', '+') != make_b64_digest(message).decode('ascii')):
+        abort(403)
 
 
 def make_url(host, ihost):
@@ -26,5 +28,5 @@ def make_url(host, ihost):
 
 
 def make_b64_digest(content):
-    digest = hmac.new(__KEY, msg=content, digestmod="sha256").digest()
+    digest = hmac.new(base64.b64encode(__KEY), msg=content, digestmod="sha256").digest()
     return base64.b64encode(digest)

@@ -1,6 +1,6 @@
 import webbrowser
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from gevent.pywsgi import WSGIServer
 
 from qiime_studio.api.security import make_url
