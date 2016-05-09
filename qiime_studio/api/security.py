@@ -11,10 +11,13 @@ __KEY = os.urandom(33)
 
 
 def validate_request_authentication():
-    message = b"test"
-    unhexed = binascii.unhexlify(request.args['signature'])
-    if (base64.b64encode(unhexed) != make_b64_digest(message)):
-        abort(403)
+    if (request.method == "POST"):
+        message = b"test"
+        json = request.json
+        hex_signature = json['signature']
+        unhexed_signature = binascii.unhexlify(hex_signature)
+        if (base64.b64encode(unhexed_signature) != make_b64_digest(message)):
+            abort(403)
 
 
 def make_url(host, ihost):
@@ -30,5 +33,7 @@ def make_url(host, ihost):
 
 
 def make_b64_digest(content):
-    digest = hmac.new(base64.b64encode(__KEY), msg=content, digestmod="sha256").digest()
+    digest = hmac.new(base64.b64encode(__KEY),
+                      msg=content,
+                      digestmod="sha256").digest()
     return base64.b64encode(digest)
