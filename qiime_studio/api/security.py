@@ -1,5 +1,6 @@
 import hmac
 import base64
+import binascii
 import os
 import urllib
 import collections
@@ -11,7 +12,8 @@ __KEY = os.urandom(33)
 
 def validate_request_authentication():
     message = b"test"
-    if (request.args['signature'].replace(' ', '+') != make_b64_digest(message).decode('ascii')):
+    unhexed = binascii.unhexlify(request.args['signature'])
+    if (base64.b64encode(unhexed) != make_b64_digest(message)):
         abort(403)
 
 
