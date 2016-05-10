@@ -1,16 +1,23 @@
 import hmac
 import base64
+import binascii
 import os
 import urllib
 import collections
 
-from flask import request
+from flask import request, abort
 
 __KEY = os.urandom(33)
 
 
 def validate_request_authentication():
-    pass
+    if (request.method == "POST"):
+        message = b"test"
+        json = request.json
+        hex_signature = json['signature']
+        unhexed_signature = binascii.unhexlify(hex_signature)
+        if (base64.b64encode(unhexed_signature) != make_b64_digest(message)):
+            abort(403)
 
 
 def make_url(host, ihost):
@@ -26,5 +33,7 @@ def make_url(host, ihost):
 
 
 def make_b64_digest(content):
-    digest = hmac.new(__KEY, msg=content, digestmod="sha256").digest()
+    digest = hmac.new(base64.b64encode(__KEY),
+                      msg=content,
+                      digestmod="sha256").digest()
     return base64.b64encode(digest)
