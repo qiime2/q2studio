@@ -19,7 +19,7 @@ def api_plugins():
     return jsonify({"names": plugin_list})
 
 
-@v1.route('/workflows/<plugin_name>', methods=['GET'])
+@v1.route('/<plugin_name>/workflows', methods=['GET'])
 def api_workflows(plugin_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
     workflows_dict = {}
