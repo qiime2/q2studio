@@ -1,12 +1,13 @@
 import React from 'react';
 import Workflow from './Workflow';
 
-const Workflows = ({ workflows }) => (
+const Workflows = ({ plugin }, { router }) => (
     <div>
-        { workflows.map(workflow => (
+        { plugin.workflows.map(workflow => (
             <Workflow
                 key={workflow.name}
                 flow={workflow}
+                onClick = {() => router.push(`job/${plugin.name}/${workflow.name}`)}
             />
         ))}
     </div>
@@ -14,7 +15,11 @@ const Workflows = ({ workflows }) => (
 
 
 Workflows.propTypes = {
-    workflows: React.PropTypes.array
+    plugin: React.PropTypes.object
+};
+
+Workflows.contextTypes = {
+    router: React.PropTypes.object
 };
 
 export default Workflows;

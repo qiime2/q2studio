@@ -1,6 +1,14 @@
 import React from 'react';
-import Workflows from '../containers/Workflows';
-import Error from './Error';
+import { connect } from 'react-redux';
+import Plugin from '../components/Plugin';
+import Workflows from './Workflows';
+import Error from '../components/Error';
+
+const mapStateToProps = (state) => {
+    return {
+        plugins: state.plugins
+    };
+};
 
 const Plugins = ({ plugins }) => {
     let data;
@@ -21,14 +29,15 @@ const Plugins = ({ plugins }) => {
             </div>
             <div className="panel-body">
                 { data }
-                { plugins.map(plugin =>
-                    <div key={ plugin.name }>
-                        <h4>
-                            { plugin.name }
-                        </h4>
-                        <Workflows
-                            key={ `${plugin.name}-workflows` }
+                { plugins.map((plugin, id) =>
+                    <div key={ id }>
+                        <Plugin
+                            key={ id }
                             plugin={ plugin }
+                        />
+                        <Workflows
+                            key={ plugin.name + id }
+                            workflows={ plugin.workflows }
                         />
                     </div>
                 )}
@@ -41,8 +50,6 @@ Plugins.propTypes = {
     plugins: React.PropTypes.array
 };
 
-Plugins.contextTypes = {
-    router: React.PropTypes.object
-};
-
-export default Plugins;
+export default connect(
+    mapStateToProps
+)(Plugins);
