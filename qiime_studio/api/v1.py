@@ -5,9 +5,7 @@ from .cors import add_cors_headers
 
 v1 = Blueprint('v1', __name__)
 v1.before_request(validate_request_authentication)
-v1.after_request(add_cors_headers)
 
-
-@v1.route('/')
+@v1.route('/', methods=['GET'])
 def root():
     return jsonify(content="!")

@@ -4,12 +4,15 @@ from flask import Flask, jsonify
 from gevent.pywsgi import WSGIServer
 
 from qiime_studio.api.security import make_url
+from qiime_studio.api.cors import add_cors_headers
 from qiime_studio.api.v1 import v1
 from qiime_studio.static import static_files
 
 studio = Flask('qiime_studio')
 studio.register_blueprint(v1, url_prefix='/api/0.0.1')
 studio.debug = True
+
+studio.after_request(add_cors_headers)
 
 
 @studio.route("/api/", methods=['GET'])
