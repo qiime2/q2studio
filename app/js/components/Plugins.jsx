@@ -1,6 +1,7 @@
 import React from 'react';
-import Workflows from '../containers/Workflows';
+
 import Error from './Error';
+import Workflows from '../containers/Workflows';
 
 const Plugins = ({ plugins }) => {
     let data;

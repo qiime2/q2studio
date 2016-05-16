@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
-import Workflows from '../components/Workflows';
+
+import App from '../components/pages/App';
 
 const mapStateToProps = (state) => ({
-    plugins: state.plugins
+    connected: state.connection.connected
 });
 
 export default connect(
     mapStateToProps
-)(Workflows);
+)(App);

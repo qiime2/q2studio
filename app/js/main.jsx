@@ -6,9 +6,12 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import App from './components/pages/App';
-import reducer from './reducers';
+import queryString from 'query-string';
+
+import actions from './actions';
+import App from './containers/App';
 import Flow from './components/pages/Flow';
+import reducer from './reducers';
 
 const logger = createLogger();
 
@@ -31,3 +34,16 @@ render(
     </Provider>,
     document.getElementById('root')
 );
+
+const parseHash = () => {
+    const { type } = queryString.parse(location.hash);
+    if (type === 'ESTABLISH_CONNECTION') {
+        const { uri, secret_key } = queryString.parse(location.hash);
+        store.dispatch(actions.establishConnection(uri, secret_key));
+        window.history.replaceState('', document.title, window.location.pathname);
+    }
+};
+
+window.onhashchange = parseHash;
+
+parseHash();
