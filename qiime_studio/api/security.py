@@ -1,22 +1,25 @@
 import hmac
 import base64
-import binascii
 import os
 import urllib
 import collections
+from time import time
 
 from flask import request, abort
 
 __KEY = os.urandom(33)
+__WHITE_LIST = ["GET", "OPTIONS"]
 
 
 def validate_request_authentication():
-    if (request.method == "POST"):
+    if (request.method not in __WHITE_LIST):
+        request_date = int(request.headers.get('Request-Date'))
+        auth, signature = request.headers.get('Authorization').split()
         message = b"test"
-        json = request.json
-        hex_signature = json['signature']
-        unhexed_signature = binascii.unhexlify(hex_signature)
-        if (base64.b64encode(unhexed_signature) != make_b64_digest(message)):
+        if (
+            signature.encode('utf8') != make_b64_digest(message) or
+            time() - (request_date / 1000) > 60
+        ):
             abort(403)
 
 
@@ -33,7 +36,7 @@ def make_url(host, ihost):
 
 
 def make_b64_digest(content):
-    digest = hmac.new(base64.b64encode(__KEY),
+    digest = hmac.new(__KEY,
                       msg=content,
                       digestmod="sha256").digest()
     return base64.b64encode(digest)

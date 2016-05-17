@@ -25,5 +25,7 @@ def api_workflows(plugin_name):
     workflows_dict = {}
     for key, value in plugin.workflows.items():
         workflows_dict[key] = {}
-        workflows_dict[key]['info'] = "Produces: {}".format(list(value.signature.output_artifacts.values()))
+        workflows_dict[key]['info'] = "Produces: {}".format(
+            list(value.signature.output_artifacts.values())
+        )
     return jsonify({"workflows": workflows_dict})
