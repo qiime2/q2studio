@@ -2,7 +2,7 @@ import React from 'react';
 
 import style from './Loading.css';
 
-const Loading = ({ loaded }) => (
+const Loading = ({ loaded, status }) => (
     loaded ?
         null :
         <div className={style.wrapper}>
@@ -10,14 +10,15 @@ const Loading = ({ loaded }) => (
                 <div className={style.loader}>
                 </div>
                 <p className={style.label}>
-                    Connecting...
+                    { status }
                 </p>
             </div>
         </div>
 );
 
 Loading.propTypes = {
-    loaded: React.PropTypes.bool.isRequired
+    loaded: React.PropTypes.bool.isRequired,
+    status: React.PropTypes.string.isRequired
 };
 
 export default Loading;

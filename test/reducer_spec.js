@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import deepFreeze from 'deep-freeze';
 
 import reducer from '../app/js/reducers';
 import actions from '../app/js/actions';
@@ -54,9 +55,38 @@ describe('reducer', () => {
         const state = reducer(initialState, action);
         action = actions.deleteArtifact(artifact.uuid);
 
+        deepFreeze(state);
         const nextState = reducer(state, action);
         expect(nextState.artifacts).to.not.include.something.that.eql(artifact);
         expect(nextState.artifacts).to.be.empty;
+    });
+
+    it('handles FOUND_WORKFLOW', () => {
+        const initialState = {
+            plugins: [{
+                name: 'diversity',
+                workflows: []
+            }]
+        };
+        const expectedState = {
+            name: 'diversity',
+            workflows: [{
+                name: 'beta_diversity',
+                info: 'Produces: DistanceMatrix'
+            }]
+        };
+
+        const state = reducer(initialState, {type: 'DO_NOTHING'});
+        const action = {
+            type: 'FOUND_WORKFLOW',
+            key: 'beta_diversity',
+            plugin: 'diversity',
+            info: 'Produces: DistanceMatrix'
+        };
+
+        deepFreeze(state);
+        const nextState = reducer(state, action);
+        expect(nextState.plugins).to.include.something.that.eql(expectedState);
     });
 
 });

@@ -1,10 +1,16 @@
-const connectionReducer = (state = { connected: true }, action) => {
+const initialState = {
+    connected: false,
+    message: 'Open server generated URL'
+};
+
+const connectionReducer = (state = initialState, action) => {
     switch (action.type) {
     case 'ESTABLISH_CONNECTION': {
         const newState = {
             ...state,
             uri: action.uri,
-            secretKey: action.secretKey
+            secretKey: action.secretKey,
+            message: 'Connecting to server...'
         };
         return newState;
     }
@@ -12,7 +18,29 @@ const connectionReducer = (state = { connected: true }, action) => {
         const newState = {
             ...state,
             availableApis: action.availableApis,
-            connected: true
+            message: 'Fetching available APIs'
+        };
+        return newState;
+    }
+    case 'HANDSHAKE_SERVER': {
+        const newState = {
+            ...state,
+            message: 'Validating credentials'
+        };
+        return newState;
+    }
+    case 'SUCCESFULLY_CONNECTED': {
+        const newState = {
+            ...state,
+            connected: action.result,
+            message: action.result ? '' : 'Connection failed'
+        };
+        return newState;
+    }
+    case 'UPDATE_STATUS': {
+        const newState = {
+            ...state,
+            message: action.status
         };
         return newState;
     }

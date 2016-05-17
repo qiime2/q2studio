@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
@@ -17,9 +17,12 @@ const logger = createLogger();
 
 let store = createStore(
     reducer,
-    applyMiddleware(
-      thunk,
-      logger
+    compose(
+        applyMiddleware(
+            thunk,
+            logger
+        ),
+        window.devToolsExtension ? window.devToolsExtension() : f => f
     )
 );
 
