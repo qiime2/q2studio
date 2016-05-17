@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import es6Promise from 'es6-promise';
-import { enc, HmacSHA256 as hmacSHA256 } from 'crypto-js';
+import CryptoJS from 'crypto-js';
 
 import actions from './index';
 
@@ -35,16 +35,21 @@ const shakeHandsWithServer = () => {
     return (dispatch, getState) => {
         dispatch(alertReducerOfConnection());
         const { connection: { uri, availableApis, secretKey } } = getState();
-        const byteArray = enc.Base64.parse(secretKey);
-
-        const hmac = hmacSHA256('test', byteArray).toString(enc.Base64);
+        const byteArray = CryptoJS.enc.Base64.parse(secretKey);
+        const requestTime = Date.now();
+        const message = ['POST', window.location.origin, requestTime, 'application/json', 0];
+        const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, byteArray);
+        for (let i = 0; i < message.length; i++) {
+            hmac.update(message[i].toString());
+        }
+        const hash = hmac.finalize().toString(CryptoJS.enc.Base64);
 
         fetch(`http://${uri.split('/')[0]}${availableApis[0]}`, {
             method: 'POST',
             headers: new Headers({
-                Authorization: `HMAC-SHA256 ${hmac}`,
+                Authorization: `HMAC-SHA256 ${hash}`,
                 'Content-Type': 'application/json',
-                'Request-Date': Date.now()
+                'Request-Date': requestTime
             })
         })
         .then((response) => {
