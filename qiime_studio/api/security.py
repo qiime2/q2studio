@@ -15,7 +15,15 @@ def validate_request_authentication():
     if (request.method not in __WHITE_LIST):
         request_date = int(request.headers.get('Request-Date'))
         auth, signature = request.headers.get('Authorization').split()
-        message = b"test"
+        message = [
+                    request.method,
+                    request.headers.get('Origin'),
+                    request.headers.get('Request-Date'),
+                    request.headers.get('Content-Type'),
+                    request.headers.get('Content-Length')
+                  ]
+        for i in range(len(message)):
+            message[i] = str(message[i]).encode('utf8')
         if (
             signature.encode('utf8') != make_b64_digest(message) or
             time() - (request_date / 1000) > 60
@@ -36,7 +44,9 @@ def make_url(host, ihost):
 
 
 def make_b64_digest(content):
-    digest = hmac.new(__KEY,
-                      msg=content,
-                      digestmod="sha256").digest()
+    hmac_generator = hmac.new(__KEY,
+                              digestmod="sha256")
+    for value in content:
+        hmac_generator.update(value)
+    digest = hmac_generator.digest()
     return base64.b64encode(digest)
