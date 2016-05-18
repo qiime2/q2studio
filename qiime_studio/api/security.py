@@ -8,22 +8,20 @@ from time import time
 from flask import request, abort
 
 __KEY = os.urandom(33)
-__WHITE_LIST = ["GET", "OPTIONS"]
+__WHITELIST = ["GET", "OPTIONS"]
 
 
 def validate_request_authentication():
-    if (request.method not in __WHITE_LIST):
+    if (request.method not in __WHITELIST):
         request_date = int(request.headers.get('Request-Date'))
         auth, signature = request.headers.get('Authorization').split()
         message = [
-                    request.method,
-                    request.headers.get('Origin'),
-                    request.headers.get('Request-Date'),
-                    request.headers.get('Content-Type'),
-                    request.headers.get('Content-Length')
-                  ]
-        for i in range(len(message)):
-            message[i] = str(message[i]).encode('utf8')
+            request.method.encode('utf8'),
+            request.headers.get('Origin', as_bytes=True),
+            request.headers.get('Request-Date', as_bytes=True),
+            request.headers.get('Content-Type', as_bytes=True),
+            request.headers.get('Content-Length', as_bytes=True)
+        ]
         if (
             signature.encode('utf8') != make_b64_digest(message) or
             time() - (request_date / 1000) > 60
