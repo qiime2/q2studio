@@ -39,9 +39,7 @@ const shakeHandsWithServer = () => {
         const requestTime = Date.now();
         const message = ['POST', window.location.origin, requestTime, 'application/json', 0];
         const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, byteArray);
-        for (let i = 0; i < message.length; i++) {
-            hmac.update(message[i].toString());
-        }
+        message.map(value => hmac.update(value.toString()));
         const hash = hmac.finalize().toString(CryptoJS.enc.Base64);
 
         fetch(`http://${uri.split('/')[0]}${availableApis[0]}`, {

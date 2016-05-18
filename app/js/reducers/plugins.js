@@ -17,7 +17,11 @@ const pluginsReducer = (state = initialState, action) => {
     case 'FOUND_WORKFLOW': {
         const workflow = {
             name: action.key,
-            info: action.info
+            info: action.info.info,
+            description: action.info.description,
+            inputArtifacts: action.info.input_artifacts,
+            inputParameters: action.info.input_parameters,
+            outputArtifacts: action.info.output_artifacts
         };
 
         const index = state.findIndex(plugin => plugin.name === action.plugin);

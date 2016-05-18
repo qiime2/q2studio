@@ -25,7 +25,7 @@ export const loadWorkflows = (plugin) => {
         .then((response) => (response.json()))
         .then((json) => {
             Object.keys(json.workflows).map(key =>
-                dispatch(foundWorkflow(plugin, key, json.workflows[key].info))
+                dispatch(foundWorkflow(plugin, key, json.workflows[key]))
             );
         });
     };

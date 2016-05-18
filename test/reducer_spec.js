@@ -72,7 +72,11 @@ describe('reducer', () => {
             name: 'diversity',
             workflows: [{
                 name: 'beta_diversity',
-                info: 'Produces: DistanceMatrix'
+                info: undefined,
+                description: 'Produces: DistanceMatrix',
+                inputArtifacts: undefined,
+                inputParameters: undefined,
+                outputArtifacts: undefined
             }]
         };
 
@@ -81,7 +85,12 @@ describe('reducer', () => {
             type: 'FOUND_WORKFLOW',
             key: 'beta_diversity',
             plugin: 'diversity',
-            info: 'Produces: DistanceMatrix'
+            info: {
+                description: 'Produces: DistanceMatrix',
+                inputArtifacts: undefined,
+                inputParameters: undefined,
+                outputArtifacts: undefined
+            }
         };
 
         deepFreeze(state);
