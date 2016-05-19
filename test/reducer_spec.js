@@ -83,13 +83,10 @@ describe('reducer', () => {
         const state = reducer(initialState, {type: 'DO_NOTHING'});
         const action = {
             type: 'FOUND_WORKFLOW',
-            key: 'beta_diversity',
             plugin: 'diversity',
-            info: {
+            workflow: {
+                name: 'beta_diversity',
                 description: 'Produces: DistanceMatrix',
-                inputArtifacts: undefined,
-                inputParameters: undefined,
-                outputArtifacts: undefined
             }
         };
 

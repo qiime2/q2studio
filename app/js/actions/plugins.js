@@ -11,23 +11,24 @@ const foundPlugin = (plugin) => ({
     plugin
 });
 
-const foundWorkflow = (plugin, key, info) => ({
+const foundWorkflow = (plugin, workflow) => ({
     type: 'FOUND_WORKFLOW',
     plugin,
-    key,
-    info
+    workflow
 });
 
-export const loadWorkflows = (plugin) => {
+export const loadWorkflows = () => {
     return (dispatch, getState) => {
-        const { connection: { uri, availableApis } } = getState();
-        fetch(`http://${uri.split('/')[0]}${availableApis[0]}${plugin}/workflows`)
-        .then((response) => (response.json()))
-        .then((json) => {
-            Object.keys(json.workflows).map(key =>
-                dispatch(foundWorkflow(plugin, key, json.workflows[key]))
-            );
-        });
+        const { plugins, connection: { uri, availableApis } } = getState();
+        plugins.map((plugin) => (
+            fetch(`http://${uri.split('/')[0]}${availableApis[0]}${plugin.workflowsURI}`)
+            .then((response) => (response.json()))
+            .then((json) => {
+                Object.keys(json.workflows).map(workflow =>
+                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow]))
+                );
+            })
+        ));
     };
 };
 
@@ -37,12 +38,11 @@ export const loadPlugins = () => {
         fetch(`http://${uri.split('/')[0]}${availableApis[0]}plugins`)
         .then((response) => (response.json()))
         .then((json) => {
-            json.names.map(plugin => (
+            json.plugins.map(plugin => (
                 dispatch(foundPlugin(plugin))
             ));
-            return json.names;
         })
-        .then((names) => (names.map(plugin => dispatch(loadWorkflows(plugin)))))
+        .then(() => dispatch(loadWorkflows()))
         .then(() => (dispatch(actions.successfullyConnected(true))));
     };
 };

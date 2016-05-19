@@ -8,7 +8,8 @@ const pluginsReducer = (state = initialState, action) => {
         const newState = [
             ...state,
             {
-                name: action.plugin,
+                name: action.plugin.name,
+                workflowsURI: action.plugin.workflow_uri,
                 workflows: []
             }
         ];
@@ -16,12 +17,12 @@ const pluginsReducer = (state = initialState, action) => {
     }
     case 'FOUND_WORKFLOW': {
         const workflow = {
-            name: action.key,
-            info: action.info.info,
-            description: action.info.description,
-            inputArtifacts: action.info.input_artifacts,
-            inputParameters: action.info.input_parameters,
-            outputArtifacts: action.info.output_artifacts
+            name: action.workflow.name,
+            info: action.workflow.info,
+            description: action.workflow.description,
+            inputArtifacts: action.workflow.input_artifacts,
+            inputParameters: action.workflow.input_parameters,
+            outputArtifacts: action.workflow.output_artifacts
         };
 
         const index = state.findIndex(plugin => plugin.name === action.plugin);
