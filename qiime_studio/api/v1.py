@@ -15,8 +15,13 @@ def root():
 
 @v1.route('/plugins', methods=['GET'])
 def api_plugins():
-    plugin_list = list(PLUGIN_MANAGER.plugins.keys())
-    return jsonify({"names": plugin_list})
+    plugins_dict = {}
+    plugins_dict = [
+        {'name': name, 'workflow_uri': '{}/workflows'.format(name)}
+        for name in list(PLUGIN_MANAGER.plugins.keys())
+    ]
+
+    return jsonify({"plugins": plugins_dict})
 
 
 @v1.route('/<plugin_name>/workflows', methods=['GET'])
@@ -25,23 +30,24 @@ def api_workflows(plugin_name):
     workflows_dict = {}
     for key, value in plugin.workflows.items():
         workflows_dict[key] = {}
+        workflows_dict[key]['name'] = key
         workflows_dict[key]['info'] = "Produces: {}".format(
             ", ".join([
                 repr(type)
                 for type in value.signature.output_artifacts.values()
             ])
         )
-    workflows_dict[key]['description'] = value.signature.name
-    workflows_dict[key]['input_artifacts'] = [
-        {'name': name, 'type': repr(type)}
-        for name, type in value.signature.input_artifacts.items()
-    ]
-    workflows_dict[key]['input_parameters'] = [
-        {'name': name, 'type': repr(type)}
-        for name, type in value.signature.input_parameters.items()
-    ]
-    workflows_dict[key]['output_artifacts'] = [
-        {'name': name, 'type': repr(type)}
-        for name, type in value.signature.output_artifacts.items()
-    ]
+        workflows_dict[key]['description'] = value.signature.name
+        workflows_dict[key]['input_artifacts'] = [
+            {'name': name, 'type': repr(type)}
+            for name, type in value.signature.input_artifacts.items()
+        ]
+        workflows_dict[key]['input_parameters'] = [
+            {'name': name, 'type': repr(type)}
+            for name, type in value.signature.input_parameters.items()
+        ]
+        workflows_dict[key]['output_artifacts'] = [
+            {'name': name, 'type': repr(type)}
+            for name, type in value.signature.output_artifacts.items()
+        ]
     return jsonify({"workflows": workflows_dict})

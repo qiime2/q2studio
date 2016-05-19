@@ -41,4 +41,6 @@ def start_server(port, domain, in_dev, run_local, skip_open):
     print(url)
     if not skip_open:
         webbrowser.open(url)
-    WSGIServer((domain, port), studio).serve_forever()
+    # WSGIServer((domain, port), studio).serve_forever()
+    studio.run(host=domain,port=port,threaded=True)
+    
