@@ -1,6 +1,15 @@
-import update from 'react-addons-update';
-
 const initialState = [];
+
+const addWorkflow = (plugin, workflow) => {
+    const updatedPlugin = {
+        ...plugin,
+        workflows: [
+            ...plugin.workflows,
+            workflow
+        ]
+    };
+    return updatedPlugin;
+};
 
 const pluginsReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -24,9 +33,13 @@ const pluginsReducer = (state = initialState, action) => {
             inputParameters: action.workflow.input_parameters,
             outputArtifacts: action.workflow.output_artifacts
         };
-
-        const index = state.findIndex(plugin => plugin.name === action.plugin);
-        const newState = update(state, { [index]: { workflows: { $push: [workflow] } } });
+        const originalPlugin = state.filter(plugin => plugin.name === action.plugin)[0];
+        const filteredState = state.filter(plugin => plugin.name !== action.plugin);
+        const newPlugin = addWorkflow(originalPlugin, workflow);
+        const newState = [
+            ...filteredState,
+            newPlugin
+        ];
         return newState;
     }
     default:

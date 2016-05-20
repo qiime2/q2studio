@@ -17,38 +17,50 @@ const establishAvailableAPIList = (availableApis) => ({
     availableApis
 });
 
-const alertReducerOfConnection = () => ({
-    type: 'HANDSHAKE_SERVER'
-});
-
 export const successfullyConnected = (result) => ({
     type: 'SUCCESFULLY_CONNECTED',
     result
 });
 
-const updateConnectionStatus = (status) => ({
+export const updateConnectionStatus = (status) => ({
     type: 'UPDATE_STATUS',
     status
 });
 
+const makeB64Digest = (secretKey, httpVerb, requestTime, body = JSON.stringify({})) => {
+    const byteArray = CryptoJS.enc.Base64.parse(secretKey);
+    const message = [
+        httpVerb,
+        window.location.origin,
+        requestTime,
+        'application/json',
+        body.length
+    ];
+
+    const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, byteArray);
+    message.map(value => hmac.update(value.toString()));
+    const hash = hmac.finalize().toString(CryptoJS.enc.Base64);
+
+    return hash;
+};
+
 const shakeHandsWithServer = () => {
     return (dispatch, getState) => {
-        dispatch(alertReducerOfConnection());
+        dispatch(updateConnectionStatus('Validating credentials'));
         const { connection: { uri, availableApis, secretKey } } = getState();
-        const byteArray = CryptoJS.enc.Base64.parse(secretKey);
+        const httpVerb = 'POST';
         const requestTime = Date.now();
-        const message = ['POST', window.location.origin, requestTime, 'application/json', 0];
-        const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, byteArray);
-        message.map(value => hmac.update(value.toString()));
-        const hash = hmac.finalize().toString(CryptoJS.enc.Base64);
+        const body = JSON.stringify({});
+        const digest = makeB64Digest(secretKey, httpVerb, requestTime, body);
 
         fetch(`http://${uri.split('/')[0]}${availableApis[0]}`, {
-            method: 'POST',
+            method: httpVerb,
             headers: new Headers({
-                Authorization: `HMAC-SHA256 ${hash}`,
+                Authorization: `HMAC-SHA256 ${digest}`,
                 'Content-Type': 'application/json',
                 'Request-Date': requestTime
-            })
+            }),
+            body
         })
         .then((response) => {
             if (!response.ok) {
@@ -57,7 +69,6 @@ const shakeHandsWithServer = () => {
             }
             return response;
         })
-        .then(() => dispatch(updateConnectionStatus('Fetching Plugins')))
         .then(() => dispatch(actions.loadPlugins()));
     };
 };
@@ -70,7 +81,7 @@ export const establishConnection = (uri, secretKey) => {
             method: 'GET'
         })
         .then((response) => (response.json()))
-        .then((json) => (dispatch(establishAvailableAPIList(json.available))))
-        .then(() => (dispatch(shakeHandsWithServer())));
+        .then((json) => dispatch(establishAvailableAPIList(json.available)))
+        .then(() => dispatch(shakeHandsWithServer()));
     };
 };

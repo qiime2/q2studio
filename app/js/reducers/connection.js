@@ -22,13 +22,6 @@ const connectionReducer = (state = initialState, action) => {
         };
         return newState;
     }
-    case 'HANDSHAKE_SERVER': {
-        const newState = {
-            ...state,
-            message: 'Validating credentials'
-        };
-        return newState;
-    }
     case 'SUCCESFULLY_CONNECTED': {
         const newState = {
             ...state,

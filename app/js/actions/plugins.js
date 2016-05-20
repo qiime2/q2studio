@@ -34,6 +34,7 @@ export const loadWorkflows = () => {
 
 export const loadPlugins = () => {
     return (dispatch, getState) => {
+        dispatch(actions.updateConnectionStatus('Fetching Plugins'));
         const { connection: { uri, availableApis } } = getState();
         fetch(`http://${uri.split('/')[0]}${availableApis[0]}plugins`)
         .then((response) => (response.json()))
@@ -43,6 +44,6 @@ export const loadPlugins = () => {
             ));
         })
         .then(() => dispatch(loadWorkflows()))
-        .then(() => (dispatch(actions.successfullyConnected(true))));
+        .then(() => dispatch(actions.successfullyConnected(true)));
     };
 };
