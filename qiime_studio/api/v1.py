@@ -17,8 +17,8 @@ def root():
 def api_plugins():
     plugins_dict = {}
     plugins_dict = [
-        {'name': name, 'workflow_uri': '{}/workflows'.format(name)}
-        for name in list(PLUGIN_MANAGER.plugins.keys())
+        {'name': name, 'workflow_uri': '%s/workflows' % name}
+        for name in PLUGIN_MANAGER.plugins
     ]
 
     return jsonify({"plugins": plugins_dict})

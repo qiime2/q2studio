@@ -13,19 +13,17 @@ __WHITELIST = ["GET", "OPTIONS"]
 
 def validate_request_authentication():
     if (request.method not in __WHITELIST):
-        request_date = int(request.headers.get('Request-Date'))
+        request_date = int(request.headers['X-QIIME-Timestamp'])
         auth, signature = request.headers.get('Authorization').split()
         message = [
             request.method.encode('utf8'),
             request.headers.get('Origin', as_bytes=True),
-            request.headers.get('Request-Date', as_bytes=True),
+            request.headers.get('X-QIIME-Timestamp', as_bytes=True),
             request.headers.get('Content-Type', as_bytes=True),
             request.headers.get('Content-Length', as_bytes=True)
         ]
-        if (
-            signature.encode('utf8') != make_b64_digest(message) or
-            time() - (request_date / 1000) > 60
-        ):
+        if (signature.encode('utf8') != make_b64_digest(message) or
+                time() - (request_date / 1000) > 60):
             abort(403)
 
 
