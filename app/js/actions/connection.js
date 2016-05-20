@@ -58,7 +58,7 @@ const shakeHandsWithServer = () => {
             headers: new Headers({
                 Authorization: `HMAC-SHA256 ${digest}`,
                 'Content-Type': 'application/json',
-                'Request-Date': requestTime
+                'X-QIIME-Timestamp': requestTime
             }),
             body
         })
