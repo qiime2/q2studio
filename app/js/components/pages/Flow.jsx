@@ -11,69 +11,66 @@ const Flow = ({ routeParams: { pluginId, flowId } }, { store }) => {
                 <h1>{plugin.name}: {flow.description}</h1>
             </div>
             <form>
-            { flow.input.filter(input => input.input_type ===
-                'Dropdown').map(workflow =>
-                    <fieldset
-                        className="form-group"
-                        key={ `${workflow.name}-dropdown${counter++}` }
+            { flow.inputArtifacts.map(({ name }) =>
+                <fieldset
+                    className="form-group"
+                    key={ `${name}-dropdown${counter++}` }
+                >
+                    <label htmlFor="in-{ name }">
+                        Input Artifact: { name }
+                    </label>
+                    <select
+                        className="form-control"
+                        name="in-{ name }"
                     >
-                        <label htmlFor="in-{ workflow.sub_type }">
-                            Input Artifact: { workflow.sub_type }
-                        </label>
-                        <select
-                            className="form-control"
-                            name="in-{ workflow.sub_type }"
-                        >
-                              { Artifacts.filter(artifact => artifact.name ===
-                                  workflow.sub_type).map(artifact =>
-                                      <option
-                                          key={ `${artifact.uuid}-dropdown` }
-                                          value="{{ artifact.uuid }}"
-                                      >
-                                          {artifact.name} - {artifact.uuid}
-                                      </option>
-                              )}
-                        </select>
-                    </fieldset>
+                          { Artifacts.filter(artifact => artifact.name ===
+                              name).map(artifact =>
+                                  <option
+                                      key={ `${artifact.uuid}-dropdown` }
+                                      value="{{ artifact.uuid }}"
+                                  >
+                                      {artifact.name} - {artifact.uuid}
+                                  </option>
+                          )}
+                    </select>
+                </fieldset>
             )}
 
-            { flow.input.filter(input => input.input_type ===
-                'Text').map(workflow =>
-                    <fieldset
-                        className="form-group"
-                        key={ `${workflow.name}-text-input${counter++}` }
-                    >
-                        <label htmlFor="param-{ workflow.sub_type }">
-                            Input Parameter: { workflow.sub_type }
-                        </label>
-                        <input
-                            type="text-field"
-                            className="form-control"
-                            name="param-{ workflow.sub_type }"
-                            placeholder={ workflow.input_hint }
-                        />
-                    </fieldset>
+            { flow.inputParameters.map(({ name, type }) =>
+                <fieldset
+                    className="form-group"
+                    key={ `${name}-text-input${counter++}` }
+                >
+                    <label htmlFor="param-{ name }">
+                        Input Parameter: { name }
+                    </label>
+                    <input
+                        type="text-field"
+                        className="form-control"
+                        name="param-{ name }"
+                        placeholder={ type }
+                    />
+                </fieldset>
             )}
                 <br />
                 <br />
                 <br />
 
-            { flow.output.filter(input => input.input_type ===
-                'Text').map(workflow =>
-                    <fieldset
-                        className="form-group"
-                        key={ `${workflow.name}-text-output${counter++}` }
-                    >
-                        <label htmlFor="out-{ workflow.sub_type }">
-                            Output Name: { workflow.sub_type }
-                        </label>
-                        <input
-                            type="text-field"
-                            className="form-control"
-                            name="out-{ workflow.sub_type }"
-                            placeholder={ workflow.input_hint }
-                        />
-                    </fieldset>
+            { flow.outputArtifacts.map(({ name, type }) =>
+                <fieldset
+                    className="form-group"
+                    key={ `${name}-text-output${counter++}` }
+                >
+                    <label htmlFor="out-{ name }">
+                        Output Name: { name }
+                    </label>
+                    <input
+                        type="text-field"
+                        className="form-control"
+                        name="out-{ name }"
+                        placeholder={ type }
+                    />
+                </fieldset>
             )}
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import ArtifactsList from '../../containers/ArtifactsList';
 import PluginsList from '../../containers/PluginsList';
-import Loading from '../Loading';
+import Loading from '../../containers/Loading';
 
 const App = ({ connected }) => (
     <div>
