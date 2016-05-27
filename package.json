@@ -9,6 +9,7 @@
     "url": "git://github.com/qiime2/qiime-studio-backend.git"
   },
   "scripts": {
+    "dev": "source activate qiime_studio && concurrently \"qiime-studio serve -d\" \"npm start\"",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:css": "stylelint 'app/**/*.css' --config config/stylelint.yaml",
     "lint:js": "eslint app/ config/ --ext .js,.jsx --config config/eslint.yaml",
