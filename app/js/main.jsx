@@ -10,7 +10,7 @@ import queryString from 'query-string';
 
 import actions from './actions';
 import App from './containers/App';
-import Flow from './components/pages/Flow';
+import Job from './containers/Job';
 import reducer from './reducers';
 
 const logger = createLogger();
@@ -32,7 +32,7 @@ render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App} />
-            <Route path="job/:pluginId/:flowId" component={Flow} />
+            <Route path="job/:pluginId/:flowId" component={Job} />
         </Router>
     </Provider>,
     document.getElementById('root')
