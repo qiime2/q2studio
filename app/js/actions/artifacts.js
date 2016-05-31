@@ -12,6 +12,21 @@ export const deleteArtifact = (uuid) => ({
     uuid
 });
 
+export const loadArtifacts = () => {
+    return (dispatch, getState) => {
+        const { connection: { uri, availableApis } } = getState();
+        fetch(`http://${uri.split('/')[0]}${availableApis[0]}artifacts`, {
+            method: 'GET'
+        })
+        .then((response) => (response.json()))
+        .then((json) => {
+            json.artifacts.map(artifact => (
+                dispatch(newArtifact(artifact))
+            ));
+        });
+    };
+};
+
 export const refreshArtifacts = () => ({
     type: 'REFRESH_ARTIFACTS'
 });

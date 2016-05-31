@@ -44,6 +44,7 @@ export const loadPlugins = () => {
             ));
         })
         .then(() => dispatch(loadWorkflows()))
+        .then(() => dispatch(actions.loadArtifacts()))
         .then(() => dispatch(actions.successfullyConnected(true)));
     };
 };

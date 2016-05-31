@@ -12,8 +12,7 @@ const mapStateToProps = (state, { params: { pluginId, flowId } }) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    onClickSubmit: () => dispatch({ type: 'SUBMIT' }),
-    onClickCancel: () => dispatch({ type: 'CANCEL' })
+    onClickSubmit: () => dispatch({ type: 'SUBMIT' })
 });
 
 export default connect(
