@@ -53,20 +53,24 @@ def api_workflows(plugin_name):
             {'name': name, 'type': repr(type)}
             for name, type in value.signature.output_artifacts.items()
         ]
-        workflows_dict[key]['input_artifacts_uri'] = '%s/%s/inputartifacts' % (plugin_name, key)
+        workflows_dict[key]['input_artifacts_uri'] = \
+            '%s/%s/inputartifacts' % (plugin_name, key)
     return jsonify({"workflows": workflows_dict})
 
 
 @v1.route('/artifacts', methods=['GET'])
 def api_artifacts():
     artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qtf'))
-    artifacts = [{
-        'name' : os.path.splitext(os.path.split(path)[1])[0],
-        'uuid' : str(Artifact(path).uuid),
-        'type' : str(Artifact(path).type) }
+    artifacts = [
+        {
+            'name': os.path.splitext(os.path.split(path)[1])[0],
+            'uuid': str(Artifact(path).uuid),
+            'type': str(Artifact(path).type)
+        }
         for path in artifact_paths
     ]
     return jsonify({"artifacts": artifacts})
+
 
 @v1.route('/<plugin_name>/<workflow_name>/inputartifacts', methods=['GET'])
 def api_input_artifacts(plugin_name, workflow_name):
