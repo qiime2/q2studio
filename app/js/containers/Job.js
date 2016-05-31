@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import Job from '../components/pages/Job';
 
@@ -15,7 +16,9 @@ const mapDispatchToProps = (dispatch) => ({
     onClickSubmit: () => dispatch({ type: 'SUBMIT' })
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Job);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(Job)
+);
