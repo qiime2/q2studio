@@ -1,7 +1,10 @@
+import glob
+import os
+
 from flask import Blueprint, jsonify
 
 from .security import validate_request_authentication
-from qiime.sdk import PluginManager
+from qiime.sdk import PluginManager, Artifact
 
 PLUGIN_MANAGER = PluginManager()
 v1 = Blueprint('v1', __name__)
@@ -50,4 +53,21 @@ def api_workflows(plugin_name):
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.outputs.items()
         ]
+        workflows_dict[key]['input_artifacts_uri'] = '%s/%s/inputartifacts' % (plugin_name, key)
     return jsonify({"workflows": workflows_dict})
+
+
+@v1.route('/artifacts', methods=['GET'])
+def api_artifacts():
+    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qtf'))
+    artifacts = [{
+        'name' : os.path.splitext(os.path.split(path)[1])[0],
+        'uuid' : str(Artifact(path).uuid),
+        'type' : str(Artifact(path).type) }
+        for path in artifact_paths
+    ]
+    return jsonify({"artifacts": artifacts})
+
+@v1.route('/<plugin_name>/<workflow_name>/inputartifacts', methods=['GET'])
+def api_input_artifacts(plugin_name, workflow_name):
+    pass

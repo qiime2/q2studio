@@ -9,7 +9,7 @@
     "url": "git://github.com/qiime2/qiime-studio-backend.git"
   },
   "scripts": {
-    "dev": "source activate qiime_studio && concurrently \"qiime-studio serve -d\" \"npm start\"",
+    "dev": "source activate qiime_studio && concurrently --raw \"qiime-studio serve -d\" \"npm start\"",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:css": "stylelint 'app/**/*.css' --config config/stylelint.yaml",
     "lint:js": "eslint app/ config/ --ext .js,.jsx --config config/eslint.yaml",
@@ -22,7 +22,7 @@
     "crypto-js": "^3.1.6",
     "es6-promise": "^3.1.2",
     "isomorphic-fetch": "^2.2.1",
-    "query-string": "^4.1.0",
+    "query-string": "^4.2.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "react-redux": "^4.4.1",

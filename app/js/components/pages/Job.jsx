@@ -10,7 +10,7 @@ import React from 'react';
 //         </option>
 // )}
 
-const Job = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
+const Job = ({ plugin, workflow, onClickSubmit, route }, { router }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -23,12 +23,12 @@ const Job = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
                     className="form-group"
                     key={ `${name}-dropdown${counter++}` }
                 >
-                    <label htmlFor="in-{ name }">
+                    <label htmlFor={`in-${name}`}>
                         Input Artifact: { name }
                     </label>
                     <select
                         className="form-control"
-                        name="in-{ name }"
+                        name={`in-${name}`}
                     >
 
                     </select>
@@ -40,13 +40,13 @@ const Job = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
                     className="form-group"
                     key={ `${name}-text-input${counter++}` }
                 >
-                    <label htmlFor="param-{ name }">
+                    <label htmlFor={`param-${name}`}>
                         Input Parameter: { name }
                     </label>
                     <input
                         type="text-field"
                         className="form-control"
-                        name="param-{ name }"
+                        name={`param-${name}`}
                         placeholder={ type }
                     />
                 </fieldset>
@@ -60,28 +60,43 @@ const Job = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
                     className="form-group"
                     key={ `${name}-text-output${counter++}` }
                 >
-                    <label htmlFor="out-{ name }">
+                    <label htmlFor={`out-${name}`}>
                         Output Name: { name }
                     </label>
                     <input
                         type="text-field"
                         className="form-control"
-                        name="out-{ name }"
+                        name={`out-${name}`}
                         placeholder={ type }
                     />
                 </fieldset>
             )}
             </form>
-            <button className="btn btn-primary" onClick={onClickSubmit}>Go!</button>
-            <button className="btn btn-danger" onClick={onClickCancel}>Cancel</button>
+            <button
+                className="btn btn-primary"
+                onClick={onClickSubmit}
+            >
+                Go!
+            </button>
+            <button
+                className="btn btn-danger pull-right"
+                onClick={() => router.goBack()}
+            >
+                Cancel
+            </button>
         </div>
   );};
 
 Job.propTypes = {
     plugin: React.PropTypes.object,
     workflow: React.PropTypes.object,
-    onClickSubmit: React.PropTypes.func,
-    onClickCancel: React.PropTypes.func
+    route: React.PropTypes.object,
+    onClickSubmit: React.PropTypes.func
+};
+
+Job.contextTypes = {
+    store: React.PropTypes.object,
+    router: React.PropTypes.object
 };
 
 export default Job;
