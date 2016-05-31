@@ -10,7 +10,7 @@ import React from 'react';
 //         </option>
 // )}
 
-const Job = ({ plugin, workflow, onClickSubmit, route }, { router }) => {
+const Job = ({ plugin, workflow, onClickSubmit, route, router }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -91,12 +91,8 @@ Job.propTypes = {
     plugin: React.PropTypes.object,
     workflow: React.PropTypes.object,
     route: React.PropTypes.object,
+    router: React.PropTypes.object,
     onClickSubmit: React.PropTypes.func
-};
-
-Job.contextTypes = {
-    store: React.PropTypes.object,
-    router: React.PropTypes.object
 };
 
 export default Job;
