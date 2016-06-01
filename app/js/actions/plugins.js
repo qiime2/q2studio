@@ -45,6 +45,7 @@ export const loadPlugins = () => {
         })
         .then(() => dispatch(loadWorkflows()))
         .then(() => dispatch(actions.loadArtifacts()))
+        .then(() => setInterval(() => dispatch(actions.refreshArtifacts()), 5000))
         .then(() => dispatch(actions.successfullyConnected(true)));
     };
 };
