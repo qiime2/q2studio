@@ -69,6 +69,23 @@ export const loadArtifacts = () => {
     };
 };
 
-export const refreshArtifacts = () => ({
-    type: 'REFRESH_ARTIFACTS'
-});
+export const refreshArtifacts = () => {
+    return (dispatch, getState) => {
+        const { artifacts, connection: { uri, availableApis } } = getState();
+        fetch(`http://${uri.split('/')[0]}${availableApis[0]}artifacts`, {
+            method: 'GET'
+        })
+        .then((response) => (response.json()))
+        .then((json) => {
+            json.artifacts.map(a0 => {
+                for (const artifact of artifacts) {
+                    if (artifact.uuid === a0.uuid) {
+                        return false;
+                    }
+                }
+                dispatch(newArtifact(a0));
+                return true;
+            });
+        });
+    };
+};
