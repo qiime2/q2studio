@@ -53,7 +53,7 @@ describe('reducer', () => {
         };
         var action = actions.newArtifact(artifact);
         const state = reducer(initialState, action);
-        action = actions.deleteArtifact(artifact.uuid);
+        action = actions.hiddenDeleteArtifact(artifact.uuid);
 
         deepFreeze(state);
         const nextState = reducer(state, action);

@@ -20,7 +20,11 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => {
                 <Artifact
                     key={artifact.uuid}
                     data={artifact}
-                    onClick={() => dispatchDeleteArtifact(artifact.uuid)}
+                    onClick={() => {
+                        if (confirm('Are you sure you want to delete this Artifact?')) {
+                            dispatchDeleteArtifact(artifact.uuid);
+                        }
+                    }}
                 />
             ))
         );

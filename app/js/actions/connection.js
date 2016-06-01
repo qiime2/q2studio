@@ -27,7 +27,7 @@ export const updateConnectionStatus = (status) => ({
     status
 });
 
-const makeB64Digest = (secretKey, httpVerb, requestTime, body = JSON.stringify({})) => {
+export const makeB64Digest = (secretKey, httpVerb, requestTime, body = JSON.stringify({})) => {
     const byteArray = CryptoJS.enc.Base64.parse(secretKey);
     const message = [
         httpVerb,
