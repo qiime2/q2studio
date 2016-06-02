@@ -93,7 +93,7 @@ def delete_artifact(name):
     return jsonify(result)
 
 
-@v1.route('/<plugin_name>/<workflow_name>/<input_name>/inputartifacts', methods=['GET'])
+@v1.route('/artifacts/<plugin_name>/<workflow_name>/<input_name>', methods=['GET'])
 def api_input_artifacts(plugin_name, workflow_name, input_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
     workflow = plugin.workflows[workflow_name]
@@ -112,6 +112,6 @@ def api_input_artifacts(plugin_name, workflow_name, input_name):
         for path in artifact_paths
     ]
     for artifact in artifacts:
-        if artifact.type < target_type:
+        if Artifact(artifact['path']).type < input_type:
             input_artifacts.append(artifact)
     return jsonify({'input_artifacts': input_artifacts})

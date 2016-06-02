@@ -10,12 +10,10 @@ export const newArtifact = (artifact) => ({
     artifact
 });
 
-export const linkInputArtifact = (plugin, workflow, input, artifact) => ({
+export const linkInputArtifact = (input, artifacts) => ({
     type: 'LINK_INPUT_ARTIFACT',
-    plugin,
-    workflow,
     input,
-    artifact
+    artifacts
 });
 
 export const expectingArtifact = () => ({
@@ -27,9 +25,22 @@ export const hiddenDeleteArtifact = (uuid) => ({
     uuid
 });
 
+export const fetchInputArtifacts = (input) => {
+    return (dispatch, getState) => {
+        const { connection: { uri, availableApis } } = getState();
+        fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}`, {
+            method: 'GET'
+        })
+        .then((response) => (response.json()))
+        .then(({ input_artifacts }) => dispatch(linkInputArtifact(input, input_artifacts)));
+    };
+};
+
 export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {
-        const { artifacts, connection: { uri, availableApis, secretKey } } = getState();
+        const { artifacts: { artifacts },
+                connection: { uri, availableApis, secretKey }
+        } = getState();
         const httpVerb = 'DELETE';
         const timestamp = Date.now();
         const artifact = artifacts.filter(a => a.uuid === uuid)[0];
