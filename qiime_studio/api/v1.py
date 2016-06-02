@@ -42,7 +42,11 @@ def api_workflows(plugin_name):
         )
         workflows_dict[key]['description'] = value.signature.name
         workflows_dict[key]['input_artifacts'] = [
-            {'name': name, 'type': repr(type)}
+            {
+                'name': name,
+                'type': repr(type),
+                'uri': '%s/%s/%s/inputartifacts' % (plugin_name, key, name)
+            }
             for name, type in value.signature.input_artifacts.items()
         ]
         workflows_dict[key]['input_parameters'] = [
@@ -53,8 +57,6 @@ def api_workflows(plugin_name):
             {'name': name, 'type': repr(type)}
             for name, type in value.signature.output_artifacts.items()
         ]
-        workflows_dict[key]['input_artifacts_uri'] = \
-            '%s/%s/inputartifacts' % (plugin_name, key)
     return jsonify({'workflows': workflows_dict})
 
 
@@ -91,6 +93,25 @@ def delete_artifact(name):
     return jsonify(result)
 
 
-@v1.route('/<plugin_name>/<workflow_name>/inputartifacts', methods=['GET'])
-def api_input_artifacts(plugin_name, workflow_name):
-    pass
+@v1.route('/<plugin_name>/<workflow_name>/<input_name>/inputartifacts', methods=['GET'])
+def api_input_artifacts(plugin_name, workflow_name, input_name):
+    plugin = PLUGIN_MANAGER.plugins[plugin_name]
+    workflow = plugin.workflows[workflow_name]
+    input_type = workflow.signature.input_artifacts[input_name]
+    input_artifacts = []
+    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qtf'))
+    artifacts = [
+        {
+            'name': os.path.splitext(os.path.split(path)[1])[0],
+            'uuid': str(Artifact(path).uuid),
+            'type': str(Artifact(path).type),
+            'path': path,
+            'uri': 'artifacts/%s' % (os.path.splitext(
+                                        os.path.split(path)[1])[0])
+        }
+        for path in artifact_paths
+    ]
+    for artifact in artifacts:
+        if artifact.type < target_type:
+            input_artifacts.append(artifact)
+    return jsonify({'input_artifacts': input_artifacts})
