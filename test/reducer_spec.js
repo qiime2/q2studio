@@ -76,8 +76,7 @@ describe('reducer', () => {
                 description: 'Produces: DistanceMatrix',
                 inputArtifacts: undefined,
                 inputParameters: undefined,
-                outputArtifacts: undefined,
-                inputArtifactsUri: undefined
+                outputArtifacts: undefined
             }]
         };
 

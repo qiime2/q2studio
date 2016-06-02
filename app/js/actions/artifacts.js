@@ -10,6 +10,14 @@ export const newArtifact = (artifact) => ({
     artifact
 });
 
+export const linkInputArtifact = (plugin, workflow, input, artifact) => ({
+    type: 'LINK_INPUT_ARTIFACT',
+    plugin,
+    workflow,
+    input,
+    artifact
+});
+
 export const expectingArtifact = () => ({
     type: 'EXPECTING_ARTIFACT'
 });
@@ -18,8 +26,6 @@ export const hiddenDeleteArtifact = (uuid) => ({
     type: 'DELETE_ARTIFACT',
     uuid
 });
-
-// const makeB64Digest = (secretKey, httpVerb, requestTime, body = JSON.stringify({})) => {
 
 export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {
