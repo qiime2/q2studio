@@ -4,29 +4,29 @@ import deepFreeze from 'deep-freeze';
 import reducer from '../app/js/reducers';
 import actions from '../app/js/actions';
 
+const doNothingAction = {
+    type: 'DO_NOTHING'
+}
+
 describe('reducer', () => {
     it('contains a plugins reducer', () => {
-        const action = {
-            type: 'DO_NOTHING'
-        };
-        const state = reducer(undefined, action);
+        const state = reducer(undefined, doNothingAction);
         expect(state).to.include.key('plugins');
     });
 
     it('contains an artifacts reducer', () => {
-        const action = {
-            type: 'DO_NOTHING'
-        };
-        const state = reducer(undefined, action);
+        const state = reducer(undefined, doNothingAction);
         expect(state).to.include.key('artifacts');
     });
 
     it('contains a connection reducer', () => {
-        const action = {
-            type: 'DO_NOTHING'
-        };
-        const state = reducer(undefined, action);
+        const state = reducer(undefined, doNothingAction);
         expect(state).to.include.key('connection');
+    });
+
+    it('contains a jobs reducer', () => {
+        const state = reducer(undefined, doNothingAction);
+        expect(state).to.include.key('jobs');
     });
 
     it('handles NEW_ARTIFACT', () => {
@@ -38,13 +38,16 @@ describe('reducer', () => {
         const action = actions.newArtifact(artifact);
         const state = reducer(undefined, action);
 
-        expect(state.artifacts).to.not.be.empty;
-        expect(state.artifacts).includes.something.that.eql(artifact);
+        expect(state.artifacts.artifacts).to.not.be.empty;
+        expect(state.artifacts.artifacts).includes.something.that.eql(artifact);
     });
 
     it('handles DELETE_ARTIFACT', () => {
         const initialState = {
-            artifacts: []
+            artifacts: {
+                artifacts: [],
+                inputArtifacts: {}
+            }
         };
         const artifact = {
             name: 'table',
@@ -57,8 +60,8 @@ describe('reducer', () => {
 
         deepFreeze(state);
         const nextState = reducer(state, action);
-        expect(nextState.artifacts).to.not.include.something.that.eql(artifact);
-        expect(nextState.artifacts).to.be.empty;
+        expect(nextState.artifacts.artifacts).to.not.include.something.that.eql(artifact);
+        expect(nextState.artifacts.artifacts).to.be.empty;
     });
 
     it('handles FOUND_WORKFLOW', () => {
@@ -80,13 +83,13 @@ describe('reducer', () => {
             }]
         };
 
-        const state = reducer(initialState, {type: 'DO_NOTHING'});
+        const state = reducer(initialState, doNothingAction);
         const action = {
             type: 'FOUND_WORKFLOW',
             plugin: 'diversity',
             workflow: {
                 name: 'beta_diversity',
-                description: 'Produces: DistanceMatrix',
+                description: 'Produces: DistanceMatrix'
             }
         };
 

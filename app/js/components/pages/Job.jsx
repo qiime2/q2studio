@@ -1,16 +1,7 @@
 import React from 'react';
 
-// { Artifacts.filter(artifact => artifact.name ===
-//     name).map(artifact =>
-//         <option
-//             key={ `${artifact.uuid}-dropdown` }
-//             value="{{ artifact.uuid }}"
-//         >
-//             {artifact.name} - {artifact.uuid}
-//         </option>
-// )}
 
-const Job = ({ plugin, workflow, onClickSubmit, router }) => {
+const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -30,7 +21,14 @@ const Job = ({ plugin, workflow, onClickSubmit, router }) => {
                         className="form-control"
                         name={`in-${name}`}
                     >
-
+                        { Object.keys(inputArtifacts).map(key => (
+                            key === name ?
+                                inputArtifacts[key].map(artifact =>
+                                    <option>
+                                        {artifact.name} - {`(${artifact.uuid})`}
+                                    </option>
+                                ) : null
+                        ))}
                     </select>
                 </fieldset>
             )}
@@ -80,7 +78,7 @@ const Job = ({ plugin, workflow, onClickSubmit, router }) => {
             </button>
             <button
                 className="btn btn-danger pull-right"
-                onClick={() => router.goBack()}
+                onClick={onClickCancel}
             >
                 Cancel
             </button>
@@ -88,10 +86,17 @@ const Job = ({ plugin, workflow, onClickSubmit, router }) => {
   );};
 
 Job.propTypes = {
+    inputArtifacts: React.PropTypes.object,
     plugin: React.PropTypes.object,
     workflow: React.PropTypes.object,
     router: React.PropTypes.object,
-    onClickSubmit: React.PropTypes.func
+    onClickSubmit: React.PropTypes.func,
+    onClickCancel: React.PropTypes.func
+};
+
+Job.contextTypes = {
+    store: React.PropTypes.object,
+    dispatch: React.PropTypes.func
 };
 
 export default Job;
