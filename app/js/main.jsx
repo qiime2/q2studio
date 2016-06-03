@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 
 import App from './containers/App';
-import Flow from './components/pages/Flow';
+import Flow from './containers/Flow';
 import reducer from './reducers';
 import Auth from './containers/Auth';
 

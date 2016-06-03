@@ -1,53 +1,43 @@
 import React from 'react';
 
-const Flow = ({ routeParams: { pluginId, flowId } }, { store }) => {
-    const Artifacts = store.getState().artifacts;
-    const plugin = store.getState().plugins.filter(plug => plug.name === pluginId)[0];
-    const flow = plugin.workflows.filter(workflow => workflow.name === flowId)[0];
+
+const Flow = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
     let counter = 1;
     return (
         <div className="container">
             <div className="page-header">
-                <h1>{plugin.name}: {flow.description}</h1>
+                <h1>{plugin.name}: {workflow.description}</h1>
             </div>
             <form>
-            { flow.inputArtifacts.map(({ name }) =>
+            { workflow.inputArtifacts.map(({ name }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-dropdown${counter++}` }
                 >
-                    <label htmlFor="in-{ name }">
+                    <label htmlFor={`in-${name}`}>
                         Input Artifact: { name }
                     </label>
                     <select
                         className="form-control"
-                        name="in-{ name }"
+                        name={`in-${name}`}
                     >
-                          { Artifacts.filter(artifact => artifact.name ===
-                              name).map(artifact =>
-                                  <option
-                                      key={ `${artifact.uuid}-dropdown` }
-                                      value="{{ artifact.uuid }}"
-                                  >
-                                      {artifact.name} - {artifact.uuid}
-                                  </option>
-                          )}
+
                     </select>
                 </fieldset>
             )}
 
-            { flow.inputParameters.map(({ name, type }) =>
+            { workflow.inputParameters.map(({ name, type }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-text-input${counter++}` }
                 >
-                    <label htmlFor="param-{ name }">
+                    <label htmlFor={`param-${name}`}>
                         Input Parameter: { name }
                     </label>
                     <input
                         type="text-field"
                         className="form-control"
-                        name="param-{ name }"
+                        name={`param-${name}`}
                         placeholder={ type }
                     />
                 </fieldset>
@@ -56,35 +46,44 @@ const Flow = ({ routeParams: { pluginId, flowId } }, { store }) => {
                 <br />
                 <br />
 
-            { flow.outputArtifacts.map(({ name, type }) =>
+            { workflow.outputArtifacts.map(({ name, type }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-text-output${counter++}` }
                 >
-                    <label htmlFor="out-{ name }">
+                    <label htmlFor={`out-${name}`}>
                         Output Name: { name }
                     </label>
                     <input
                         type="text-field"
                         className="form-control"
-                        name="out-{ name }"
+                        name={`out-${name}`}
                         placeholder={ type }
                     />
                 </fieldset>
             )}
-
-
-                <button type="submit" className="btn btn-primary">Go!</button>
             </form>
+            <button
+                className="btn btn-primary"
+                onClick={onClickSubmit}
+            >
+                Go!
+            </button>
+            <button
+                className="btn btn-danger pull-right"
+                onClick={onClickCancel}
+            >
+                Cancel
+            </button>
         </div>
   );};
 
 Flow.propTypes = {
-    routeParams: React.PropTypes.object
-};
-
-Flow.contextTypes = {
-    store: React.PropTypes.object
+    plugin: React.PropTypes.object,
+    workflow: React.PropTypes.object,
+    router: React.PropTypes.object,
+    onClickSubmit: React.PropTypes.func,
+    onClickCancel: React.PropTypes.func
 };
 
 export default Flow;
