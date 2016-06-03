@@ -1,17 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { Router, Route, browserHistory } from 'react-router';
+import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import queryString from 'query-string';
 
-import actions from './actions';
 import App from './containers/App';
 import Flow from './components/pages/Flow';
 import reducer from './reducers';
+import Auth from './containers/Auth';
 
 const logger = createLogger();
 
@@ -26,27 +25,15 @@ let store = createStore(
     )
 );
 
-const history = syncHistoryWithStore(browserHistory, store);
+const history = syncHistoryWithStore(hashHistory, store);
 
 render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App} />
             <Route path="job/:pluginId/:flowId" component={Flow} />
+            <Route path="type=:type&uri=:uri&secret_key=:secret_key" component={Auth} />
         </Router>
     </Provider>,
     document.getElementById('root')
 );
-
-const parseHash = () => {
-    const { type } = queryString.parse(location.hash);
-    if (type === 'ESTABLISH_CONNECTION') {
-        const { uri, secret_key } = queryString.parse(location.hash);
-        store.dispatch(actions.establishConnection(uri, secret_key));
-        window.history.replaceState('', document.title, window.location.pathname);
-    }
-};
-
-window.onhashchange = parseHash;
-
-parseHash();
