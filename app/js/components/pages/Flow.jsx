@@ -64,16 +64,16 @@ const Flow = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
             )}
             </form>
             <button
-                className="btn btn-primary"
-                onClick={onClickSubmit}
-            >
-                Go!
-            </button>
-            <button
-                className="btn btn-danger pull-right"
+                className="btn btn-danger"
                 onClick={onClickCancel}
             >
                 Cancel
+            </button>
+            <button
+                className="btn btn-primary pull-right"
+                onClick={onClickSubmit}
+            >
+                Go!
             </button>
         </div>
   );};
