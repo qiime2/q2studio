@@ -62,12 +62,12 @@ def api_workflows(plugin_name):
 
 @v1.route('/artifacts', methods=['GET'])
 def api_artifacts():
-    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qtf'))
+    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qzf'))
     artifacts = [
         {
             'name': os.path.splitext(os.path.split(path)[1])[0],
-            'uuid': str(Artifact(path).uuid),
-            'type': str(Artifact(path).type),
+            'uuid': str(Artifact.load(path).uuid),
+            'type': str(Artifact.load(path).type),
             'path': path,
             'uri': 'artifacts/%s' % (os.path.splitext(
                                         os.path.split(path)[1])[0])
