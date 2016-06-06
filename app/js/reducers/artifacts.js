@@ -1,35 +1,20 @@
-const initialState = {
-    artifacts: [],
-    inputArtifacts: {}
-};
+const initialState = [];
 
 const artifactsReducer = (state = initialState, action) => {
     switch (action.type) {
     case 'NEW_ARTIFACT': {
         const { artifact } = action;
-        const newState = {
+        const newState = [
             ...state,
-            artifacts: [
-                ...state.artifacts,
-                artifact
-            ]
-        };
+            artifact
+        ];
         return newState;
     }
     case 'DELETE_ARTIFACT': {
-        const filteredArtifacts = state.artifacts.filter(a => a.uuid !== action.uuid);
-        const newState = {
-            ...state,
-            artifacts: filteredArtifacts
-        };
-        return newState;
-    }
-    case 'LINK_INPUT_ARTIFACT': {
-        const { input: { name }, artifacts } = action;
-        const newState = {
-            ...state
-        };
-        newState.inputArtifacts[name] = artifacts;
+        const filteredState = state.filter(a => a.uuid !== action.uuid);
+        const newState = [
+            ...filteredState
+        ];
         return newState;
     }
     default:

@@ -24,13 +24,9 @@ export const loadWorkflows = () => {
             fetch(`http://${uri.split('/')[0]}${availableApis[0]}${plugin.workflowsURI}`)
             .then((response) => (response.json()))
             .then((json) => {
-                Object.keys(json.workflows).map(workflow => {
-                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow]));
-                    json.workflows[workflow].input_artifacts.map(input =>
-                        dispatch(actions.fetchInputArtifacts(input))
-                    );
-                    return true;
-                });
+                Object.keys(json.workflows).map(workflow =>
+                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow]))
+                );
             })
         ));
     };

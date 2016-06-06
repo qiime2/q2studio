@@ -5,7 +5,7 @@ import actions from '../actions';
 import Job from '../components/pages/Job';
 
 const mapStateToProps = (state, { params: { pluginId, flowId } }) => {
-    const { artifacts: { inputArtifacts } } = state;
+    const { jobs: { inputArtifacts } } = state;
     const plugin = state.plugins.filter(p => p.name === pluginId)[0];
     const workflow = plugin.workflows.filter(w => w.name === flowId)[0];
     return ({
@@ -17,7 +17,7 @@ const mapStateToProps = (state, { params: { pluginId, flowId } }) => {
 
 const mapDispatchToProps = (dispatch, { router }) => ({
     onClickSubmit: (job) => dispatch(actions.startJob(job)),
-    onClickCancel: () => router.goBack()
+    onClickCancel: () => { router.goBack(); dispatch(actions.clearJobState()); }
 });
 
 export default withRouter(

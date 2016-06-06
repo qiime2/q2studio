@@ -45,7 +45,7 @@ def api_workflows(plugin_name):
             {
                 'name': name,
                 'type': repr(type_[0]),
-                'uri': '%s/%s/%s/inputartifacts' % (plugin_name, key, name)
+                'uri': 'artifacts/%s/%s/%s' % (plugin_name, key, name)
             }
             for name, type_ in value.signature.inputs.items()
         ]
@@ -83,7 +83,7 @@ def delete_artifact(name):
         'success': True
     }
     artifact_json = request.get_json()['artifact']
-    artifact = Artifact(artifact_json['path'])
+    artifact = Artifact.load(artifact_json['path'])
     if (str(artifact.uuid) == artifact_json['uuid']):
         try:
             os.remove(artifact_json['path'])
@@ -97,14 +97,14 @@ def delete_artifact(name):
 def api_input_artifacts(plugin_name, workflow_name, input_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
     workflow = plugin.workflows[workflow_name]
-    input_type = workflow.signature.input_artifacts[input_name]
+    input_type = workflow.signature.inputs[input_name][0]
     input_artifacts = []
-    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qtf'))
+    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qzf'))
     artifacts = [
         {
             'name': os.path.splitext(os.path.split(path)[1])[0],
-            'uuid': str(Artifact(path).uuid),
-            'type': str(Artifact(path).type),
+            'uuid': str(Artifact.load(path).uuid),
+            'type': str(Artifact.load(path).type),
             'path': path,
             'uri': 'artifacts/%s' % (os.path.splitext(
                                         os.path.split(path)[1])[0])
@@ -112,6 +112,6 @@ def api_input_artifacts(plugin_name, workflow_name, input_name):
         for path in artifact_paths
     ]
     for artifact in artifacts:
-        if Artifact(artifact['path']).type < input_type:
+        if Artifact.load(artifact['path']).type <= input_type:
             input_artifacts.append(artifact)
     return jsonify({'input_artifacts': input_artifacts})

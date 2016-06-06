@@ -10,12 +10,6 @@ export const newArtifact = (artifact) => ({
     artifact
 });
 
-export const linkInputArtifact = (input, artifacts) => ({
-    type: 'LINK_INPUT_ARTIFACT',
-    input,
-    artifacts
-});
-
 export const expectingArtifact = () => ({
     type: 'EXPECTING_ARTIFACT'
 });
@@ -24,17 +18,6 @@ export const hiddenDeleteArtifact = (uuid) => ({
     type: 'DELETE_ARTIFACT',
     uuid
 });
-
-export const fetchInputArtifacts = (input) => {
-    return (dispatch, getState) => {
-        const { connection: { uri, availableApis } } = getState();
-        fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}`, {
-            method: 'GET'
-        })
-        .then((response) => (response.json()))
-        .then(({ input_artifacts }) => dispatch(linkInputArtifact(input, input_artifacts)));
-    };
-};
 
 export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {

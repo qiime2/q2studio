@@ -21,14 +21,15 @@ const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel })
                         className="form-control"
                         name={`in-${name}`}
                     >
-                        { Object.keys(inputArtifacts).map(key => (
-                            key === name ?
-                                inputArtifacts[key].map(artifact =>
-                                    <option>
-                                        {artifact.name} - {`(${artifact.uuid})`}
-                                    </option>
-                                ) : null
-                        ))}
+                        { inputArtifacts[name] !== undefined ?
+                            inputArtifacts[name].map(artifact =>
+                                <option
+                                    key={artifact.uuid}
+                                >
+                                    {artifact.name} - {`(${artifact.uuid})`}
+                                </option>
+                            ) : null
+                        }
                     </select>
                 </fieldset>
             )}
