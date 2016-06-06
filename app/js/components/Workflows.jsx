@@ -2,7 +2,7 @@ import React from 'react';
 
 import Workflow from './Workflow';
 
-const Workflows = ({ plugin }, { router }) => (
+const Workflows = ({ plugin, router }) => (
     <div>
         { plugin.workflows.map(workflow => (
             <Workflow
@@ -16,10 +16,7 @@ const Workflows = ({ plugin }, { router }) => (
 
 
 Workflows.propTypes = {
-    plugin: React.PropTypes.object
-};
-
-Workflows.contextTypes = {
+    plugin: React.PropTypes.object,
     router: React.PropTypes.object
 };
 
