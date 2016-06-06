@@ -8,7 +8,7 @@ from time import time
 from flask import request, abort
 
 __KEY = os.urandom(33)
-__WHITELIST = ["GET", "OPTIONS"]
+__WHITELIST = ['GET', 'OPTIONS']
 
 
 def validate_request_authentication():
@@ -34,14 +34,14 @@ def make_url(host, ihost):
         # ('auth', 'HMAC-sha256'),
         # ('public_key', 'self'),
         ('secret_key', base64.b64encode(__KEY).decode('ascii'))
-        # 'digest_members': "VERB,URL,Date,Content-Type,Content-Length,BODY"
+        # 'digest_members': 'VERB,URL,Date,Content-Type,Content-Length,BODY'
     ])
-    return "http://%s/#%s" % (ihost, urllib.parse.urlencode(args))
+    return 'http://%s/#%s' % (ihost, urllib.parse.urlencode(args))
 
 
 def make_b64_digest(content):
     hmac_generator = hmac.new(__KEY,
-                              digestmod="sha256")
+                              digestmod='sha256')
     for value in content:
         hmac_generator.update(value)
     digest = hmac_generator.digest()
