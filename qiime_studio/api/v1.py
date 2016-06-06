@@ -34,40 +34,40 @@ def api_workflows(plugin_name):
     for key, value in plugin.workflows.items():
         workflows_dict[key] = {}
         workflows_dict[key]['name'] = key
-        workflows_dict[key]['info'] = 'Produces: {}'.format(
-            ', '.join([
-                repr(type)
-                for type in value.signature.output_artifacts.values()
+        workflows_dict[key]['info'] = "Produces: {}".format(
+            ", ".join([
+                repr(type_[0])
+                for type_ in value.signature.outputs.values()
             ])
         )
         workflows_dict[key]['description'] = value.signature.name
         workflows_dict[key]['input_artifacts'] = [
             {
                 'name': name,
-                'type': repr(type),
-                'uri': 'artifacts/%s/%s/%s' % (plugin_name, key, name)
+                'type': repr(type_[0]),
+                'uri': '%s/%s/%s/inputartifacts' % (plugin_name, key, name)
             }
-            for name, type in value.signature.input_artifacts.items()
+            for name, type_ in value.signature.inputs.items()
         ]
         workflows_dict[key]['input_parameters'] = [
-            {'name': name, 'type': repr(type)}
-            for name, type in value.signature.input_parameters.items()
+            {'name': name, 'type': repr(type_[0])}
+            for name, type_ in value.signature.parameters.items()
         ]
         workflows_dict[key]['output_artifacts'] = [
-            {'name': name, 'type': repr(type)}
-            for name, type in value.signature.output_artifacts.items()
+            {'name': name, 'type': repr(type_[0])}
+            for name, type_ in value.signature.outputs.items()
         ]
     return jsonify({'workflows': workflows_dict})
 
 
 @v1.route('/artifacts', methods=['GET'])
 def api_artifacts():
-    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qtf'))
+    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qzf'))
     artifacts = [
         {
             'name': os.path.splitext(os.path.split(path)[1])[0],
-            'uuid': str(Artifact(path).uuid),
-            'type': str(Artifact(path).type),
+            'uuid': str(Artifact.load(path).uuid),
+            'type': str(Artifact.load(path).type),
             'path': path,
             'uri': 'artifacts/%s' % (os.path.splitext(
                                         os.path.split(path)[1])[0])

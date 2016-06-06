@@ -4,7 +4,7 @@ import Plugins from '../components/Plugins.jsx';
 
 const mapStateToProps = (state) => {
     return {
-        plugins: state.plugins
+        plugins: state.plugins.filter(plugin => plugin.workflows.length !== 0)
     };
 };
 
