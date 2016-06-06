@@ -84,7 +84,7 @@ def delete_artifact(name):
     }
     artifact_json = request.get_json()['artifact']
     artifact = Artifact.load(artifact_json['path'])
-    if (str(artifact.uuid) == artifact_json['uuid']):
+    if str(artifact.uuid) == artifact_json['uuid']:
         try:
             os.remove(artifact_json['path'])
         except OSError:

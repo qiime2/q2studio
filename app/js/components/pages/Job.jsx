@@ -95,9 +95,4 @@ Job.propTypes = {
     onClickCancel: React.PropTypes.func
 };
 
-Job.contextTypes = {
-    store: React.PropTypes.object,
-    dispatch: React.PropTypes.func
-};
-
 export default Job;
