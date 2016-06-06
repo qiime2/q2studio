@@ -31,10 +31,7 @@ def make_url(host, ihost):
     args = collections.OrderedDict([
         ('type', 'ESTABLISH_CONNECTION'),
         ('uri', host),
-        # ('auth', 'HMAC-sha256'),
-        # ('public_key', 'self'),
         ('secret_key', base64.b64encode(__KEY).decode('ascii'))
-        # 'digest_members': 'VERB,URL,Date,Content-Type,Content-Length,BODY'
     ])
     return 'http://%s/#%s' % (ihost, urllib.parse.urlencode(args))
 
