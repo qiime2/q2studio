@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import es6Promise from 'es6-promise';
 
-import actions from './index';
+import { makeB64Digest } from '../util/auth';
 
 es6Promise.polyfill();
 
@@ -14,23 +14,21 @@ export const expectingArtifact = () => ({
     type: 'EXPECTING_ARTIFACT'
 });
 
-export const hiddenDeleteArtifact = (uuid) => ({
+export const removedArtifact = (uuid) => ({
     type: 'DELETE_ARTIFACT',
     uuid
 });
 
 export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {
-        const { artifacts: { artifacts },
-                connection: { uri, availableApis, secretKey }
-        } = getState();
+        const { artifacts, connection: { uri, availableApis, secretKey } } = getState();
         const httpVerb = 'DELETE';
         const timestamp = Date.now();
-        const artifact = artifacts.filter(a => a.uuid === uuid)[0];
+        const artifact = artifacts.find(a => a.uuid === uuid);
         const body = JSON.stringify({
             artifact
         });
-        const digest = actions.makeB64Digest(secretKey, httpVerb, timestamp, body);
+        const digest = makeB64Digest(secretKey, httpVerb, timestamp, body);
         fetch(`http://${uri.split('/')[0]}${availableApis[0]}${artifact.uri}`, {
             method: httpVerb,
             headers: new Headers({
@@ -48,7 +46,7 @@ export const deleteArtifact = (uuid) => {
         })
         .then((json) => {
             if (json.success) {
-                dispatch(hiddenDeleteArtifact(uuid));
+                dispatch(removedArtifact(uuid));
             }
         });
     };

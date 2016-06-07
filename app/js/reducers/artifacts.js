@@ -11,10 +11,7 @@ const artifactsReducer = (state = initialState, action) => {
         return newState;
     }
     case 'DELETE_ARTIFACT': {
-        const filteredState = state.filter(a => a.uuid !== action.uuid);
-        const newState = [
-            ...filteredState
-        ];
+        const newState = state.filter(a => a.uuid !== action.uuid);
         return newState;
     }
     default:

@@ -17,8 +17,7 @@ const Workflows = ({ plugin, openWorkflow }) => (
 
 Workflows.propTypes = {
     openWorkflow: React.PropTypes.func,
-    plugin: React.PropTypes.object,
-    router: React.PropTypes.object
+    plugin: React.PropTypes.object
 };
 
 export default Workflows;

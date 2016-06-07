@@ -31,7 +31,7 @@ render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App} />
-            <Route path="job/:pluginId/:flowId" component={Job} />
+            <Route path="job/:pluginId/:jobId" component={Job} />
             <Route path="type=:type&uri=:uri&secret_key=:secret_key" component={Auth} />
         </Router>
     </Provider>,

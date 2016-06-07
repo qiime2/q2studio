@@ -25,7 +25,7 @@ export const fetchInputArtifacts = (workflow) => {
             fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}`, {
                 method: 'GET'
             })
-            .then((response) => (response.json()))
+            .then(response => response.json())
             .then(({ input_artifacts }) => dispatch(linkInputArtifact(input, input_artifacts)))
         ));
     };

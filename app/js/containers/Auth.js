@@ -21,8 +21,6 @@ class Auth extends React.Component {
 Auth.propTypes = {
     params: React.PropTypes.object,
     type: React.PropTypes.string,
-    uri: React.PropTypes.string,
-    secret_key: React.PropTypes.string,
     router: React.PropTypes.object,
     establishConnection: React.PropTypes.func
 };

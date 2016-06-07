@@ -4,10 +4,10 @@ import { withRouter } from 'react-router';
 import actions from '../actions';
 import Job from '../components/pages/Job';
 
-const mapStateToProps = (state, { params: { pluginId, flowId } }) => {
+const mapStateToProps = (state, { params: { pluginId, jobId } }) => {
     const { jobs: { inputArtifacts } } = state;
-    const plugin = state.plugins.filter(p => p.name === pluginId)[0];
-    const workflow = plugin.workflows.filter(w => w.name === flowId)[0];
+    const plugin = state.plugins.find(p => p.name === pluginId);
+    const workflow = plugin.workflows.find(w => w.name === jobId);
     return ({
         plugin,
         workflow,

@@ -90,7 +90,6 @@ Job.propTypes = {
     inputArtifacts: React.PropTypes.object,
     plugin: React.PropTypes.object,
     workflow: React.PropTypes.object,
-    router: React.PropTypes.object,
     onClickSubmit: React.PropTypes.func,
     onClickCancel: React.PropTypes.func
 };

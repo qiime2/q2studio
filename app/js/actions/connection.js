@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import es6Promise from 'es6-promise';
-import CryptoJS from 'crypto-js';
 
 import actions from './index';
+import { makeB64Digest } from '../util/auth';
 
 es6Promise.polyfill();
 
@@ -26,23 +26,6 @@ export const updateConnectionStatus = (status) => ({
     type: 'UPDATE_STATUS',
     status
 });
-
-export const makeB64Digest = (secretKey, httpVerb, requestTime, body = JSON.stringify({})) => {
-    const byteArray = CryptoJS.enc.Base64.parse(secretKey);
-    const message = [
-        httpVerb,
-        window.location.origin,
-        requestTime,
-        'application/json',
-        body.length
-    ];
-
-    const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, byteArray);
-    message.map(value => hmac.update(value.toString()));
-    const hash = hmac.finalize().toString(CryptoJS.enc.Base64);
-
-    return hash;
-};
 
 const shakeHandsWithServer = () => {
     return (dispatch, getState) => {

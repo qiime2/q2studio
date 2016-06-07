@@ -33,7 +33,7 @@ const pluginsReducer = (state = initialState, action) => {
             inputParameters: action.workflow.input_parameters,
             outputArtifacts: action.workflow.output_artifacts
         };
-        const originalPlugin = state.filter(plugin => plugin.name === action.plugin)[0];
+        const originalPlugin = state.find(plugin => plugin.name === action.plugin);
         const filteredState = state.filter(plugin => plugin.name !== action.plugin);
         const newPlugin = addWorkflow(originalPlugin, workflow);
         const newState = [
