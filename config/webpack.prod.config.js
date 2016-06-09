@@ -27,7 +27,13 @@ module.exports = extendConfig((config) => {
                 },
                 inject: true
             }),
-            new ExtractTextPlugin('css/main.css')
-        ]
+            new ExtractTextPlugin('css/main.css'),
+            new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: JSON.stringify('production')
+                }
+            })
+        ],
+        target: 'electron-renderer'
     };
 }, false);

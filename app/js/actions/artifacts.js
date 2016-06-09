@@ -1,9 +1,4 @@
-import fetch from 'isomorphic-fetch';
-import es6Promise from 'es6-promise';
-
 import { makeB64Digest } from '../util/auth';
-
-es6Promise.polyfill();
 
 export const newArtifact = (artifact) => ({
     type: 'NEW_ARTIFACT',
@@ -22,14 +17,15 @@ export const removedArtifact = (uuid) => ({
 export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {
         const { artifacts, connection: { uri, availableApis, secretKey } } = getState();
+        const artifact = artifacts.find(a => a.uuid === uuid);
+        const url = `http://${uri.split('/')[0]}${availableApis[0]}${artifact.uri}`;
         const httpVerb = 'DELETE';
         const timestamp = Date.now();
-        const artifact = artifacts.find(a => a.uuid === uuid);
         const body = JSON.stringify({
             artifact
         });
-        const digest = makeB64Digest(secretKey, httpVerb, timestamp, body);
-        fetch(`http://${uri.split('/')[0]}${availableApis[0]}${artifact.uri}`, {
+        const digest = makeB64Digest(secretKey, httpVerb, url, timestamp, body);
+        fetch(url, {
             method: httpVerb,
             headers: new Headers({
                 Authorization: `HMAC-SHA256 ${digest}`,

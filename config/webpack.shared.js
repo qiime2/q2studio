@@ -1,6 +1,7 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+
 module.exports = function extendConfig(override, isDev) {
     var cssLoader = 'css-loader?modules&importLoaders=1' + // eslint-disable-line no-var
                     '&localIdentName=[name]--[local]-[hash:base64:5]!postcss-loader';
@@ -38,6 +39,10 @@ module.exports = function extendConfig(override, isDev) {
                 {
                     test: /\.css$/,
                     loader: cssLoader
+                },
+                {
+                    test: /\.json$/,
+                    loader: 'json-loader'
                 }
             ]
         },

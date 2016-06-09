@@ -1,10 +1,10 @@
 import CryptoJS from 'crypto-js';
 
-export const makeB64Digest = (secretKey, httpVerb, requestTime, body = JSON.stringify({})) => {
+export const makeB64Digest = (secretKey, httpVerb, url, requestTime, body = JSON.stringify({})) => {
     const byteArray = CryptoJS.enc.Base64.parse(secretKey);
     const message = [
         httpVerb,
-        window.location.origin,
+        url,
         requestTime,
         'application/json',
         body.length
