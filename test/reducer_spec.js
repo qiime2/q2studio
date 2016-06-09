@@ -4,29 +4,29 @@ import deepFreeze from 'deep-freeze';
 import reducer from '../app/js/reducers';
 import actions from '../app/js/actions';
 
+const doNothingAction = {
+    type: 'DO_NOTHING'
+}
+
 describe('reducer', () => {
     it('contains a plugins reducer', () => {
-        const action = {
-            type: 'DO_NOTHING'
-        };
-        const state = reducer(undefined, action);
+        const state = reducer(undefined, doNothingAction);
         expect(state).to.include.key('plugins');
     });
 
     it('contains an artifacts reducer', () => {
-        const action = {
-            type: 'DO_NOTHING'
-        };
-        const state = reducer(undefined, action);
+        const state = reducer(undefined, doNothingAction);
         expect(state).to.include.key('artifacts');
     });
 
     it('contains a connection reducer', () => {
-        const action = {
-            type: 'DO_NOTHING'
-        };
-        const state = reducer(undefined, action);
+        const state = reducer(undefined, doNothingAction);
         expect(state).to.include.key('connection');
+    });
+
+    it('contains a jobs reducer', () => {
+        const state = reducer(undefined, doNothingAction);
+        expect(state).to.include.key('jobs');
     });
 
     it('handles NEW_ARTIFACT', () => {
@@ -51,9 +51,9 @@ describe('reducer', () => {
             uuid: 'f16ca3d0-fe83-4b1e-8eea-7e35db3f6b0f',
             type: 'FeatureTable[Frequency]'
         };
-        var action = actions.newArtifact(artifact);
+        let action = actions.newArtifact(artifact);
         const state = reducer(initialState, action);
-        action = actions.deleteArtifact(artifact.uuid);
+        action = actions.removedArtifact(artifact.uuid);
 
         deepFreeze(state);
         const nextState = reducer(state, action);
@@ -80,13 +80,13 @@ describe('reducer', () => {
             }]
         };
 
-        const state = reducer(initialState, {type: 'DO_NOTHING'});
+        const state = reducer(initialState, doNothingAction);
         const action = {
             type: 'FOUND_WORKFLOW',
             plugin: 'diversity',
             workflow: {
                 name: 'beta_diversity',
-                description: 'Produces: DistanceMatrix',
+                description: 'Produces: DistanceMatrix'
             }
         };
 

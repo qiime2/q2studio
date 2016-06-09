@@ -8,6 +8,7 @@ parserOptions:
         experimentalObjectRestSpread: true
 # Override a couple of rules because no style guide is perfect.
 rules:
+    no-alert: off
     comma-dangle: [error, never]
     # PEP8 uses 4 spaces, it's just easier this way.
     indent: [error, 4]

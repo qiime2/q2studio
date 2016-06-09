@@ -42,8 +42,4 @@ Plugins.propTypes = {
     plugins: React.PropTypes.array
 };
 
-Plugins.contextTypes = {
-    router: React.PropTypes.object
-};
-
 export default Plugins;

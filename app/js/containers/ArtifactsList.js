@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Artifacts from '../components/Artifacts';
 import actions from '../actions';
 
-const mapStateToProps = (state) => ({
-    artifacts: state.artifacts
+const mapStateToProps = ({ artifacts }) => ({
+    artifacts
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 
 import App from './containers/App';
-import Flow from './containers/Flow';
+import Job from './containers/Job';
 import reducer from './reducers';
 import Auth from './containers/Auth';
 
@@ -31,7 +31,7 @@ render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App} />
-            <Route path="job/:pluginId/:flowId" component={Flow} />
+            <Route path="job/:pluginId/:jobId" component={Job} />
             <Route path="type=:type&uri=:uri&secret_key=:secret_key" component={Auth} />
         </Router>
     </Provider>,

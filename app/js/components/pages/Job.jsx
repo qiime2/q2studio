@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Flow = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
+const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -21,7 +21,15 @@ const Flow = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
                         className="form-control"
                         name={`in-${name}`}
                     >
-
+                        { inputArtifacts[name] !== undefined ?
+                            inputArtifacts[name].map(artifact =>
+                                <option
+                                    key={artifact.uuid}
+                                >
+                                    {artifact.name} - {`(${artifact.uuid})`}
+                                </option>
+                            ) : null
+                        }
                     </select>
                 </fieldset>
             )}
@@ -78,12 +86,12 @@ const Flow = ({ plugin, workflow, onClickSubmit, onClickCancel }) => {
         </div>
   );};
 
-Flow.propTypes = {
+Job.propTypes = {
+    inputArtifacts: React.PropTypes.object,
     plugin: React.PropTypes.object,
     workflow: React.PropTypes.object,
-    router: React.PropTypes.object,
     onClickSubmit: React.PropTypes.func,
     onClickCancel: React.PropTypes.func
 };
 
-export default Flow;
+export default Job;

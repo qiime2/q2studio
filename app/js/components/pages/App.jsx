@@ -9,7 +9,7 @@ const App = ({ connected }) => (
         <Loading loaded={connected} />
         <div className="container">
             <div className="page-header">
-                <h1>analysis-dir</h1>
+                <h1>QIIME Studio</h1>
             </div>
             <PluginsList />
             <ArtifactsList />

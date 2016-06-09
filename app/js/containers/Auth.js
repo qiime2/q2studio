@@ -4,18 +4,23 @@ import { withRouter } from 'react-router';
 
 import actions from '../actions';
 
-const Auth = ({ params: { type }, router, establishConnection }) => {
-    if (type === 'ESTABLISH_CONNECTION') {
-        establishConnection();
-        router.replace('/');
+class Auth extends React.Component {
+    componentWillMount() {
+        if (this.props.params.type === 'ESTABLISH_CONNECTION') {
+            this.props.establishConnection();
+            this.props.router.replace('/');
+        }
+        return null;
     }
-    return null;
-};
+
+    render() {
+        return null;
+    }
+}
 
 Auth.propTypes = {
+    params: React.PropTypes.object,
     type: React.PropTypes.string,
-    uri: React.PropTypes.string,
-    secret_key: React.PropTypes.string,
     router: React.PropTypes.object,
     establishConnection: React.PropTypes.func
 };
