@@ -25,6 +25,7 @@ const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel })
                             inputArtifacts[name].map(artifact =>
                                 <option
                                     key={artifact.uuid}
+                                    value={artifact.path}
                                 >
                                     {artifact.name} - {`(${artifact.uuid})`}
                                 </option>
@@ -79,7 +80,17 @@ const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel })
             </button>
             <button
                 className="btn btn-primary pull-right"
-                onClick={onClickSubmit}
+                onClick={() => {
+                    const formData = new FormData(document.querySelector('form'));
+                    for (const [key, value] of formData.entries()) {
+                        // this could eventually decorate the inputs that are invalid
+                        if (value === '') {
+                            alert(`${key} must not be blank.`);
+                            return;
+                        }
+                    }
+                    onClickSubmit(workflow, formData);
+                }}
             >
                 Go!
             </button>

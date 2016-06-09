@@ -72,11 +72,7 @@ describe('reducer', () => {
             name: 'diversity',
             workflows: [{
                 name: 'beta_diversity',
-                info: undefined,
-                description: 'Produces: DistanceMatrix',
-                inputArtifacts: undefined,
-                inputParameters: undefined,
-                outputArtifacts: undefined
+                description: 'Produces: DistanceMatrix'
             }]
         };
 

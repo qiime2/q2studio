@@ -26,12 +26,7 @@ const pluginsReducer = (state = initialState, action) => {
     }
     case 'FOUND_WORKFLOW': {
         const workflow = {
-            name: action.workflow.name,
-            info: action.workflow.info,
-            description: action.workflow.description,
-            inputArtifacts: action.workflow.input_artifacts,
-            inputParameters: action.workflow.input_parameters,
-            outputArtifacts: action.workflow.output_artifacts
+            ...action.workflow
         };
         const originalPlugin = state.find(plugin => plugin.name === action.plugin);
         const filteredState = state.filter(plugin => plugin.name !== action.plugin);

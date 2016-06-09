@@ -19,14 +19,14 @@ export const deleteArtifact = (uuid) => {
         const { artifacts, connection: { uri, availableApis, secretKey } } = getState();
         const artifact = artifacts.find(a => a.uuid === uuid);
         const url = `http://${uri.split('/')[0]}${availableApis[0]}${artifact.uri}`;
-        const httpVerb = 'DELETE';
+        const method = 'DELETE';
         const timestamp = Date.now();
         const body = JSON.stringify({
             artifact
         });
-        const digest = makeB64Digest(secretKey, httpVerb, url, timestamp, body);
+        const digest = makeB64Digest(secretKey, method, url, timestamp, body);
         fetch(url, {
-            method: httpVerb,
+            method,
             headers: new Headers({
                 Authorization: `HMAC-SHA256 ${digest}`,
                 'Content-Type': 'application/json',

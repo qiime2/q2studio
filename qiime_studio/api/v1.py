@@ -4,9 +4,11 @@ import os
 from flask import Blueprint, jsonify, request
 
 from .security import validate_request_authentication
-from qiime.sdk import PluginManager, Artifact
+from qiime.sdk import PluginManager, Artifact, SubprocessExecutor
 
 PLUGIN_MANAGER = PluginManager()
+SUBPROCESS_EXECUTOR = SubprocessExecutor()
+
 v1 = Blueprint('v1', __name__)
 v1.before_request(validate_request_authentication)
 
@@ -41,7 +43,7 @@ def api_workflows(plugin_name):
             ])
         )
         workflows_dict[key]['description'] = value.signature.name
-        workflows_dict[key]['input_artifacts'] = [
+        workflows_dict[key]['inputArtifacts'] = [
             {
                 'name': name,
                 'type': repr(type_[0]),
@@ -49,14 +51,16 @@ def api_workflows(plugin_name):
             }
             for name, type_ in value.signature.inputs.items()
         ]
-        workflows_dict[key]['input_parameters'] = [
+        workflows_dict[key]['inputParameters'] = [
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.parameters.items()
         ]
-        workflows_dict[key]['output_artifacts'] = [
+        workflows_dict[key]['outputArtifacts'] = [
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.outputs.items()
         ]
+        workflows_dict[key]['jobUri'] = \
+            'job/%s/%s' % (plugin_name, key)
     return jsonify({'workflows': workflows_dict})
 
 
@@ -93,7 +97,8 @@ def delete_artifact(name):
     return jsonify(result)
 
 
-@v1.route('/artifacts/<plugin_name>/<workflow_name>/<input_name>', methods=['GET'])
+@v1.route('/artifacts/<plugin_name>/<workflow_name>/<input_name>',
+          methods=['GET'])
 def api_input_artifacts(plugin_name, workflow_name, input_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
     workflow = plugin.workflows[workflow_name]
@@ -115,3 +120,41 @@ def api_input_artifacts(plugin_name, workflow_name, input_name):
         if Artifact.load(artifact['path']).type <= input_type:
             input_artifacts.append(artifact)
     return jsonify({'input_artifacts': input_artifacts})
+
+
+@v1.route('/job/<plugin_name>/<workflow_name>', methods=['POST'])
+def execute_workflow(plugin_name, workflow_name):
+    plugin = PLUGIN_MANAGER.plugins[plugin_name]
+    workflow = plugin.workflows[workflow_name]
+
+    request_body = request.get_json()['jobData']
+
+    process_values = {}
+    for key, value in request_body.items():
+        if '-' in key:
+            type_, name = key.split('-')
+            process_values[name] = value
+
+    inputs = {
+        name: process_values[name]
+        for name in workflow.signature.inputs
+    }
+    parameters = {
+        name: process_values[name]
+        for name in workflow.signature.parameters
+    }
+    outputs = {
+        name: process_values[name]
+        for name in workflow.signature.outputs
+    }
+    result = {
+        'success': True
+    }
+
+    process = SUBPROCESS_EXECUTOR(workflow, inputs, parameters, outputs)
+    completed_process = process.result()
+
+    if completed_process.returncode != 0:
+        result['success'] = False
+
+    return jsonify(result)
