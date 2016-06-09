@@ -1,26 +1,32 @@
 {
-  "name": "qiime-studio-frontend",
+  "name": "qiime-studio",
   "version": "0.0.1",
   "description": "A web-based interface for QIIME 2.",
   "author": "QIIME 2 Development Team",
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git://github.com/qiime2/qiime-studio-backend.git"
+    "url": "git://github.com/qiime2/qiime-studio.git"
   },
   "scripts": {
-    "lint": "npm run lint:js && npm run lint:css",
     "lint:css": "stylelint 'app/**/*.css' --config config/stylelint.yaml",
     "lint:js": "eslint app/ config/ --ext .js,.jsx --config config/eslint.yaml",
+    "lint": "npm run lint:js && npm run lint:css",
     "pretest": "npm run lint --silent",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive",
-    "start": "webpack-dev-server --config config/webpack.dev.config.js --host localhost --port 4242 --inline --hot",
-    "build": "webpack --config config/webpack.prod.config.js"
+    "build:render": "webpack --config config/webpack.prod.config.js",
+    "build:main": "webpack --config config/webpack.main.config.js",
+    "build": "npm run build:main && npm run build:render",
+    "start": "cross-env NODE_ENV=production electron -r babel-register build/main.js",
+    "dev:render": "webpack-dev-server --config config/webpack.dev.config.js --host localhost --port 4242 --inline --hot",
+    "dev:main": "webpack --config config/webpack.main.config.js",
+    "dev:start": "cross-env NODE_ENV=development electron -r babel-register build/main.js",
+    "dev": "npm run dev:main && concurrently --kill-others \"npm run dev:render\" \"npm run dev:start\""
   },
   "dependencies": {
     "crypto-js": "^3.1.6",
-    "es6-promise": "^3.1.2",
-    "isomorphic-fetch": "^2.2.1",
+    "electron-prebuilt": "^1.2.1",
+    "json-loader": "^0.5.4",
     "query-string": "^4.1.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
@@ -28,7 +34,8 @@
     "react-router": "^2.4.1",
     "react-router-redux": "^4.0.2",
     "redux": "^3.3.1",
-    "redux-thunk": "^2.0.1"
+    "redux-thunk": "^2.0.1",
+    "which": "^1.2.10"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
@@ -40,6 +47,8 @@
     "babel-preset-react": "^6.5.0",
     "chai": "^3.5.0",
     "chai-things": "^0.2.0",
+    "concurrently": "^2.1.0",
+    "cross-env": "^1.0.8",
     "css-loader": "^0.23.1",
     "deep-freeze": "0.0.1",
     "eslint": "^2.6.0",
@@ -56,7 +65,7 @@
     "stylelint": "^5.2.1",
     "stylelint-config-standard": "^4.0.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.12.14",
+    "webpack": "^1.12.15",
     "webpack-dev-server": "^1.14.1"
   },
   "private": true

@@ -1,10 +1,7 @@
-import fetch from 'isomorphic-fetch';
-import es6Promise from 'es6-promise';
 import CryptoJS from 'crypto-js';
 
 import actions from './index';
 
-es6Promise.polyfill();
 
 const establishConnectionHidden = (uri, secretKey) => ({
     type: 'ESTABLISH_CONNECTION',
@@ -27,11 +24,11 @@ export const updateConnectionStatus = (status) => ({
     status
 });
 
-const makeB64Digest = (secretKey, httpVerb, requestTime, body = JSON.stringify({})) => {
+const makeB64Digest = (secretKey, httpVerb, url, requestTime, body = JSON.stringify({})) => {
     const byteArray = CryptoJS.enc.Base64.parse(secretKey);
     const message = [
         httpVerb,
-        window.location.origin,
+        url,
         requestTime,
         'application/json',
         body.length
@@ -48,12 +45,13 @@ const shakeHandsWithServer = () => {
     return (dispatch, getState) => {
         dispatch(updateConnectionStatus('Validating credentials'));
         const { connection: { uri, availableApis, secretKey } } = getState();
+        const url = `http://${uri.split('/')[0]}${availableApis[0]}`;
         const httpVerb = 'POST';
         const requestTime = Date.now();
         const body = JSON.stringify({});
-        const digest = makeB64Digest(secretKey, httpVerb, requestTime, body);
+        const digest = makeB64Digest(secretKey, httpVerb, url, requestTime, body);
 
-        fetch(`http://${uri.split('/')[0]}${availableApis[0]}`, {
+        fetch(url, {
             method: httpVerb,
             headers: new Headers({
                 Authorization: `HMAC-SHA256 ${digest}`,
