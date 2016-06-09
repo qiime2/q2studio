@@ -9,6 +9,11 @@ pip -e install .
 
 To develop:
 ```bash
+npm run dev
+```
+
+To build static:
+```bash
+npm run build
 npm start
-qiime-studio serve -d
 ```

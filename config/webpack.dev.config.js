@@ -28,6 +28,7 @@ module.exports = extendConfig((config) => {
         },
         devServer: {
             contentBase: 'build'
-        }
+        },
+        target: 'electron-renderer'
     };
 }, true);

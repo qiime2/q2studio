@@ -1,9 +1,4 @@
-import fetch from 'isomorphic-fetch';
-import es6Promise from 'es6-promise';
-
 import actions from './index';
-
-es6Promise.polyfill();
 
 
 const foundPlugin = (plugin) => ({
