@@ -1,5 +1,7 @@
+import datetime
 import glob
 import os
+import sys
 
 from flask import Blueprint, jsonify, request
 
@@ -8,6 +10,8 @@ from qiime.sdk import PluginManager, Artifact, SubprocessExecutor
 
 PLUGIN_MANAGER = PluginManager()
 SUBPROCESS_EXECUTOR = SubprocessExecutor()
+
+__JOBS = {}
 
 v1 = Blueprint('v1', __name__)
 v1.before_request(validate_request_authentication)
@@ -147,14 +151,47 @@ def execute_workflow(plugin_name, workflow_name):
         name: process_values[name]
         for name in workflow.signature.outputs
     }
+
+    def toggle_completion(process):
+        process_id = id(process)
+        completed_process = process.result()
+        if completed_process.returncode != 0:
+            __JOBS[process_id]['error'] = True
+            __JOBS[process_id]['message'] = \
+                completed_process.stderr.decode('utf-8')
+        __JOBS[process_id]['completed'] = True
+
+    now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
+    process = SUBPROCESS_EXECUTOR(workflow, inputs, parameters, outputs)
+    process_id = id(process)
+    __JOBS[process_id] = {
+        'completed': False,
+        'error': False,
+        'message': ''
+    }
+    process.add_done_callback(toggle_completion)
+
+    success = process.running() or process.done()
     result = {
-        'success': True
+        'success': success,
+        'job': {
+            'workflow': workflow_name,
+            'id': process_id,
+            'started': now
+        }
     }
 
-    process = SUBPROCESS_EXECUTOR(workflow, inputs, parameters, outputs)
-    completed_process = process.result()
-
-    if completed_process.returncode != 0:
-        result['success'] = False
-
     return jsonify(result)
+
+
+@v1.route('/jobs', methods=['GET'])
+def fetch_job_status():
+    return jsonify({
+        'completed': [{
+                'id': key,
+                'job': value
+            }
+            for key, value in __JOBS.items()
+            if value['completed'] is True
+        ]
+    })

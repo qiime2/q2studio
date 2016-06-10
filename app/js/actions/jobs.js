@@ -1,10 +1,53 @@
 import actions from '../actions';
 import { makeB64Digest } from '../util/auth';
 
-export const createJob = (job) => ({
-    type: 'CREATE_JOB',
+// global variable to set and clear intervals for scanning for jobs.
+let jobInterval;
+
+export const newActiveJob = (workflow, job) => ({
+    type: 'NEW_ACTIVE_JOB',
+    workflow,
     job
 });
+
+export const jobCompleted = (job) => ({
+    type: 'JOB_COMPLETED',
+    job
+});
+
+export const pollJobStatus = () => {
+    return (dispatch, getState) => {
+        const { connection: { uri, availableApis } } = getState();
+        const url = `http://${uri.split('/')[0]}${availableApis[0]}jobs`;
+        fetch(url, {
+            method: 'GET'
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response.json();
+        })
+        .then((json) => {
+            if (json.completed.length !== 0) {
+                json.completed.map(job => {
+                    if (Object.keys(job).length !== 0) {
+                        dispatch(actions.jobCompleted(job));
+                        dispatch(actions.refreshArtifacts());
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        })
+        .then(() => {
+            const { jobs: { activeJobs } } = getState();
+            if (!activeJobs.length) {
+                clearInterval(jobInterval);
+            }
+        });
+    };
+};
 
 export const startJob = (workflow, data) => {
     const jobData = {};
@@ -39,7 +82,8 @@ export const startJob = (workflow, data) => {
         })
         .then((json) => {
             if (json.success) {
-                dispatch(actions.refreshArtifacts());
+                dispatch(actions.newActiveJob(workflow, json.job));
+                jobInterval = setInterval(() => dispatch(actions.pollJobStatus()), 1000);
             }
         });
     };

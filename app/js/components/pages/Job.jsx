@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel }) => {
+const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -74,7 +74,7 @@ const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel })
             </form>
             <button
                 className="btn btn-danger"
-                onClick={onClickCancel}
+                onClick={cancelJob}
             >
                 Cancel
             </button>
@@ -89,7 +89,7 @@ const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel })
                             return;
                         }
                     }
-                    onClickSubmit(workflow, formData);
+                    submitJob(workflow, formData);
                 }}
             >
                 Go!
@@ -101,8 +101,8 @@ Job.propTypes = {
     inputArtifacts: React.PropTypes.object,
     plugin: React.PropTypes.object,
     workflow: React.PropTypes.object,
-    onClickSubmit: React.PropTypes.func,
-    onClickCancel: React.PropTypes.func
+    submitJob: React.PropTypes.func,
+    cancelJob: React.PropTypes.func
 };
 
 export default Job;

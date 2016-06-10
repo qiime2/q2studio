@@ -16,11 +16,11 @@ const mapStateToProps = (state, { params: { pluginId, jobId } }) => {
 };
 
 const mapDispatchToProps = (dispatch, { router }) => ({
-    onClickSubmit: (workflow, formData) => {
+    submitJob: (workflow, formData) => {
         dispatch(actions.startJob(workflow, formData));
         router.push('/');
     },
-    onClickCancel: () => { router.goBack(); dispatch(actions.clearJobState()); }
+    cancelJob: () => { router.goBack(); dispatch(actions.clearJobState()); }
 });
 
 export default withRouter(
