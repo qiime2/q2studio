@@ -12,6 +12,31 @@ const foundWorkflow = (plugin, workflow) => ({
     workflow
 });
 
+const toggleWorkflow = (plugin, workflow, input, disabled) => ({
+    type: 'TOGGLE_WORKFLOW',
+    plugin,
+    workflow,
+    input,
+    disabled
+});
+
+const validateWorkflow = (plugin, workflow) => {
+    return (dispatch, getState) => {
+        const { connection: { uri, availableApis } } = getState();
+        workflow.inputArtifacts.map(input => (
+            fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(({ input_artifacts }) => {
+                if (input_artifacts.length === 0) {
+                    dispatch(toggleWorkflow(plugin, workflow, input.type, true));
+                }
+            })
+        ));
+    };
+};
+
 export const loadWorkflows = () => {
     return (dispatch, getState) => {
         const { plugins, connection: { uri, availableApis } } = getState();
@@ -20,7 +45,8 @@ export const loadWorkflows = () => {
             .then((response) => (response.json()))
             .then((json) => {
                 Object.keys(json.workflows).map(workflow =>
-                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow]))
+                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow])) &&
+                    dispatch(validateWorkflow(plugin, json.workflows[workflow]))
                 );
             })
         ));
