@@ -1,5 +1,7 @@
-import { app, BrowserWindow } from 'electron';
 import { spawn } from 'child_process';
+import path from 'path';
+
+import { app, BrowserWindow } from 'electron';
 import which from 'which';
 
 
@@ -9,9 +11,20 @@ let win;
 
 
 const startRestAPI = (callback) => {
-    // find the python for this process                  This is literally the worst idea.
-    const python = which.sync('python', { all: true }).find(path => path.search('conda') !== -1);
-    const api = spawn(python, ['-m', 'qiime_studio']);
+    // find the conda python and use that to infer the conda bin directory
+    // which needs to be reapplied to the front of our path so that subprocess
+    // spawns work correctly.
+    const python = which.sync('python', { all: true })
+                        .find(binaryPath => binaryPath.search('conda') !== -1);
+    const condaBin = path.dirname(python);
+
+    const api = spawn('python', ['-m', 'qiime_studio'], {
+        env: {
+            ...process.env,
+            // prepend conda bin to PATH
+            PATH: `${condaBin}:${process.env.PATH}`
+        }
+    });
 
     let started = false;
     api.stdout.on('data', (data) => {
