@@ -2,8 +2,8 @@ import React from 'react';
 
 import JobRow from './JobRow';
 
-const JobList = ({ activeJobs }) => (
-    activeJobs.length !== 0 ?
+const JobList = ({ activeJobs, failedJobs, closeFailed }) => (
+    activeJobs.length !== 0 || failedJobs.length !== 0 ?
         <div className="panel panel-default">
             <div className="panel-heading">
                 Active Jobs:
@@ -22,12 +22,22 @@ const JobList = ({ activeJobs }) => (
                     )}
                     </tbody>
                 </table>
+                { failedJobs.map(job =>
+                    <JobRow
+                        data={job}
+                        key={job.id}
+                        failed={job.error}
+                        closeFailed={() => closeFailed(job.id)}
+                    />
+                )}
             </div>
         </div> : null
 );
 
 JobList.propTypes = {
-    activeJobs: React.PropTypes.array
+    activeJobs: React.PropTypes.array,
+    failedJobs: React.PropTypes.array,
+    closeFailed: React.PropTypes.func
 };
 
 export default JobList;

@@ -15,10 +15,15 @@ export const jobCompleted = (job) => ({
     job
 });
 
+export const dismissFailed = (id) => ({
+    type: 'DISMISS_FAILED_NOTIFICATION',
+    id
+});
+
 export const pollJobStatus = () => {
     return (dispatch, getState) => {
-        const { connection: { uri, availableApis } } = getState();
-        const url = `http://${uri.split('/')[0]}${availableApis[0]}jobs`;
+        const { connection: { uri, availableApis, secretKey } } = getState();
+        let url = `http://${uri.split('/')[0]}${availableApis[0]}jobs`;
         fetch(url, {
             method: 'GET'
         })
@@ -29,15 +34,35 @@ export const pollJobStatus = () => {
             return response.json();
         })
         .then((json) => {
+            const completed = [];
             if (json.completed.length !== 0) {
-                json.completed.map(job => {
+                for (const job of json.completed) {
                     if (Object.keys(job).length !== 0) {
                         dispatch(actions.jobCompleted(job));
-                        dispatch(actions.refreshArtifacts());
-                        return true;
+                        completed.push(job.id);
                     }
-                    return false;
-                });
+                }
+            }
+            return completed;
+        })
+        .then((completed) => {
+            if (completed.length !== 0) {
+                dispatch(actions.refreshArtifacts());
+                for (const id of completed) {
+                    url = `http://${uri.split('/')[0]}${availableApis[0]}jobs/${id}`;
+                    const method = 'DELETE';
+                    const requestTime = Date.now();
+                    const digest = makeB64Digest(secretKey, method, url, requestTime, undefined);
+                    fetch(url, {
+                        method,
+                        headers: new Headers({
+                            Authorization: `HMAC-SHA256 ${digest}`,
+                            'Content-Type': 'application/json',
+                            'X-QIIME-Timestamp': requestTime
+                        }),
+                        body: JSON.stringify({})
+                    });
+                }
             }
         })
         .then(() => {

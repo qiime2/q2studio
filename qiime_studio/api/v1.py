@@ -195,3 +195,14 @@ def fetch_job_status():
             if value['completed'] is True
         ]
     })
+
+
+@v1.route('/jobs/<job_id>', methods=['DELETE'])
+def delete_completed_job(job_id):
+    success = True
+    try:
+        __JOBS.pop(int(job_id))
+    except KeyError:
+        success = False
+
+    return jsonify({'result': success})
