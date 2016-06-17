@@ -65,8 +65,9 @@ export const loadArtifacts = () => {
 
 export const refreshArtifacts = () => {
     return (dispatch, getState) => {
-        const { artifacts, connection: { uri, availableApis } } = getState();
-        fetch(`http://${uri.split('/')[0]}${availableApis[0]}artifacts`, {
+        const { artifacts, connection: { uri, availableApis }, currentDirectory } = getState();
+        const path = encodeURIComponent(currentDirectory);
+        fetch(`http://${uri.split('/')[0]}${availableApis[0]}artifacts?path=${path}`, {
             method: 'GET'
         })
         .then((response) => (response.json()))

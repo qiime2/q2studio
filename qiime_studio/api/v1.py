@@ -70,7 +70,8 @@ def api_workflows(plugin_name):
 
 @v1.route('/artifacts', methods=['GET'])
 def api_artifacts():
-    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qzf'))
+    path = request.args.get('path', os.getcwd())
+    artifact_paths = glob.glob(os.path.join(path, '*.qzf'))
     artifacts = [
         {
             'name': os.path.splitext(os.path.split(path)[1])[0],
