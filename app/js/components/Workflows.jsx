@@ -8,6 +8,7 @@ const Workflows = ({ plugin, openWorkflow }) => (
             <Workflow
                 key={workflow.name}
                 flow={workflow}
+                disabled={workflow.requires.length !== 0}
                 onClick = {() => openWorkflow(plugin, workflow)}
             />
         ))}

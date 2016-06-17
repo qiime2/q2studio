@@ -46,6 +46,7 @@ def api_workflows(plugin_name):
             ])
         )
         workflows_dict[key]['description'] = value.signature.name
+        workflows_dict[key]['requires'] = []
         workflows_dict[key]['inputArtifacts'] = [
             {
                 'name': name,
