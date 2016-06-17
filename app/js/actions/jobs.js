@@ -69,6 +69,7 @@ export const pollJobStatus = () => {
             const { jobs: { activeJobs } } = getState();
             if (!activeJobs.length) {
                 clearInterval(jobInterval);
+                jobInterval = undefined;
             }
         });
     };
@@ -108,7 +109,10 @@ export const startJob = (workflow, data) => {
         .then((json) => {
             if (json.success) {
                 dispatch(actions.newActiveJob(workflow, json.job));
-                jobInterval = setInterval(() => dispatch(actions.pollJobStatus()), 1000);
+                if (jobInterval === undefined) {
+                    jobInterval = setInterval(() =>
+                        dispatch(actions.pollJobStatus()), 1000);
+                }
             }
         });
     };

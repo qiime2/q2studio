@@ -13,14 +13,6 @@ studio.register_blueprint(v1, url_prefix='/api/0.0.1')
 studio.after_request(add_cors_headers)
 
 
-# No output is visible, as for some reason it is held back
-# by the server flushed at seemingly random intervals
-# also, what should be the stdout, is being sent through stderr??
-def flush_stdio():
-    sys.stdout.flush()
-    sys.stderr.flush()
-
-
 @studio.route("/api/", methods=['GET'])
 def available_api():
     return jsonify(available=["/api/0.0.1/"])
@@ -33,7 +25,6 @@ def hello():
 
 def start_server():
     studio.debug = True
-    studio.before_request(flush_stdio)
 
     studio.config['SECRET_KEY'] = secret_key = os.urandom(33)
     secret_key = base64.b64encode(secret_key).decode('ascii')

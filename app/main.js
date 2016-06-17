@@ -18,7 +18,7 @@ const startRestAPI = (callback) => {
                         .find(binaryPath => binaryPath.search('conda') !== -1);
     const condaBin = path.dirname(python);
 
-    const api = spawn('python', ['-m', 'qiime_studio'], {
+    const api = spawn('python', ['-u', '-m', 'qiime_studio'], {
         env: {
             ...process.env,
             // prepend conda bin to PATH

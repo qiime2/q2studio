@@ -87,9 +87,7 @@ def api_artifacts():
 
 @v1.route('/artifacts/<name>', methods=['DELETE'])
 def delete_artifact(name):
-    result = {
-        'success': True
-    }
+    result = {'success': True}
     artifact_json = request.get_json()['artifact']
     artifact = Artifact.load(artifact_json['path'])
     if str(artifact.uuid) == artifact_json['uuid']:
@@ -131,52 +129,50 @@ def execute_workflow(plugin_name, workflow_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
     workflow = plugin.workflows[workflow_name]
 
-    request_body = request.get_json()['jobData']
+    request_body = request.get_json()
 
-    process_values = {}
-    for key, value in request_body.items():
+    inputs = {name: None
+              for name in workflow.signature.inputs}
+    parameters = {name: None
+                  for name in workflow.signature.parameters}
+    outputs = {name: None
+               for name in workflow.signature.outputs}
+
+    for key, value in request_body['jobData'].items():
         if '-' in key:
             type_, name = key.split('-')
-            process_values[name] = value
+            if type_ == 'in':
+                inputs[name] = value
+            elif type_ == 'param':
+                parameters[name] = value
+            elif type_ == 'out':
+                outputs[name] = value
 
-    inputs = {
-        name: process_values[name]
-        for name in workflow.signature.inputs
-    }
-    parameters = {
-        name: process_values[name]
-        for name in workflow.signature.parameters
-    }
-    outputs = {
-        name: process_values[name]
-        for name in workflow.signature.outputs
-    }
-
-    def toggle_completion(process):
-        process_id = id(process)
-        completed_process = process.result()
-        if completed_process.returncode != 0:
-            __JOBS[process_id]['error'] = True
-            __JOBS[process_id]['message'] = \
-                completed_process.stderr.decode('utf-8')
-        __JOBS[process_id]['completed'] = True
+    def toggle_completion(future_result):
+        future_id = id(future_result)
+        completed_future = future_result.result()
+        if completed_future.returncode != 0:
+            __JOBS[future_id]['error'] = True
+            __JOBS[future_id]['message'] = \
+                completed_future.stderr.decode('utf-8')
+        __JOBS[future_id]['completed'] = True
 
     now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
-    process = SUBPROCESS_EXECUTOR(workflow, inputs, parameters, outputs)
-    process_id = id(process)
-    __JOBS[process_id] = {
+    future_result = SUBPROCESS_EXECUTOR(workflow, inputs, parameters, outputs)
+    future_id = id(future_result)
+    __JOBS[future_id] = {
         'completed': False,
         'error': False,
         'message': ''
     }
-    process.add_done_callback(toggle_completion)
+    future_result.add_done_callback(toggle_completion)
 
-    success = process.running() or process.done()
+    success = future_result.running() or future_result.done()
     result = {
         'success': success,
         'job': {
             'workflow': workflow_name,
-            'id': process_id,
+            'id': future_id,
             'started': now
         }
     }
@@ -187,21 +183,17 @@ def execute_workflow(plugin_name, workflow_name):
 @v1.route('/jobs', methods=['GET'])
 def fetch_job_status():
     return jsonify({
-        'completed': [{
-                'id': key,
-                'job': value
-            }
-            for key, value in __JOBS.items()
-            if value['completed'] is True
-        ]
+        'completed': [{'id': key, 'job': value}
+                      for key, value in __JOBS.items()
+                      if value['completed'] is True]
     })
 
 
-@v1.route('/jobs/<job_id>', methods=['DELETE'])
+@v1.route('/jobs/<int:job_id>', methods=['DELETE'])
 def delete_completed_job(job_id):
     success = True
     try:
-        __JOBS.pop(int(job_id))
+        __JOBS.pop(job_id)
     except KeyError:
         success = False
 
