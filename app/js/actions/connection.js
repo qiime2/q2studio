@@ -29,13 +29,13 @@ const shakeHandsWithServer = () => {
         dispatch(updateConnectionStatus('Validating credentials'));
         const { connection: { uri, availableApis, secretKey } } = getState();
         const url = `http://${uri.split('/')[0]}${availableApis[0]}`;
-        const httpVerb = 'POST';
+        const method = 'POST';
         const requestTime = Date.now();
         const body = JSON.stringify({});
-        const digest = makeB64Digest(secretKey, httpVerb, url, requestTime, body);
+        const digest = makeB64Digest(secretKey, method, url, requestTime, body);
 
         fetch(url, {
-            method: httpVerb,
+            method,
             headers: new Headers({
                 Authorization: `HMAC-SHA256 ${digest}`,
                 'Content-Type': 'application/json',

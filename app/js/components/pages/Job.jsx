@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel }) => {
+const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -25,6 +25,7 @@ const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel })
                             inputArtifacts[name].map(artifact =>
                                 <option
                                     key={artifact.uuid}
+                                    value={artifact.path}
                                 >
                                     {artifact.name} - {`(${artifact.uuid})`}
                                 </option>
@@ -73,13 +74,22 @@ const Job = ({ plugin, workflow, inputArtifacts, onClickSubmit, onClickCancel })
             </form>
             <button
                 className="btn btn-danger"
-                onClick={onClickCancel}
+                onClick={cancelJob}
             >
                 Cancel
             </button>
             <button
                 className="btn btn-primary pull-right"
-                onClick={onClickSubmit}
+                onClick={() => {
+                    const formData = new FormData(document.querySelector('form'));
+                    for (const [key, value] of formData.entries()) {
+                        if (value === '') {
+                            alert(`${key} must not be blank.`);
+                            return;
+                        }
+                    }
+                    submitJob(workflow, formData);
+                }}
             >
                 Go!
             </button>
@@ -90,8 +100,8 @@ Job.propTypes = {
     inputArtifacts: React.PropTypes.object,
     plugin: React.PropTypes.object,
     workflow: React.PropTypes.object,
-    onClickSubmit: React.PropTypes.func,
-    onClickCancel: React.PropTypes.func
+    submitJob: React.PropTypes.func,
+    cancelJob: React.PropTypes.func
 };
 
 export default Job;

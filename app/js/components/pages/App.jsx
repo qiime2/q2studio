@@ -3,6 +3,7 @@ import React from 'react';
 import ArtifactsList from '../../containers/ArtifactsList';
 import PluginsList from '../../containers/PluginsList';
 import Loading from '../../containers/Loading';
+import JobList from '../../containers/JobList';
 
 const App = ({ connected }) => (
     <div>
@@ -12,6 +13,7 @@ const App = ({ connected }) => (
                 <h1>QIIME Studio</h1>
             </div>
             <PluginsList />
+            <JobList />
             <ArtifactsList />
         </div>
     </div>
