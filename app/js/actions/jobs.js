@@ -82,8 +82,9 @@ export const startJob = (workflow, data) => {
     }
 
     return (dispatch, getState) => {
-        const { connection: { uri, availableApis, secretKey } } = getState();
-        const url = `http://${uri.split('/')[0]}${availableApis[0]}${workflow.jobUri}`;
+        const { connection: { uri, availableApis, secretKey }, currentDirectory } = getState();
+        const path = encodeURIComponent(currentDirectory);
+        const url = `http://${uri.split('/')[0]}${availableApis[0]}${workflow.jobUri}?path=${path}`;
         const method = 'POST';
         const requestTime = Date.now();
         const body = JSON.stringify({
@@ -130,9 +131,10 @@ export const linkInputArtifact = (input, artifacts) => ({
 
 export const fetchInputArtifacts = (workflow) => {
     return (dispatch, getState) => {
-        const { connection: { uri, availableApis } } = getState();
+        const { connection: { uri, availableApis }, currentDirectory } = getState();
+        const path = encodeURIComponent(currentDirectory);
         workflow.inputArtifacts.map(input => (
-            fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}`, {
+            fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}?path=${path}`, {
                 method: 'GET'
             })
             .then(response => response.json())
