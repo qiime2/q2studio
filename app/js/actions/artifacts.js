@@ -1,3 +1,4 @@
+import actions from './';
 import { makeB64Digest } from '../util/auth';
 
 export const newArtifact = (artifact) => ({
@@ -44,7 +45,8 @@ export const deleteArtifact = (uuid) => {
             if (json.success) {
                 dispatch(removedArtifact(uuid));
             }
-        });
+        })
+        .then(() => dispatch(actions.refreshValidation()));
     };
 };
 
@@ -81,6 +83,7 @@ export const refreshArtifacts = () => {
                 dispatch(newArtifact(a0));
                 return true;
             });
-        });
+        })
+        .then(() => dispatch(actions.refreshValidation()));
     };
 };

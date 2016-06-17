@@ -1,4 +1,4 @@
-import actions from './index';
+import actions from './';
 
 
 const foundPlugin = (plugin) => ({
@@ -12,12 +12,18 @@ const foundWorkflow = (plugin, workflow) => ({
     workflow
 });
 
-const toggleWorkflow = (plugin, workflow, input, disabled) => ({
-    type: 'TOGGLE_WORKFLOW',
+const validateArtifact = (plugin, workflow, input) => ({
+    type: 'VALIDATE_ARTIFACT',
     plugin,
     workflow,
-    input,
-    disabled
+    input
+});
+
+const missingArtifact = (plugin, workflow, input) => ({
+    type: 'MISSING_ARTIFACT',
+    plugin,
+    workflow,
+    input
 });
 
 const validateWorkflow = (plugin, workflow) => {
@@ -30,9 +36,22 @@ const validateWorkflow = (plugin, workflow) => {
             .then(response => response.json())
             .then(({ input_artifacts }) => {
                 if (input_artifacts.length === 0) {
-                    dispatch(toggleWorkflow(plugin, workflow, input.type, true));
+                    dispatch(missingArtifact(plugin, workflow, input.type));
+                } else {
+                    dispatch(validateArtifact(plugin, workflow, input.type));
                 }
             })
+        ));
+    };
+};
+
+export const refreshValidation = () => {
+    return (dispatch, getState) => {
+        const { plugins } = getState();
+        plugins.map(p => (
+            p.workflows.map(w => (
+                dispatch(validateWorkflow(p, w))
+            ))
         ));
     };
 };

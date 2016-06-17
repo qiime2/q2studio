@@ -45,7 +45,8 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => (
 
 Artifacts.propTypes = {
     artifacts: React.PropTypes.array,
-    dispatchDeleteArtifact: React.PropTypes.func
+    dispatchDeleteArtifact: React.PropTypes.func,
+    refreshArtifacts: React.PropTypes.func
 };
 
 export default Artifacts;

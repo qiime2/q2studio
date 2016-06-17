@@ -15,7 +15,7 @@ const addWorkflow = (plugin, workflow) => {
     return updatedPlugin;
 };
 
-const toggleWorkflow = (plugin, workflow, input, disabled) => {
+const addRequirement = (plugin, workflow, input) => {
     const updatedPlugin = {
         ...plugin,
         workflows: [
@@ -25,8 +25,7 @@ const toggleWorkflow = (plugin, workflow, input, disabled) => {
                 requires: [
                     ...workflow.requires,
                     input
-                ],
-                disabled
+                ]
             }
         ]
     };
@@ -56,12 +55,31 @@ const pluginsReducer = (state = initialState, action) => {
         ];
         return newState;
     }
-    case 'TOGGLE_WORKFLOW': {
+    case 'VALIDATE_ARTIFACT': {
+        const originalPlugin = state.find(p => p.name === action.plugin.name);
+        const workflow = originalPlugin.workflows.find(w => w.name === action.workflow.name);
+        if (workflow.requires.indexOf(action.input) !== -1) {
+            const filteredState = state.filter(p => p.name !== action.plugin.name);
+            originalPlugin.workflows = originalPlugin.workflows.filter(w => (
+                w.name !== action.workflow.name
+            ));
+            workflow.requires = workflow.requires.filter(r => action.input !== r);
+            const newPlugin = addWorkflow(originalPlugin, workflow);
+            const newState = [
+                ...filteredState,
+                newPlugin
+            ];
+            return newState;
+        }
+        return state;
+    }
+    case 'MISSING_ARTIFACT': {
         const originalPlugin = state.find(p => p.name === action.plugin.name);
         const filteredState = state.filter(p => p.name !== action.plugin.name);
         const workflow = originalPlugin.workflows.find(w => w.name === action.workflow.name);
+        if (workflow.requires.indexOf(action.input) !== -1) { return state; }
+        const newPlugin = addRequirement(originalPlugin, workflow, action.input);
 
-        const newPlugin = toggleWorkflow(originalPlugin, workflow, action.input, action.disabled);
         const newState = [
             ...filteredState,
             newPlugin

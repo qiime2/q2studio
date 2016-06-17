@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Workflow = ({ flow, onClick }) => (
-    <button type="button" disabled={flow.disabled} className="list-group-item"
+    <button type="button" disabled={flow.requires.length !== 0} className="list-group-item"
         style={{ backgroundColor: flow.disabled ? '#f9f9f9' : '' }} onClick={ onClick }
     >
         <span className={flow.disabled ? 'col-md-3' : 'col-md-7'}>
