@@ -1,4 +1,4 @@
-import actions from './index';
+import actions from './';
 import { makeB64Digest } from '../util/auth';
 
 
