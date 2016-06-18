@@ -1,6 +1,5 @@
 import hmac
 import base64
-import sys
 from time import time
 
 from flask import request, abort, current_app

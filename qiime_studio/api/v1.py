@@ -1,7 +1,6 @@
 import datetime
 import glob
 import os
-import sys
 
 from flask import Blueprint, jsonify, request
 
@@ -107,7 +106,8 @@ def api_input_artifacts(plugin_name, workflow_name, input_name):
     workflow = plugin.workflows[workflow_name]
     input_type = workflow.signature.inputs[input_name][0]
     input_artifacts = []
-    artifact_paths = glob.glob(os.path.join(os.getcwd(), '*.qzf'))
+    path = request.args.get('path', os.getcwd())
+    artifact_paths = glob.glob(os.path.join(path, '*.qzf'))
     artifacts = [
         {
             'name': os.path.splitext(os.path.split(path)[1])[0],
@@ -127,6 +127,7 @@ def api_input_artifacts(plugin_name, workflow_name, input_name):
 
 @v1.route('/job/<plugin_name>/<workflow_name>', methods=['POST'])
 def execute_workflow(plugin_name, workflow_name):
+    path = request.args.get('path', os.getcwd())
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
     workflow = plugin.workflows[workflow_name]
 
@@ -147,7 +148,9 @@ def execute_workflow(plugin_name, workflow_name):
             elif type_ == 'param':
                 parameters[name] = value
             elif type_ == 'out':
-                outputs[name] = value
+                if not value.endswith('.qzf'):
+                    value += '.qzf'
+                outputs[name] = os.path.join(path, value)
 
     def toggle_completion(future_result):
         future_id = id(future_result)

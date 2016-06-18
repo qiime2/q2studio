@@ -39,7 +39,7 @@ export const loadPlugins = () => {
             ));
         })
         .then(() => dispatch(loadWorkflows()))
-        .then(() => dispatch(actions.loadArtifacts()))
+        .then(() => dispatch(actions.refreshArtifacts()))
         .then(() => dispatch(actions.successfullyConnected(true)));
     };
 };

@@ -14,6 +14,10 @@ export const removedArtifact = (uuid) => ({
     uuid
 });
 
+export const clearArtifacts = () => ({
+    type: 'CLEAR_ARTIFACTS'
+});
+
 export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {
         const { artifacts, connection: { uri, availableApis, secretKey } } = getState();
@@ -48,23 +52,10 @@ export const deleteArtifact = (uuid) => {
     };
 };
 
-export const loadArtifacts = () => {
-    return (dispatch, getState) => {
-        const { connection: { uri, availableApis } } = getState();
-        fetch(`http://${uri.split('/')[0]}${availableApis[0]}artifacts`, {
-            method: 'GET'
-        })
-        .then((response) => (response.json()))
-        .then((json) => {
-            json.artifacts.map(artifact => (
-                dispatch(newArtifact(artifact))
-            ));
-        });
-    };
-};
 
 export const refreshArtifacts = () => {
     return (dispatch, getState) => {
+        dispatch(clearArtifacts());
         const { artifacts, connection: { uri, availableApis }, currentDirectory } = getState();
         const path = encodeURIComponent(currentDirectory);
         fetch(`http://${uri.split('/')[0]}${availableApis[0]}artifacts?path=${path}`, {
