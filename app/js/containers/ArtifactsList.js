@@ -8,8 +8,7 @@ const mapStateToProps = ({ artifacts }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    dispatchDeleteArtifact: (id) => dispatch(actions.deleteArtifact(id)),
-    refreshArtifacts: () => dispatch(actions.refreshArtifacts())
+    dispatchDeleteArtifact: (id) => dispatch(actions.deleteArtifact(id))
 });
 
 export default connect(
