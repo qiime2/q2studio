@@ -63,10 +63,10 @@ export const loadWorkflows = () => {
             fetch(`http://${uri.split('/')[0]}${availableApis[0]}${plugin.workflowsURI}`)
             .then((response) => (response.json()))
             .then((json) => {
-                Object.keys(json.workflows).map(workflow =>
-                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow])) &&
-                    dispatch(validateWorkflow(plugin, json.workflows[workflow]))
-                );
+                Object.keys(json.workflows).forEach(workflow => {
+                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow]));
+                    dispatch(validateWorkflow(plugin, json.workflows[workflow]));
+                });
             })
         ));
     };
