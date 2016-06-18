@@ -1,4 +1,4 @@
-import actions from './index';
+import actions from './';
 
 
 const foundPlugin = (plugin) => ({
@@ -12,6 +12,51 @@ const foundWorkflow = (plugin, workflow) => ({
     workflow
 });
 
+const validateArtifact = (plugin, workflow, input) => ({
+    type: 'VALIDATE_ARTIFACT',
+    plugin,
+    workflow,
+    input
+});
+
+const missingArtifact = (plugin, workflow, input) => ({
+    type: 'MISSING_ARTIFACT',
+    plugin,
+    workflow,
+    input
+});
+
+const validateWorkflow = (plugin, workflow) => {
+    return (dispatch, getState) => {
+        const { connection: { uri, availableApis }, currentDirectory } = getState();
+        const path = encodeURIComponent(currentDirectory);
+        workflow.inputArtifacts.map(input => (
+            fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}?path=${path}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(({ input_artifacts }) => {
+                if (input_artifacts.length === 0) {
+                    dispatch(missingArtifact(plugin, workflow, input.type));
+                } else {
+                    dispatch(validateArtifact(plugin, workflow, input.type));
+                }
+            })
+        ));
+    };
+};
+
+export const refreshValidation = () => {
+    return (dispatch, getState) => {
+        const { plugins } = getState();
+        plugins.map(p => (
+            p.workflows.map(w => (
+                dispatch(validateWorkflow(p, w))
+            ))
+        ));
+    };
+};
+
 export const loadWorkflows = () => {
     return (dispatch, getState) => {
         const { plugins, connection: { uri, availableApis } } = getState();
@@ -19,9 +64,10 @@ export const loadWorkflows = () => {
             fetch(`http://${uri.split('/')[0]}${availableApis[0]}${plugin.workflowsURI}`)
             .then((response) => (response.json()))
             .then((json) => {
-                Object.keys(json.workflows).map(workflow =>
-                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow]))
-                );
+                Object.keys(json.workflows).forEach(workflow => {
+                    dispatch(foundWorkflow(plugin.name, json.workflows[workflow]));
+                    dispatch(validateWorkflow(plugin, json.workflows[workflow]));
+                });
             })
         ));
     };

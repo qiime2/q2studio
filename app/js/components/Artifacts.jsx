@@ -2,11 +2,19 @@ import React from 'react';
 
 import Artifact from './Artifact';
 
-const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => (
+const Artifacts = ({ artifacts, dispatchDeleteArtifact, refreshArtifacts }) => (
     <div>
         <div className="panel panel-default">
             <div className="panel-heading">
                 Artifacts:
+                <button
+                    type="button"
+                    className="close pull-right"
+                    aria-label="Refresh"
+                    onClick={refreshArtifacts}
+                >
+                    <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                </button>
             </div>
             <div className="panel-body">
                 <table className="table">
@@ -45,7 +53,8 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact }) => (
 
 Artifacts.propTypes = {
     artifacts: React.PropTypes.array,
-    dispatchDeleteArtifact: React.PropTypes.func
+    dispatchDeleteArtifact: React.PropTypes.func,
+    refreshArtifacts: React.PropTypes.func
 };
 
 export default Artifacts;

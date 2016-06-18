@@ -1,11 +1,18 @@
 import React from 'react';
 
-const Workflow = ({ flow, onClick }) => (
-    <button type="button" className="list-group-item" onClick={ onClick }>
-        <span className="col-md-7">
+const Workflow = ({ flow, onClick, disabled }) => (
+    <button type="button" disabled={disabled} className="list-group-item"
+        style={{ backgroundColor: disabled ? '#f9f9f9' : '' }} onClick={ onClick }
+    >
+        <span className={disabled ? 'col-md-3' : 'col-md-7'}>
             { flow.name }
         </span>
-        <span className="col-md-5">
+        {disabled ?
+            <span className="col-md-5">
+                {`Requires: ${flow.requires.join(', ')}`}
+            </span> : null
+        }
+        <span className={disabled ? 'col-md-4' : 'col-md-5'}>
             { flow.info }
         </span>
     </button>
@@ -13,7 +20,8 @@ const Workflow = ({ flow, onClick }) => (
 
 Workflow.propTypes = {
     flow: React.PropTypes.object,
-    onClick: React.PropTypes.func
+    onClick: React.PropTypes.func,
+    disabled: React.PropTypes.bool
 };
 
 export default Workflow;
