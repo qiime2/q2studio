@@ -1,5 +1,5 @@
 const path = require('path');
-
+const webpack = require('webpack');
 const extendConfig = require('./webpack.shared');
 
 
@@ -12,6 +12,13 @@ module.exports = extendConfig(() => {
             path: path.resolve(__dirname, '../build'),
             filename: 'main.js'
         },
+        plugins: [
+            new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                    warnings: false
+                }
+            })
+        ],
         target: 'electron-main',
         node: {
             // Needed to support ${__dirname}
