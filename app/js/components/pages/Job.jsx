@@ -8,7 +8,7 @@ const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
             <div className="page-header">
                 <h1>{plugin.name}: {workflow.description}</h1>
             </div>
-            <form>
+            <form onSubmit={(e) => submitJob(e, workflow)}>
             { workflow.inputArtifacts.map(({ name }) =>
                 <fieldset
                     className="form-group"
@@ -71,28 +71,20 @@ const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
                     />
                 </fieldset>
             )}
+                <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={cancelJob}
+                >
+                    Cancel
+                </button>
+                <button
+                    className="btn btn-primary pull-right"
+                    type="submit"
+                >
+                    Go!
+                </button>
             </form>
-            <button
-                className="btn btn-danger"
-                onClick={cancelJob}
-            >
-                Cancel
-            </button>
-            <button
-                className="btn btn-primary pull-right"
-                onClick={() => {
-                    const formData = new FormData(document.querySelector('form'));
-                    for (const [key, value] of formData.entries()) {
-                        if (value === '') {
-                            alert(`${key} must not be blank.`);
-                            return;
-                        }
-                    }
-                    submitJob(workflow, formData);
-                }}
-            >
-                Go!
-            </button>
         </div>
   );};
 

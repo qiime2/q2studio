@@ -16,7 +16,15 @@ const mapStateToProps = (state, { params: { pluginId, jobId } }) => {
 };
 
 const mapDispatchToProps = (dispatch, { router }) => ({
-    submitJob: (workflow, formData) => {
+    submitJob: (e, workflow) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        for (const [key, value] of formData.entries()) {
+            if (value.trim().length === 0) {
+                alert(`${key} must not be blank.`);
+                return;
+            }
+        }
         dispatch(actions.startJob(workflow, formData));
         router.push('/');
     },
