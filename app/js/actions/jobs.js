@@ -14,11 +14,6 @@ export const jobCompleted = (job) => ({
     job
 });
 
-export const dismissFailed = (id) => ({
-    type: 'DISMISS_FAILED_NOTIFICATION',
-    id
-});
-
 export const pollJobStatus = () => {
     return (dispatch, getState) => {
         const { connection: { uri, availableApis, secretKey } } = getState();
@@ -38,7 +33,7 @@ export const pollJobStatus = () => {
                 for (const job of json.completed) {
                     if (Object.keys(job).length !== 0) {
                         dispatch(actions.jobCompleted(job));
-                        completed.push(job.id);
+                        completed.push(job.uuid);
                     }
                 }
             }

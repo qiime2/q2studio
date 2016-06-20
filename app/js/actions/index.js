@@ -4,6 +4,7 @@ import * as pluginActionCreators from './plugins';
 import * as connectionActionCreators from './connection';
 import * as jobActionCreators from './jobs';
 import * as currentDirectoryActionCreators from './currentdirectory';
+import * as jobListActionCreators from './joblist';
 
 const actions = {
     ...artifactActionCreators,
@@ -11,7 +12,8 @@ const actions = {
     ...pluginActionCreators,
     ...connectionActionCreators,
     ...jobActionCreators,
-    ...currentDirectoryActionCreators
+    ...currentDirectoryActionCreators,
+    ...jobListActionCreators
 };
 
 export default actions;

@@ -104,32 +104,21 @@ describe('reducer', () => {
     });
 
     it('handles JOB_COMPLETED', () => {
-        const job = { id: 12345 };
+        const job = { uuid: 12345 };
         const state = {
             jobs: {
                 activeJobs: [
                     job
-                ]
+                ],
+                failedJobs: [],
+                completedJobs: []
             }
         };
         const nextState = reducer(state, actions.jobCompleted({
-            job: { ...job, error: false },
-            id: job.id
+            job: { job: { ...job }, error: false },
+            uuid: job.uuid
         }));
         expect(nextState.jobs.activeJobs).to.not.include.something.eql(job);
-    });
-
-    it('handles DISMISS_FAILED_NOTIFICATION', () => {
-        const job = { id: 12345 };
-        const state = {
-            jobs: {
-                failedJobs: [
-                    job
-                ]
-            }
-        };
-        const nextState = reducer(state, actions.dismissFailed(job.id));
-        expect(nextState.jobs.failedJobs).to.be.empty;
     });
 
     it('handles CLEAR_JOB_STATE', () => {

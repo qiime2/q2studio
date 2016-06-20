@@ -153,31 +153,40 @@ def execute_workflow(plugin_name, workflow_name):
                     value += '.qzf'
                 outputs[name] = os.path.join(path, value)
 
-    def toggle_completion(future_result):
-        future_id = id(future_result)
+    def toggle_completion(future_result, job):
+        job_id = str(job.uuid)
         completed_future = future_result.result()
-        if completed_future.returncode != 0:
-            __JOBS[future_id]['error'] = True
-            __JOBS[future_id]['message'] = \
-                completed_future.stderr.decode('utf-8')
-        __JOBS[future_id]['completed'] = True
+        __JOBS[job_id]['error'] = completed_future.returncode is not 0
+        __JOBS[job_id]['stderr'] = completed_future.stderr.decode('utf-8')
+        __JOBS[job_id]['stdout'] = completed_future.stdout.decode('utf-8')
+        __JOBS[job_id]['completed'] = True
+        __JOBS[job_id]['finished'] = '{:%Y-%b-%d %H:%M:%S}' \
+                                     .format(datetime.datetime.now())
 
     now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
-    future_result = SUBPROCESS_EXECUTOR(workflow, inputs, parameters, outputs)
-    future_id = id(future_result)
-    __JOBS[future_id] = {
+    future_result, job = SUBPROCESS_EXECUTOR(workflow,
+                                             inputs,
+                                             parameters,
+                                             outputs)
+    __JOBS[str(job.uuid)] = {
         'completed': False,
         'error': False,
-        'message': ''
+        'finished': None,
+        'started': now
     }
-    future_result.add_done_callback(toggle_completion)
+    future_result.add_done_callback(lambda future_result:
+                                    toggle_completion(future_result, job))
 
     success = future_result.running() or future_result.done()
     result = {
         'success': success,
         'job': {
+            'code': job.code,
             'workflow': workflow_name,
-            'id': future_id,
+            'uuid': job.uuid,
+            'inputs': job.input_artifact_filepaths,
+            'params': job.parameter_references,
+            'outputs': job.output_artifact_filepaths,
             'started': now
         }
     }
@@ -188,18 +197,17 @@ def execute_workflow(plugin_name, workflow_name):
 @v1.route('/jobs', methods=['GET'])
 def fetch_job_status():
     return jsonify({
-        'completed': [{'id': key, 'job': value}
+        'completed': [{'uuid': key, 'job': value}
                       for key, value in __JOBS.items()
                       if value['completed'] is True]
     })
 
 
-@v1.route('/jobs/<int:job_id>', methods=['DELETE'])
+@v1.route('/jobs/<job_id>', methods=['DELETE'])
 def delete_completed_job(job_id):
     success = True
     try:
         __JOBS.pop(job_id)
     except KeyError:
         success = False
-
     return jsonify({'result': success})
