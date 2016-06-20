@@ -4,9 +4,8 @@ import { makeB64Digest } from '../util/auth';
 // global variable to set and clear intervals for scanning for jobs.
 let jobInterval;
 
-export const newActiveJob = (workflow, job) => ({
+export const newActiveJob = (job) => ({
     type: 'NEW_ACTIVE_JOB',
-    workflow,
     job
 });
 
@@ -109,7 +108,7 @@ export const startJob = (workflow, data) => {
         })
         .then((json) => {
             if (json.success) {
-                dispatch(actions.newActiveJob(workflow, json.job));
+                dispatch(actions.newActiveJob(json.job));
                 if (jobInterval === undefined) {
                     jobInterval = setInterval(() =>
                         dispatch(actions.pollJobStatus()), 1000);
