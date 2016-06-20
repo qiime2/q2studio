@@ -1,18 +1,23 @@
 import { connect } from 'react-redux';
 
 import actions from '../actions';
-import JobList from '../components/JobList.jsx';
+import JobListFrame from '../components/JobListFrame.jsx';
 
-const mapStateToProps = ({ jobs: { activeJobs, failedJobs } }) => ({
-    activeJobs,
-    failedJobs
-});
+const mapStateToProps = ({
+    jobs: { activeJobs, completedJobs, failedJobs },
+    joblist: { active } }) => ({
+        activeJobs,
+        completedJobs,
+        failedJobs,
+        active
+    });
 
 const mapDispatchToProps = (dispatch) => ({
-    closeFailed: (id) => dispatch(actions.dismissFailed(id))
+    closeFailed: (id) => dispatch(actions.dismissFailed(id)),
+    changeJobTab: (tab) => dispatch(actions.changeJobTab(tab))
 });
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(JobList);
+)(JobListFrame);

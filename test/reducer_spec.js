@@ -109,11 +109,13 @@ describe('reducer', () => {
             jobs: {
                 activeJobs: [
                     job
-                ]
+                ],
+                failedJobs: [],
+                completedJobs: []
             }
         };
         const nextState = reducer(state, actions.jobCompleted({
-            job: { ...job, error: false },
+            job: { job: { ...job }, error: false },
             id: job.id
         }));
         expect(nextState.jobs.activeJobs).to.not.include.something.eql(job);

@@ -3,12 +3,17 @@ import React from 'react';
 const JobRow = ({ data, failed, closeFailed }) => (
     !failed ?
         <tr>
-            <td className="col-md-7">
+            <td>
                 { data.workflow }
             </td>
-            <td className="col-md-7">
-                { data.started }
+            <td>
+                {data.started}
             </td>
+            { data.timestamp ?
+                <td>
+                {data.timestamp}
+                </td> : null
+            }
         </tr> :
         <div
             className="alert alert-danger"

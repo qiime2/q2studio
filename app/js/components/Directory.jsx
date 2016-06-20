@@ -6,10 +6,11 @@ const Directory = ({ path, dispatchChangeDirectory }) => (
         <h4>{path}</h4>
         <button
             type="button"
-            className="btn pull-left"
+            className="btn btn-primary pull-left"
             onClick={() => dispatchChangeDirectory(path)}
         >
-			Change Directory
+            <span>Change Directory </span>
+            <span className="glyphicon glyphicon-folder-open"></span>
         </button>
         <br></br>
         <br></br>

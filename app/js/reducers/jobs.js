@@ -1,5 +1,6 @@
 const initialState = {
     activeJobs: [],
+    completedJobs: [],
     failedJobs: [],
     inputArtifacts: {}
 };
@@ -48,6 +49,14 @@ const jobReducer = (state = initialState, action) => {
         if (action.job.job.error) {
             newState.failedJobs = [
                 ...state.failedJobs,
+                {
+                    ...job,
+                    ...action.job.job
+                }
+            ];
+        } else {
+            newState.completedJobs = [
+                ...state.completedJobs,
                 {
                     ...job,
                     ...action.job.job

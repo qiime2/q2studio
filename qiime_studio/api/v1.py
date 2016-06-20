@@ -153,31 +153,40 @@ def execute_workflow(plugin_name, workflow_name):
                     value += '.qzf'
                 outputs[name] = os.path.join(path, value)
 
-    def toggle_completion(future_result):
-        future_id = id(future_result)
+    def toggle_completion(future_result, job):
         completed_future = future_result.result()
         if completed_future.returncode != 0:
-            __JOBS[future_id]['error'] = True
-            __JOBS[future_id]['message'] = \
+            __JOBS[job.uuid]['error'] = True
+            __JOBS[job.uuid]['message'] = \
                 completed_future.stderr.decode('utf-8')
-        __JOBS[future_id]['completed'] = True
+        __JOBS[job.uuid]['completed'] = True
+        __JOBS[job.uuid]['timestamp'] = '{:%Y-%b-%d %H:%M:%S}' \
+                                        .format(datetime.datetime.now())
 
     now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
-    future_result = SUBPROCESS_EXECUTOR(workflow, inputs, parameters, outputs)
-    future_id = id(future_result)
-    __JOBS[future_id] = {
+    future_result, job = SUBPROCESS_EXECUTOR(workflow,
+                                             inputs,
+                                             parameters,
+                                             outputs)
+    __JOBS[job.uuid] = {
         'completed': False,
         'error': False,
-        'message': ''
+        'message': '',
+        'timestamp': None
     }
-    future_result.add_done_callback(toggle_completion)
+    future_result.add_done_callback(lambda future_result:
+                                    toggle_completion(future_result, job))
 
     success = future_result.running() or future_result.done()
     result = {
         'success': success,
         'job': {
+            'code': job.code,
             'workflow': workflow_name,
-            'id': future_id,
+            'id': job.uuid,
+            'inputs': job.input_artifact_filepaths,
+            'params': job.parameter_references,
+            'outputs': job.output_artifact_filepaths,
             'started': now
         }
     }
@@ -194,7 +203,7 @@ def fetch_job_status():
     })
 
 
-@v1.route('/jobs/<int:job_id>', methods=['DELETE'])
+@v1.route('/jobs/<job_id>', methods=['DELETE'])
 def delete_completed_job(job_id):
     success = True
     try:
