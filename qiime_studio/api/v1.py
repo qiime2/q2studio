@@ -154,25 +154,25 @@ def execute_workflow(plugin_name, workflow_name):
                 outputs[name] = os.path.join(path, value)
 
     def toggle_completion(future_result, job):
+        job_id = str(job.uuid)
         completed_future = future_result.result()
-        if completed_future.returncode != 0:
-            __JOBS[job.uuid]['error'] = True
-            __JOBS[job.uuid]['message'] = \
-                completed_future.stderr.decode('utf-8')
-        __JOBS[job.uuid]['completed'] = True
-        __JOBS[job.uuid]['timestamp'] = '{:%Y-%b-%d %H:%M:%S}' \
-                                        .format(datetime.datetime.now())
+        __JOBS[job_id]['error'] = completed_future.returncode is not 0
+        __JOBS[job_id]['stderr'] = completed_future.stderr.decode('utf-8')
+        __JOBS[job_id]['stdout'] = completed_future.stdout.decode('utf-8')
+        __JOBS[job_id]['completed'] = True
+        __JOBS[job_id]['finished'] = '{:%Y-%b-%d %H:%M:%S}' \
+                                     .format(datetime.datetime.now())
 
     now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
     future_result, job = SUBPROCESS_EXECUTOR(workflow,
                                              inputs,
                                              parameters,
                                              outputs)
-    __JOBS[job.uuid] = {
+    __JOBS[str(job.uuid)] = {
         'completed': False,
         'error': False,
-        'message': '',
-        'timestamp': None
+        'finished': None,
+        'started': now
     }
     future_result.add_done_callback(lambda future_result:
                                     toggle_completion(future_result, job))
@@ -183,7 +183,7 @@ def execute_workflow(plugin_name, workflow_name):
         'job': {
             'code': job.code,
             'workflow': workflow_name,
-            'id': job.uuid,
+            'uuid': job.uuid,
             'inputs': job.input_artifact_filepaths,
             'params': job.parameter_references,
             'outputs': job.output_artifact_filepaths,
@@ -197,7 +197,7 @@ def execute_workflow(plugin_name, workflow_name):
 @v1.route('/jobs', methods=['GET'])
 def fetch_job_status():
     return jsonify({
-        'completed': [{'id': key, 'job': value}
+        'completed': [{'uuid': key, 'job': value}
                       for key, value in __JOBS.items()
                       if value['completed'] is True]
     })
@@ -210,5 +210,4 @@ def delete_completed_job(job_id):
         __JOBS.pop(job_id)
     except KeyError:
         success = False
-
     return jsonify({'result': success})

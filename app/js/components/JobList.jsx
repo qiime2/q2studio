@@ -8,7 +8,7 @@ const JobList = ({ activeJobs, completedJobs, failedJobs, active }) => {
     case 'active': {
         view = activeJobs && activeJobs.length !== 0 ?
             activeJobs.map(job => (
-                <JobRow data={job} key={job.id} />)
+                <JobRow data={job} key={job.uuid} />)
             ) :
             <tr><td>No Active Jobs...</td></tr>;
         break;
@@ -16,7 +16,7 @@ const JobList = ({ activeJobs, completedJobs, failedJobs, active }) => {
     case 'completed': {
         view = completedJobs && completedJobs.length !== 0 ?
             completedJobs.map(job => (
-                <JobRow data={job} key={job.id} />)
+                <JobRow data={job} key={job.uuid} />)
             ) :
             <tr><td>No Completed Jobs...</td></tr>;
         break;
@@ -24,7 +24,7 @@ const JobList = ({ activeJobs, completedJobs, failedJobs, active }) => {
     case 'failed': {
         view = failedJobs && failedJobs.length !== 0 ?
             failedJobs.map(job => (
-                <JobRow data={job} key={job.id} />)
+                <JobRow data={job} key={job.uuid} />)
             ) :
             <tr><td>No Failed Jobs...</td></tr>;
         break;
@@ -37,9 +37,7 @@ const JobList = ({ activeJobs, completedJobs, failedJobs, active }) => {
             <thead>
                 <tr>
                     <th className="col-md-6">Workflow</th>
-                    <th className="col-md-3">
-                        Started
-                    </th>
+                    <th className="col-md-3">Started</th>
                     {active !== 'active' ?
                         <th className="col-md-3">
                             Finished

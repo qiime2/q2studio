@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain as ipc } from 'electron';
 import which from 'which';
 
 
@@ -69,6 +69,25 @@ const createWindow = () => {
         win = null;
     });
 };
+
+const toQueryString = (obj) => {
+    return Object.keys(obj).reduce((str, key, i) => {
+        const delimiter = (i === 0) ? `#job/${obj.uuid}?` : '&';
+        const encodedKey = encodeURIComponent(key);
+        const val = encodeURIComponent(obj[key]);
+        return [str, delimiter, encodedKey, '=', val].join('');
+    }, '');
+};
+
+ipc.on('open-job-page', (event, arg) => {
+    const jobWindow = new BrowserWindow();
+    const params = toQueryString(arg);
+    let url = `file://${__dirname}/index.html${params}`;
+    if (process.env.NODE_ENV === 'development') {
+        url = `http://localhost:4242/${params}`;
+    }
+    jobWindow.loadURL(url);
+});
 
 
 // This method will be called when Electron has finished

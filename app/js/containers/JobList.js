@@ -13,7 +13,6 @@ const mapStateToProps = ({
     });
 
 const mapDispatchToProps = (dispatch) => ({
-    closeFailed: (id) => dispatch(actions.dismissFailed(id)),
     changeJobTab: (tab) => dispatch(actions.changeJobTab(tab))
 });
 

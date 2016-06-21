@@ -37,7 +37,6 @@ const JobListFrame = (props) => {
                     </li>
                 </ul>
             </div>
-
             <div className="panel-body">
                 <JobList
                     {...props}
