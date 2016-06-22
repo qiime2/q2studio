@@ -56,9 +56,7 @@ JobList.propTypes = {
     activeJobs: React.PropTypes.array,
     completedJobs: React.PropTypes.array,
     failedJobs: React.PropTypes.array,
-    closeFailed: React.PropTypes.func,
-    active: React.PropTypes.string,
-    changeJobTab: React.PropTypes.func
+    active: React.PropTypes.string
 };
 
 export default JobList;
