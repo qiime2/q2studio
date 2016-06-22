@@ -1,19 +1,19 @@
 import React from 'react';
 
 const JobHistoryData = ({ name, value }) => (
-    <tr>
-        <td className="col-sm-3">{name}</td>
-        <td className={name === 'stderr' && value.length > 0 ? 'alert alert-danger' : ''}
-            style={{ whiteSpace: 'pre' }}
-        >
-            {value}
-        </td>
-    </tr>
+    name !== undefined && value !== undefined ?
+        <tr className={name === 'stderr' && value.length > 0 ? 'danger' : ''}>
+            <td className="col-sm-3">{name}</td>
+            <td style={{ whiteSpace: 'pre' }}>
+                {`${value}`}
+            </td>
+        </tr> :
+    null
 );
 
 JobHistoryData.propTypes = {
     name: React.PropTypes.string,
-    value: React.PropTypes.string
+    value: React.PropTypes.any
 };
 
 export default JobHistoryData;

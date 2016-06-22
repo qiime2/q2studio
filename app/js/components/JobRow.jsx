@@ -21,8 +21,7 @@ const JobRow = ({ data }) => (
 );
 
 JobRow.propTypes = {
-    data: React.PropTypes.object,
-    onClick: React.PropTypes.func
+    data: React.PropTypes.object
 };
 
 export default JobRow;

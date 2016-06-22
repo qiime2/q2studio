@@ -70,23 +70,16 @@ const createWindow = () => {
     });
 };
 
-const toQueryString = (obj) => {
-    return Object.keys(obj).reduce((str, key, i) => {
-        const delimiter = (i === 0) ? `#job/${obj.uuid}?` : '&';
-        const encodedKey = encodeURIComponent(key);
-        const val = encodeURIComponent(obj[key]);
-        return [str, delimiter, encodedKey, '=', val].join('');
-    }, '');
-};
-
-ipc.on('open-job-page', (event, arg) => {
-    const jobWindow = new BrowserWindow();
-    const params = toQueryString(arg);
-    let url = `file://${__dirname}/index.html${params}`;
+ipc.on('open-job-page', (event, data) => {
+    const jobWindow = new BrowserWindow({ parent: win });
+    let url = `file://${__dirname}/index.html/#job/${data.uuid}`;
     if (process.env.NODE_ENV === 'development') {
-        url = `http://localhost:4242/${params}`;
+        url = `http://localhost:4242/#job/${data.uuid}`;
     }
     jobWindow.loadURL(url);
+    jobWindow.webContents.once('dom-ready', () => {
+        jobWindow.webContents.send('pass-job-data', data);
+    });
 });
 
 

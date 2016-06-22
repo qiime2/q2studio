@@ -71,7 +71,7 @@ def api_workflows(plugin_name):
 @v1.route('/artifacts', methods=['GET'])
 def api_artifacts():
     path = request.args.get('path', os.getcwd())
-    artifact_paths = glob.glob(os.path.join(path, '*.qzf'))
+    artifact_paths = glob.glob(os.path.join(path, '*.qza'))
     artifacts = [
         {
             'name': os.path.splitext(os.path.split(path)[1])[0],
@@ -108,7 +108,7 @@ def api_input_artifacts(plugin_name, workflow_name, input_name):
     input_type = workflow.signature.inputs[input_name][0]
     input_artifacts = []
     path = request.args.get('path', os.getcwd())
-    artifact_paths = glob.glob(os.path.join(path, '*.qzf'))
+    artifact_paths = glob.glob(os.path.join(path, '*.qza'))
     artifacts = [
         {
             'name': os.path.splitext(os.path.split(path)[1])[0],
@@ -149,8 +149,8 @@ def execute_workflow(plugin_name, workflow_name):
             elif type_ == 'param':
                 parameters[name] = value
             elif type_ == 'out':
-                if not value.endswith('.qzf'):
-                    value += '.qzf'
+                if not value.endswith('.qza'):
+                    value += '.qza'
                 outputs[name] = os.path.join(path, value)
 
     def toggle_completion(future_result, job):

@@ -1,5 +1,6 @@
 import React from 'react';
-import { initHighlightingOnLoad } from 'highlight.js';
+import { highlightBlock } from 'highlight.js';
+import { ipcRenderer as ipc } from 'electron';
 
 import JobHistoryData from './JobHistoryData';
 import style from './JobHistory.css';
@@ -8,18 +9,25 @@ import style from './JobHistory.css';
 class JobHistory extends React.Component {
     constructor(props) {
         super(props);
+        this.state = { job: {}, ...props };
         this.order = ['UUID', 'Completed', 'Error', 'Started', 'Finished', 'stdout', 'stderr'];
     }
 
-    componentDidMount() {
-        initHighlightingOnLoad();
+    componentWillMount() {
+        ipc.on('pass-job-data', (event, data) => {
+            this.setState({ job: data });
+        });
+    }
+
+    componentDidUpdate() {
+        highlightBlock(document.querySelector('pre code'));
     }
 
     render() {
         return (
             <div className={`container ${style}`}>
                 <div className="page-header">
-                    <h1>{this.props.location.query.workflow}</h1>
+                    <h1>{this.state.job.workflow}</h1>
                 </div>
                 <div className="panel panel-default">
                     <div className="panel-heading">
@@ -32,7 +40,7 @@ class JobHistory extends React.Component {
                                     <JobHistoryData
                                         key={key}
                                         name={key}
-                                        value={this.props.location.query[key.toLowerCase()]}
+                                        value={this.state.job[key.toLowerCase()]}
                                     />
                                 )}
                             </tbody>
@@ -45,7 +53,7 @@ class JobHistory extends React.Component {
                     </div>
                     <div className="panel-body">
                         <pre><code className="python">
-                            { this.props.location.query.code }
+                            { this.state.job.code }
                         </code></pre>
                     </div>
                 </div>
