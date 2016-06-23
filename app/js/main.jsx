@@ -13,6 +13,8 @@ import Auth from './containers/Auth';
 import DevTools from './util/devtools';
 import JobHistory from './components/JobHistory';
 
+require('!style-loader!css-loader!../css/main.css');
+
 let store;
 
 if (process.env.NODE_ENV === 'production') {

@@ -40,19 +40,15 @@ def api_workflows(plugin_name):
         workflows_dict[key] = {}
         workflows_dict[key]['name'] = key
         workflows_dict[key]['info'] = "Produces: {}".format(
-            ", ".join([
-                repr(type_[0])
-                for type_ in value.signature.outputs.values()
-            ])
+            ", ".join([repr(type_[0])
+                      for type_ in value.signature.outputs.values()])
         )
         workflows_dict[key]['description'] = value.signature.name
         workflows_dict[key]['requires'] = []
-        workflows_dict[key]['inputArtifacts'] = [
-            {
-                'name': name,
-                'type': repr(type_[0]),
-                'uri': 'artifacts/%s/%s/%s' % (plugin_name, key, name)
-            }
+        workflows_dict[key]['inputArtifacts'] = [{
+            'name': name,
+            'type': repr(type_[0]),
+            'uri': 'artifacts/%s/%s/%s' % (plugin_name, key, name)}
             for name, type_ in value.signature.inputs.items()
         ]
         workflows_dict[key]['inputParameters'] = [
@@ -63,8 +59,7 @@ def api_workflows(plugin_name):
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.outputs.items()
         ]
-        workflows_dict[key]['jobUri'] = \
-            'job/%s/%s' % (plugin_name, key)
+        workflows_dict[key]['jobUri'] = 'job/%s/%s' % (plugin_name, key)
     return jsonify({'workflows': workflows_dict})
 
 
@@ -72,17 +67,9 @@ def api_workflows(plugin_name):
 def api_artifacts():
     path = request.args.get('path', os.getcwd())
     artifact_paths = glob.glob(os.path.join(path, '*.qza'))
-    artifacts = [
-        {
-            'name': os.path.splitext(os.path.split(path)[1])[0],
-            'uuid': str(Artifact.load(path).uuid),
-            'type': str(Artifact.load(path).type),
-            'path': path,
-            'uri': 'artifacts/%s' % (os.path.splitext(
-                                        os.path.split(path)[1])[0])
-        }
-        for path in artifact_paths
-    ]
+    artifacts = [artifact_struct(artifact, path)
+                 for artifact, path in zip(map(Artifact.load, artifact_paths),
+                                           artifact_paths)]
     return jsonify({'artifacts': artifacts})
 
 
@@ -109,21 +96,22 @@ def api_input_artifacts(plugin_name, workflow_name, input_name):
     input_artifacts = []
     path = request.args.get('path', os.getcwd())
     artifact_paths = glob.glob(os.path.join(path, '*.qza'))
-    artifacts = [
-        {
-            'name': os.path.splitext(os.path.split(path)[1])[0],
-            'uuid': str(Artifact.load(path).uuid),
-            'type': str(Artifact.load(path).type),
-            'path': path,
-            'uri': 'artifacts/%s' % (os.path.splitext(
-                                        os.path.split(path)[1])[0])
-        }
-        for path in artifact_paths
-    ]
-    for artifact in artifacts:
-        if Artifact.load(artifact['path']).type <= input_type:
-            input_artifacts.append(artifact)
+    for artifact, path in zip(map(Artifact.load, artifact_paths),
+                              artifact_paths):
+        if artifact.type <= input_type:
+            input_artifacts.append(artifact_struct(artifact, path))
     return jsonify({'input_artifacts': input_artifacts})
+
+
+def artifact_struct(artifact, path):
+    return {
+        'name': os.path.splitext(os.path.split(path)[1])[0],
+        'uuid': str(artifact.uuid),
+        'type': str(artifact.type),
+        'path': path,
+        'uri': 'artifacts/%s' % (os.path.splitext(
+                                    os.path.split(path)[1])[0])
+    }
 
 
 @v1.route('/job/<plugin_name>/<workflow_name>', methods=['POST'])
