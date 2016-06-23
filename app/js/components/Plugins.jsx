@@ -2,7 +2,7 @@ import React from 'react';
 
 import Workflows from '../containers/Workflows';
 
-import '!style-loader!css-loader!rc-collapse/assets/index.css';
+import '!style-loader!css-loader!rc-collapse/assets/index.css'; //eslint-disable-line
 
 import Collapse, { Panel } from 'rc-collapse';
 
@@ -12,32 +12,32 @@ const Plugins = ({ plugins }) => (
         <h4>
             Available Plugins:
         </h4>
-        { plugins.length ?
+        {plugins.length ?
             (<Collapse accordion key="collapse">
                 {plugins.map(plugin =>
-                    <Panel header={ plugin.name } key={ `${plugin.name}-panel` }>
-                        { plugin.methods.length ?
+                    <Panel header={plugin.name} key={`${plugin.name}-panel`}>
+                        {plugin.methods.length ?
                             <div>
                                 <h6>
                                     Methods:
                                 </h6>
                                 <Workflows
-                                    key={ `${plugin.name}-methods` }
-                                    plugin={ plugin.name }
-                                    listing={ plugin.methods }
+                                    key={`${plugin.name}-methods`}
+                                    plugin={plugin.name}
+                                    listing={plugin.methods}
                                     type="methods"
                                 />
                             </div> : null
                         }
-                        { plugin.visualizers.length ?
+                        {plugin.visualizers.length ?
                             <div>
                                 <h6>
                                     Visualizers:
                                 </h6>
                                 <Workflows
-                                    key={ `${plugin.name}-visualizers` }
-                                    plugin={ plugin.name }
-                                    listing={ plugin.visualizers }
+                                    key={`${plugin.name}-visualizers`}
+                                    plugin={plugin.name}
+                                    listing={plugin.visualizers}
                                     type="visualizers"
                                 />
                             </div> : null

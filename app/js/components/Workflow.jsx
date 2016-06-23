@@ -1,11 +1,14 @@
 import React from 'react';
 
 const Workflow = ({ flow, onClick, disabled }) => (
-    <button type="button" disabled={disabled} className="list-group-item"
-        style={{ backgroundColor: disabled ? '#f9f9f9' : '' }} onClick={ onClick }
+    <button
+        type="button"
+        disabled={disabled}
+        className="list-group-item"
+        style={{ backgroundColor: disabled ? '#f9f9f9' : '' }} onClick={onClick}
     >
         <span className={disabled ? 'col-md-3' : 'col-md-7'}>
-            { flow.name }
+            {flow.name}
         </span>
         {disabled ?
             <span className="col-md-5">
@@ -13,7 +16,7 @@ const Workflow = ({ flow, onClick, disabled }) => (
             </span> : null
         }
         <span className={disabled ? 'col-md-4' : 'col-md-5'}>
-            Produces: { flow.outputs.map(({ type }) => type).join(', ') }
+            Produces: {flow.outputs.map(({ type }) => type).join(', ')}
         </span>
     </button>
 );

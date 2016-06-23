@@ -38,7 +38,7 @@ class ArtifactDetail extends React.Component {
                         </table>
                     </div>
                 </div>
-                { this.props.artifact.type === 'Visualization' ?
+                {this.props.artifact.type === 'Visualization' ?
                     <Visualization {...this.props} /> : null
                 }
             </div>);

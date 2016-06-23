@@ -6,6 +6,8 @@ extends: airbnb
 parserOptions:
     ecmaFeatures:
         experimentalObjectRestSpread: true
+        jsx: true
+        modules: true
 # Override a couple of rules because no style guide is perfect.
 rules:
     no-alert: off
@@ -17,4 +19,6 @@ rules:
     # There are edge cases such as (x) => { foo: [] } which are syntactically
     # ambiguous, does it return an object or is that a labeled block?
     arrow-body-style: [off, always]
-    no-nested-ternary: off
+# Fixes: Unable to resolve path to module 'electron'  import/no-unresolved
+settings:
+  import/core-modules: [ electron ]
