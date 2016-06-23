@@ -5,7 +5,6 @@ import { ipcRenderer as ipc } from 'electron';
 import JobHistoryData from './JobHistoryData';
 import style from './JobHistory.css';
 
-
 class JobHistory extends React.Component {
     constructor(props) {
         super(props);
@@ -25,7 +24,7 @@ class JobHistory extends React.Component {
 
     render() {
         return (
-            <div className={`container ${style}`}>
+            <div className="container">
                 <div className="page-header">
                     <h1>{this.state.job.workflow}</h1>
                 </div>
@@ -34,7 +33,7 @@ class JobHistory extends React.Component {
                         Job Info:
                     </div>
                     <div className="panel-body">
-                        <table className="table">
+                        <table className={`table ${style.table}`}>
                             <tbody>
                                 {this.order.map(key =>
                                     <JobHistoryData
@@ -52,7 +51,7 @@ class JobHistory extends React.Component {
                         Job Code:
                     </div>
                     <div className="panel-body">
-                        <pre><code className="python">
+                        <pre className={style.pre}><code className={`python ${style.code}`}>
                             { this.state.job.code }
                         </code></pre>
                     </div>
