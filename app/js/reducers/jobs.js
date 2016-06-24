@@ -1,5 +1,6 @@
 const initialState = {
     activeJobs: [],
+    completedJobs: [],
     failedJobs: [],
     inputArtifacts: {}
 };
@@ -37,11 +38,11 @@ const jobReducer = (state = initialState, action) => {
         return newState;
     }
     case 'JOB_COMPLETED': {
-        const job = state.activeJobs.find(a => a.id === action.job.id);
+        const job = state.activeJobs.find(a => a.uuid === action.job.uuid);
         const newState = {
             ...state,
             activeJobs: [
-                ...state.activeJobs.filter(a => a.id !== action.job.id)
+                ...state.activeJobs.filter(a => a.uuid !== action.job.uuid)
             ]
         };
 
@@ -53,17 +54,16 @@ const jobReducer = (state = initialState, action) => {
                     ...action.job.job
                 }
             ];
+        } else {
+            newState.completedJobs = [
+                ...state.completedJobs,
+                {
+                    ...job,
+                    ...action.job.job
+                }
+            ];
         }
 
-        return newState;
-    }
-    case 'DISMISS_FAILED_NOTIFICATION': {
-        const newState = {
-            ...state,
-            failedJobs: [
-                ...state.failedJobs.filter(f => f.id !== action.id)
-            ]
-        };
         return newState;
     }
     default:

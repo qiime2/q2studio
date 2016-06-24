@@ -1,0 +1,17 @@
+.table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.td {
+    overflow-x: auto;
+}
+
+.pre {
+    overflow-x: auto;
+}
+
+.code {
+    word-wrap: normal;
+    white-space: pre;
+}

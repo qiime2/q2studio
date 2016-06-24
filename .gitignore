@@ -103,4 +103,4 @@ target/
 assets/
 
 # QIIME stuff:
-*.qzf
+*.qz*

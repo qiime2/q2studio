@@ -5,35 +5,58 @@ import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import createLogger from 'redux-logger';
 
 import App from './containers/App';
 import Job from './containers/Job';
 import reducer from './reducers';
 import Auth from './containers/Auth';
+import DevTools from './util/devtools';
+import JobHistory from './components/JobHistory';
 
-const logger = createLogger();
+require('!style-loader!css-loader!../css/main.css');
 
-let store = createStore(
-    reducer,
-    compose(
+let store;
+
+if (process.env.NODE_ENV === 'production') {
+    store = createStore(
+        reducer,
         applyMiddleware(
-            thunk,
-            logger
-        ),
-        window.devToolsExtension ? window.devToolsExtension() : f => f
-    )
-);
+            thunk
+        )
+    );
+}
+
+if (process.env.NODE_ENV === 'development') {
+    store = createStore(
+        reducer,
+        compose(
+            applyMiddleware(
+                thunk
+            ),
+            DevTools.instrument()
+        )
+    );
+    if (module.hot) {
+        module.hot.accept('./reducers', () =>
+            store.replaceReducer(require('./reducers').default)
+        );
+    }
+}
 
 const history = syncHistoryWithStore(hashHistory, store);
 
+
 render(
-    <Provider store={store}>
-        <Router history={history}>
-            <Route path="/" component={App} />
-            <Route path="job/:pluginId/:jobId" component={Job} />
-            <Route path="type=:type&uri=:uri&secret_key=:secret_key" component={Auth} />
-        </Router>
-    </Provider>,
+    <div>
+        <Provider store={store}>
+            <Router history={history}>
+                <Route path="/" component={App} />
+                <Route path="job/:pluginId/:jobId" component={Job} />
+                <Route path="type=:type&uri=:uri&secret_key=:secret_key" component={Auth} />
+                <Route path="job/:id" component={JobHistory} />
+            </Router>
+        </Provider>
+        {process.env.NODE_ENV === 'development' ? <DevTools store={store} /> : null }
+    </div>,
     document.getElementById('root')
 );

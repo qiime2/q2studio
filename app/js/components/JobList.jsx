@@ -2,42 +2,61 @@ import React from 'react';
 
 import JobRow from './JobRow';
 
-const JobList = ({ activeJobs, failedJobs, closeFailed }) => (
-    activeJobs.length !== 0 || failedJobs.length !== 0 ?
-        <div className="panel panel-default">
-            <div className="panel-heading">
-                Active Jobs:
-            </div>
-            <div className="panel-body">
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Workflow</th>
-                            <th>Launched</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    { activeJobs.map(job =>
-                        <JobRow data={job} key={job.id} />
-                    )}
-                    </tbody>
-                </table>
-                { failedJobs.map(job =>
-                    <JobRow
-                        data={job}
-                        key={job.id}
-                        failed={job.error}
-                        closeFailed={() => closeFailed(job.id)}
-                    />
-                )}
-            </div>
-        </div> : null
-);
+const JobList = ({ activeJobs, completedJobs, failedJobs, active }) => {
+    let view;
+    switch (active) {
+    case 'active': {
+        view = activeJobs && activeJobs.length !== 0 ?
+            activeJobs.map(job => (
+                <JobRow data={job} key={job.uuid} />)
+            ) :
+            <tr><td>No Active Jobs...</td></tr>;
+        break;
+    }
+    case 'completed': {
+        view = completedJobs && completedJobs.length !== 0 ?
+            completedJobs.map(job => (
+                <JobRow data={job} key={job.uuid} />)
+            ) :
+            <tr><td>No Completed Jobs...</td></tr>;
+        break;
+    }
+    case 'failed': {
+        view = failedJobs && failedJobs.length !== 0 ?
+            failedJobs.map(job => (
+                <JobRow data={job} key={job.uuid} />)
+            ) :
+            <tr><td>No Failed Jobs...</td></tr>;
+        break;
+    }
+    default:
+        view = '';
+    }
+    return (
+        <table className="table">
+            <thead>
+                <tr>
+                    <th className="col-md-6">Workflow</th>
+                    <th className="col-md-3">Started</th>
+                    {active !== 'active' ?
+                        <th className="col-md-3">
+                            Finished
+                        </th> : null
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                {view}
+            </tbody>
+        </table>
+    );
+};
 
 JobList.propTypes = {
     activeJobs: React.PropTypes.array,
+    completedJobs: React.PropTypes.array,
     failedJobs: React.PropTypes.array,
-    closeFailed: React.PropTypes.func
+    active: React.PropTypes.string
 };
 
 export default JobList;

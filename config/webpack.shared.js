@@ -1,11 +1,10 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
+const autoprefixer = require('autoprefixer');
 
 module.exports = function extendConfig(override, isDev) {
     var cssLoader = 'css-loader?modules&importLoaders=1' + // eslint-disable-line no-var
                     '&localIdentName=[name]--[local]-[hash:base64:5]!postcss-loader';
-    const autoprefixer = require('autoprefixer');
     if (!isDev) {
         cssLoader = ExtractTextPlugin.extract('style-loader', cssLoader);
     } else {

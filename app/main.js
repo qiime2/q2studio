@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain as ipc } from 'electron';
 import which from 'which';
 
 
@@ -69,6 +69,18 @@ const createWindow = () => {
         win = null;
     });
 };
+
+ipc.on('open-job-page', (event, data) => {
+    const jobWindow = new BrowserWindow({ parent: win });
+    let url = `file://${__dirname}/index.html/#job/${data.uuid}`;
+    if (process.env.NODE_ENV === 'development') {
+        url = `http://localhost:4242/#job/${data.uuid}`;
+    }
+    jobWindow.loadURL(url);
+    jobWindow.webContents.once('dom-ready', () => {
+        jobWindow.webContents.send('pass-job-data', data);
+    });
+});
 
 
 // This method will be called when Electron has finished

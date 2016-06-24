@@ -12,7 +12,7 @@ const Plugins = ({ plugins }) => (
         <h4>
             Available Plugins:
         </h4>
-        <Collapse accordion={true} key="collapse">
+        <Collapse accordion key="collapse">
         { plugins.length ?
             plugins.map(plugin =>
                 <Panel header={ plugin.name } key={ `${plugin.name}-panel` }>

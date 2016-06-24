@@ -41,7 +41,9 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact, refreshArtifacts }) => (
                                 />
                             )) :
                             <tr>
-                                No Available Artifacts
+                                <td>
+                                    No Available Artifacts
+                                </td>
                             </tr>
                         }
                     </tbody>
