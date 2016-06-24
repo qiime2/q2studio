@@ -2,31 +2,36 @@ import React from 'react';
 
 import Workflows from '../containers/Workflows';
 
+import '!style-loader!css-loader!rc-collapse/assets/index.css';
+
+import Collapse, { Panel } from 'rc-collapse';
+
+
 const Plugins = ({ plugins }) => (
-    <div className="panel panel-default">
-        <div className="panel-heading">
-            Available Workflows:
-        </div>
-        <div className="panel-body">
-            { plugins.length ?
-                plugins.map(plugin =>
-                    <div key={ plugin.name }>
-                        <h4>
-                            { plugin.name }
-                        </h4>
-                        <Workflows
-                            key={ `${plugin.name}-workflows` }
-                            plugin={ plugin }
-                        />
-                    </div>
-                ) :
-                <div>
-                    <h4>
-                        No Plugins Found
-                    </h4>
-                </div>
-            }
-        </div>
+    <div>
+        <h4>
+            Available Plugins:
+        </h4>
+        <Collapse accordion={true} key="collapse">
+        { plugins.length ?
+            plugins.map(plugin =>
+                <Panel header={ plugin.name } key={ `${plugin.name}-panel` }>
+                    <h6>
+                        Workflows:
+                    </h6>
+                    <Workflows
+                        key={ `${plugin.name}-workflows` }
+                        plugin={ plugin }
+                    />
+                </Panel>
+            ) :
+            <div>
+                <h4>
+                    No Plugins Found
+                </h4>
+            </div>
+        }
+        </Collapse>
     </div>
 );
 

@@ -14,6 +14,7 @@ const App = ({ connected }) => (
                 <Directory />
             </div>
             <PluginsList />
+            <br></br>
             <JobList />
             <ArtifactsList />
         </div>
