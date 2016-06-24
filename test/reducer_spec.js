@@ -40,14 +40,12 @@ describe('reducer', () => {
         const action = actions.newArtifact(artifact);
         const state = reducer(undefined, action);
 
-        expect(state.artifacts).to.not.be.empty;
-        expect(state.artifacts).includes.something.that.eql(artifact);
+        expect(state.artifacts.artifacts).to.not.be.empty;
+        expect(state.artifacts.artifacts).includes.something.that.eql(artifact);
     });
 
     it('handles DELETE_ARTIFACT', () => {
-        const initialState = {
-            artifacts: []
-        };
+        const initialState = reducer(undefined, doNothingAction);
         const artifact = {
             name: 'table',
             uuid: 'f16ca3d0-fe83-4b1e-8eea-7e35db3f6b0f',
@@ -59,16 +57,20 @@ describe('reducer', () => {
 
         deepFreeze(state);
         const nextState = reducer(state, action);
-        expect(nextState.artifacts).to.not.include.something.that.eql(artifact);
-        expect(nextState.artifacts).to.be.empty;
+        expect(nextState.artifacts.artifacts).to.not.include.something.that.eql(artifact);
+        expect(nextState.artifacts.artifacts).to.be.empty;
     });
 
     it('handles CLEAR_ARTIFACTS', () => {
         const state = {
-            artifacts: [{ name: 'Fake Artifact' }]
+            artifacts: {
+                artifacts: [{ name: 'Fake Artifact' }],
+                visualizations: [{ name: 'Fake Visualization' }]
+            }
         };
         const nextState = reducer(state, actions.clearArtifacts());
-        expect(nextState.artifacts).to.be.empty;
+        expect(nextState.artifacts.artifacts).to.be.empty;
+        expect(nextState.artifacts.visualizations).to.be.empty;
     });
 
     it('handles ESTABLISH_CONNECTION', () => {

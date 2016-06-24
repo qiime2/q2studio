@@ -1,9 +1,11 @@
 import React from 'react';
 
-const Artifact = ({ data, onClick }) => (
+const Artifact = ({ data, onClick, deleteThis }) => (
     <tr>
         <td>
-            { data.name }
+            <a style={{ cursor: 'pointer' }} onClick={onClick}>
+                { data.name }
+            </a>
         </td>
         <td>
             { data.uuid }
@@ -15,7 +17,7 @@ const Artifact = ({ data, onClick }) => (
             <button
                 type="button"
                 className="btn btn-danger pull-right"
-                onClick={onClick}
+                onClick={deleteThis}
             >
                 Delete
             </button>
@@ -25,7 +27,8 @@ const Artifact = ({ data, onClick }) => (
 
 Artifact.propTypes = {
     data: React.PropTypes.object,
-    onClick: React.PropTypes.func
+    onClick: React.PropTypes.func,
+    deleteThis: React.PropTypes.func
 };
 
 export default Artifact;

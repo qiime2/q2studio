@@ -70,6 +70,10 @@ const createWindow = () => {
     });
 };
 
+// these can be combined once we have the central store as we can just setup
+// a url that fetches the state like a normal router route, and no data at all will
+// need to be passed along in this window opening, as we'll have store access
+
 ipc.on('open-job-page', (event, data) => {
     const jobWindow = new BrowserWindow({ parent: win });
     let url = `file://${__dirname}/index.html/#job/${data.uuid}`;
@@ -82,6 +86,17 @@ ipc.on('open-job-page', (event, data) => {
     });
 });
 
+ipc.on('open-artifact-page', (event, data) => {
+    const artifactWindow = new BrowserWindow({ parent: win });
+    let url = `file://${__dirname}/index.html/#artifact/${data.uuid}`;
+    if (process.env.NODE_ENV === 'development') {
+        url = `http://localhost:4242/#artifact/${data.uuid}`;
+    }
+    artifactWindow.loadURL(url);
+    artifactWindow.webContents.once('dom-ready', () => {
+        artifactWindow.webContents.send('pass-artifact-data', data);
+    });
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
