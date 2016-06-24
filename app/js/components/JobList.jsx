@@ -2,9 +2,9 @@ import React from 'react';
 
 import JobRow from './JobRow';
 
-const JobList = ({ activeJobs, completedJobs, failedJobs, active }) => {
+const JobList = ({ activeJobs, completedJobs, failedJobs, jobTab }) => {
     let view;
-    switch (active) {
+    switch (jobTab) {
     case 'active': {
         view = activeJobs && activeJobs.length !== 0 ?
             activeJobs.map(job => (
@@ -38,7 +38,7 @@ const JobList = ({ activeJobs, completedJobs, failedJobs, active }) => {
                 <tr>
                     <th className="col-md-6">Workflow</th>
                     <th className="col-md-3">Started</th>
-                    {active !== 'active' ?
+                    {jobTab !== 'active' ?
                         <th className="col-md-3">
                             Finished
                         </th> : null
