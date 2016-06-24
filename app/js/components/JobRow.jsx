@@ -6,15 +6,15 @@ const JobRow = ({ data }) => (
     <tr>
         <td>
             <a style={{ cursor: 'pointer' }} onClick={() => ipc.send('open-job-page', data)}>
-                { data.workflow }
+                {data.workflow}
             </a>
         </td>
         <td>
             {data.started}
         </td>
-        { data.timestamp ?
+        {data.finished ?
             <td>
-            {data.timestamp}
+            {data.finished}
             </td> : null
         }
     </tr>
