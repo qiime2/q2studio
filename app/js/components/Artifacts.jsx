@@ -1,8 +1,9 @@
 import React from 'react';
+import { ipcRenderer as ipc } from 'electron';
 
 import Artifact from './Artifact';
 
-const Artifacts = ({ artifacts, dispatchDeleteArtifact, refreshArtifacts }) => (
+const Artifacts = ({ data, type, dispatchDeleteArtifact }) => (
     <table className="table">
         <thead>
             <tr>
@@ -13,33 +14,29 @@ const Artifacts = ({ artifacts, dispatchDeleteArtifact, refreshArtifacts }) => (
             </tr>
         </thead>
         <tbody>
-            {artifacts.length ?
-                artifacts.map(artifact => (
+            {data.length ?
+                data.map(item => (
                     <Artifact
-                        key={artifact.uuid}
-                        data={artifact}
-                        onClick={() => {
+                        key={item.uuid}
+                        data={item}
+                        onClick={() => ipc.send('open-artifact-page', item)}
+                        deleteThis={() => {
                             if (confirm(
                                 'Are you sure you want to delete this Artifact?')) {
-                                dispatchDeleteArtifact(artifact.uuid);
+                                dispatchDeleteArtifact(item.uuid, type);
                             }
                         }}
                     />
-                )) :
-                <tr>
-                    <td>
-                        No Available Artifacts
-                    </td>
-                </tr>
+                )) : <tr><td>{`No available ${type}s...`}</td></tr>
             }
         </tbody>
     </table>
 );
 
 Artifacts.propTypes = {
-    artifacts: React.PropTypes.array,
-    dispatchDeleteArtifact: React.PropTypes.func,
-    refreshArtifacts: React.PropTypes.func
+    data: React.PropTypes.array,
+    type: React.PropTypes.string,
+    dispatchDeleteArtifact: React.PropTypes.func
 };
 
 export default Artifacts;

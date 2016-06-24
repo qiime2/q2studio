@@ -8,7 +8,7 @@ __WHITELIST = ["GET", "OPTIONS"]
 
 
 def validate_request_authentication():
-    if (request.method not in __WHITELIST):
+    if request.method not in __WHITELIST:
         request_date = int(request.headers['X-QIIME-Timestamp'])
         auth, signature = request.headers.get('Authorization').split()
         message = [

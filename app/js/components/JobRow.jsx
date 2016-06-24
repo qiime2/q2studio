@@ -1,27 +1,27 @@
 import React from 'react';
-import { ipcRenderer as ipc } from 'electron';
 
 
-const JobRow = ({ data }) => (
+const JobRow = ({ data, onClick }) => (
     <tr>
         <td>
-            <a style={{ cursor: 'pointer' }} onClick={() => ipc.send('open-job-page', data)}>
+            <a style={{ cursor: 'pointer' }} onClick={onClick}>
                 { data.workflow }
             </a>
         </td>
         <td>
             {data.started}
         </td>
-        { data.timestamp ?
+        {data.finished ?
             <td>
-            {data.timestamp}
+            {data.finished}
             </td> : null
         }
     </tr>
 );
 
 JobRow.propTypes = {
-    data: React.PropTypes.object
+    data: React.PropTypes.object,
+    onClick: React.PropTypes.func
 };
 
 export default JobRow;

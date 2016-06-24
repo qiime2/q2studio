@@ -12,6 +12,7 @@ import reducer from './reducers';
 import Auth from './containers/Auth';
 import DevTools from './util/devtools';
 import JobHistory from './components/JobHistory';
+import ArtifactDetail from './components/ArtifactDetail';
 
 require('!style-loader!css-loader!../css/main.css');
 
@@ -54,6 +55,7 @@ render(
                 <Route path="job/:pluginId/:jobId" component={Job} />
                 <Route path="type=:type&uri=:uri&secret_key=:secret_key" component={Auth} />
                 <Route path="job/:id" component={JobHistory} />
+                <Route path="artifact/:id" component={ArtifactDetail} />
             </Router>
         </Provider>
         {process.env.NODE_ENV === 'development' ? <DevTools store={store} /> : null }

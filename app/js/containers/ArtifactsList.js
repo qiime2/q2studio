@@ -3,13 +3,17 @@ import { connect } from 'react-redux';
 import ArtifactsListFrame from '../components/ArtifactsListFrame';
 import actions from '../actions';
 
-const mapStateToProps = ({ artifacts, tabstate: { artifactTab } }) => ({
+const mapStateToProps = ({
+    artifacts: { artifacts, visualizations },
+    tabstate: { artifactTab }
+}) => ({
     artifacts,
+    visualizations,
     artifactTab
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    dispatchDeleteArtifact: (id) => dispatch(actions.deleteArtifact(id)),
+    dispatchDeleteArtifact: (id, type) => dispatch(actions.deleteArtifact(id, type)),
     refreshArtifacts: () => dispatch(actions.refreshArtifacts()),
     changeArtifactTab: (tab) => dispatch(actions.changeArtifactTab(tab))
 });

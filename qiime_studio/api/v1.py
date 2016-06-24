@@ -5,7 +5,8 @@ import os
 from flask import Blueprint, jsonify, request
 
 from .security import validate_request_authentication
-from qiime.sdk import PluginManager, Artifact, SubprocessExecutor
+from qiime.sdk import (Artifact, PluginManager,
+                       SubprocessExecutor, Visualization)
 
 PLUGIN_MANAGER = PluginManager()
 SUBPROCESS_EXECUTOR = SubprocessExecutor()
@@ -67,20 +68,32 @@ def api_workflows(plugin_name):
 def api_artifacts():
     path = request.args.get('path', os.getcwd())
     artifact_paths = glob.glob(os.path.join(path, '*.qza'))
+    visualization_paths = glob.glob(os.path.join(path, '*.qzv'))
     artifacts = [artifact_struct(artifact, path)
                  for artifact, path in zip(map(Artifact.load, artifact_paths),
                                            artifact_paths)]
-    return jsonify({'artifacts': artifacts})
+    visualizations = [
+        artifact_struct(visualization, path)
+        for visualization, path in
+        zip(map(Visualization.load, visualization_paths), visualization_paths)]
+
+    return jsonify({'artifacts': artifacts, 'visualizations': visualizations})
 
 
 @v1.route('/artifacts/<name>', methods=['DELETE'])
-def delete_artifact(name):
+def delete_item(name):
     result = {'success': True}
-    artifact_json = request.get_json()['artifact']
-    artifact = Artifact.load(artifact_json['path'])
-    if str(artifact.uuid) == artifact_json['uuid']:
+    request_json = request.get_json()
+    item_json = request_json['item']
+    data_type = request_json['type']
+    item = None
+    if data_type == 'artifact':
+        item = Artifact.load(item_json['path'])
+    elif data_type == 'visualization':
+        item = Visualization.load(item_json['path'])
+    if str(item.uuid) == item_json['uuid']:
         try:
-            os.remove(artifact_json['path'])
+            os.remove(item_json['path'])
         except OSError:
             result['success'] = False
 

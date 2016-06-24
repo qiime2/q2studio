@@ -4,33 +4,29 @@ import JobList from './JobList';
 
 const JobListFrame = (props) => {
     const { jobTab, changeJobTab, activeJobs, completedJobs, failedJobs } = props;
+    const tabMap = {
+        active: activeJobs,
+        completed: completedJobs,
+        failed: failedJobs
+    };
     return (
         <div className="panel panel-default">
             <div className="panel-heading">
                 <ul className="nav nav-pills">
                     <li role="presentation" className={jobTab === 'active' ? 'active' : null}>
-                        <a onClick={() => (
-                            jobTab === 'active' ? null :
-                            changeJobTab('active'))}
-                        >
+                        <a onClick={() => changeJobTab('active')}>
                             Active Jobs {activeJobs.length > 0 ?
                                 <span className="badge">{activeJobs.length}</span> : null}
                         </a>
                     </li>
                     <li role="presentation" className={jobTab === 'completed' ? 'active' : null}>
-                        <a onClick={() => (
-                            jobTab === 'completed' ? null :
-                            changeJobTab('completed'))}
-                        >
+                        <a onClick={() => changeJobTab('completed')}>
                             Completed Jobs {completedJobs.length > 0 ?
                                 <span className="badge">{completedJobs.length}</span> : null}
                         </a>
                     </li>
                     <li role="presentation" className={jobTab === 'failed' ? 'active' : null}>
-                        <a onClick={() => (
-                            jobTab === 'failed' ? null :
-                            changeJobTab('failed'))}
-                        >
+                        <a onClick={() => changeJobTab('failed')}>
                             Failed Jobs {failedJobs.length > 0 ?
                                 <span className="badge">{failedJobs.length}</span> : null}
                         </a>
@@ -38,7 +34,7 @@ const JobListFrame = (props) => {
                 </ul>
             </div>
             <div className="panel-body">
-                <JobList {...props} />
+                <JobList jobs={tabMap[jobTab]} {...props} />
             </div>
         </div>
     );
