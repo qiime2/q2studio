@@ -1,6 +1,8 @@
 import datetime
 import glob
 import os
+import io
+import traceback
 
 from flask import Blueprint, jsonify, request
 
@@ -26,42 +28,42 @@ def root():
 def api_plugins():
     plugins_dict = {}
     plugins_dict = [
-        {'name': name, 'workflow_uri': 'plugins/%s/workflows' % name}
+        {'name': name, 'method_uri': 'plugins/%s/methods' % name}
         for name in PLUGIN_MANAGER.plugins
     ]
 
     return jsonify({'plugins': plugins_dict})
 
 
-@v1.route('/plugins/<plugin_name>/workflows', methods=['GET'])
-def api_workflows(plugin_name):
+@v1.route('/plugins/<plugin_name>/methods', methods=['GET'])
+def api_methods(plugin_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
-    workflows_dict = {}
-    for key, value in plugin.workflows.items():
-        workflows_dict[key] = {}
-        workflows_dict[key]['name'] = key
-        workflows_dict[key]['info'] = "Produces: {}".format(
+    methods_dict = {}
+    for key, value in plugin.methods.items():
+        methods_dict[key] = {}
+        methods_dict[key]['name'] = key
+        methods_dict[key]['info'] = "Produces: {}".format(
             ", ".join([repr(type_[0])
                       for type_ in value.signature.outputs.values()])
         )
-        workflows_dict[key]['description'] = value.signature.name
-        workflows_dict[key]['requires'] = []
-        workflows_dict[key]['inputArtifacts'] = [{
+        methods_dict[key]['description'] = value.signature.name
+        methods_dict[key]['requires'] = []
+        methods_dict[key]['inputArtifacts'] = [{
             'name': name,
             'type': repr(type_[0]),
             'uri': 'artifacts/%s/%s/%s' % (plugin_name, key, name)}
             for name, type_ in value.signature.inputs.items()
         ]
-        workflows_dict[key]['inputParameters'] = [
+        methods_dict[key]['inputParameters'] = [
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.parameters.items()
         ]
-        workflows_dict[key]['outputArtifacts'] = [
+        methods_dict[key]['outputArtifacts'] = [
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.outputs.items()
         ]
-        workflows_dict[key]['jobUri'] = 'job/%s/%s' % (plugin_name, key)
-    return jsonify({'workflows': workflows_dict})
+        methods_dict[key]['jobUri'] = 'job/%s/%s' % (plugin_name, key)
+    return jsonify({'methods': methods_dict})
 
 
 @v1.route('/artifacts', methods=['GET'])
@@ -100,12 +102,12 @@ def delete_item(name):
     return jsonify(result)
 
 
-@v1.route('/artifacts/<plugin_name>/<workflow_name>/<input_name>',
+@v1.route('/artifacts/<plugin_name>/<method_name>/<input_name>',
           methods=['GET'])
-def api_input_artifacts(plugin_name, workflow_name, input_name):
+def api_input_artifacts(plugin_name, method_name, input_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
-    workflow = plugin.workflows[workflow_name]
-    input_type = workflow.signature.inputs[input_name][0]
+    method = plugin.methods[method_name]
+    input_type = method.signature.inputs[input_name][0]
     input_artifacts = []
     path = request.args.get('path', os.getcwd())
     artifact_paths = glob.glob(os.path.join(path, '*.qza'))
@@ -127,26 +129,26 @@ def artifact_struct(artifact, path):
     }
 
 
-@v1.route('/job/<plugin_name>/<workflow_name>', methods=['POST'])
-def execute_workflow(plugin_name, workflow_name):
+@v1.route('/job/<plugin_name>/<method_name>', methods=['POST'])
+def execute_method(plugin_name, method_name):
     path = request.args.get('path', os.getcwd())
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
-    workflow = plugin.workflows[workflow_name]
+    method = plugin.methods[method_name]
 
     request_body = request.get_json()
 
     inputs = {name: None
-              for name in workflow.signature.inputs}
+              for name in method.signature.inputs}
     parameters = {name: None
-                  for name in workflow.signature.parameters}
+                  for name in method.signature.parameters}
     outputs = {name: None
-               for name in workflow.signature.outputs}
+               for name in method.signature.outputs}
 
     for key, value in request_body['jobData'].items():
         if '-' in key:
             type_, name = key.split('-')
             if type_ == 'in':
-                inputs[name] = value
+                inputs[name] = Artifact.load(value)
             elif type_ == 'param':
                 parameters[name] = value
             elif type_ == 'out':
@@ -154,38 +156,42 @@ def execute_workflow(plugin_name, workflow_name):
                     value += '.qza'
                 outputs[name] = os.path.join(path, value)
 
-    def toggle_completion(future_result, job):
-        job_id = str(job.uuid)
-        completed_future = future_result.result()
-        __JOBS[job_id]['error'] = completed_future.returncode is not 0
-        __JOBS[job_id]['stderr'] = completed_future.stderr.decode('utf-8')
-        __JOBS[job_id]['stdout'] = completed_future.stdout.decode('utf-8')
+    def toggle_completion(future_result, job_id):
+        try:
+            results = future_result.result()
+            exception = None
+        except Exception:
+            with io.StringIO as fh:
+                traceback.print_exc(file=fh)
+                exception = fh.getvalue()
+        __JOBS[job_id]['error'] = exception is not None
+        __JOBS[job_id]['stderr'] = exception
+        __JOBS[job_id]['stdout'] = ""
         __JOBS[job_id]['completed'] = True
         __JOBS[job_id]['finished'] = '{:%Y-%b-%d %H:%M:%S}' \
                                      .format(datetime.datetime.now())
 
     now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
-    future_result, job = SUBPROCESS_EXECUTOR(workflow,
-                                             inputs,
-                                             parameters,
-                                             outputs)
-    __JOBS[str(job.uuid)] = {
+    job_id = str(uuid.uuid4())
+    future_result = method.async(**inputs)
+
+    __JOBS[job_id] = {
         'completed': False,
         'error': False,
         'finished': None,
         'started': now
     }
     future_result.add_done_callback(lambda future_result:
-                                    toggle_completion(future_result, job))
+                                    toggle_completion(future_result, job_id))
 
     success = future_result.running() or future_result.done()
     result = {
         'success': success,
         'job': {
-            'code': job.code,
-            'workflow': workflow_name,
-            'uuid': job.uuid,
-            'inputs': job.input_artifact_filepaths,
+            'code': method.source,
+            'method': method_name,
+            'uuid': job_id,
+            'inputs': [],
             'params': job.parameter_references,
             'outputs': job.output_artifact_filepaths,
             'started': now

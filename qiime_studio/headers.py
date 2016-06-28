@@ -1,4 +1,3 @@
-
 def add_cors_headers(response):
     response.headers.add('Access-Control-Allow-Headers',
                          'Authorization, Content-Type, '

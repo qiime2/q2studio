@@ -4,7 +4,7 @@ from time import time
 
 from flask import request, abort, current_app
 
-__WHITELIST = ["GET", "OPTIONS"]
+__WHITELIST = ["OPTIONS"]
 
 
 def validate_request_authentication():
