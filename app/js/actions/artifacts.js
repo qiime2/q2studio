@@ -6,6 +6,11 @@ export const newArtifact = (artifact) => ({
     artifact
 });
 
+export const newVisualization = (visualization) => ({
+    type: 'NEW_VISUALIZATION',
+    visualization
+});
+
 export const expectingArtifact = () => ({
     type: 'EXPECTING_ARTIFACT'
 });
@@ -15,19 +20,33 @@ export const removedArtifact = (uuid) => ({
     uuid
 });
 
+export const removedVisualization = (uuid) => ({
+    type: 'DELETE_VISUALIZATION',
+    uuid
+});
+
 export const clearArtifacts = () => ({
     type: 'CLEAR_ARTIFACTS'
 });
 
-export const deleteArtifact = (uuid) => {
+export const deleteArtifact = (uuid, type) => {
     return (dispatch, getState) => {
-        const { artifacts, connection: { uri, availableApis, secretKey } } = getState();
-        const artifact = artifacts.find(a => a.uuid === uuid);
-        const url = `http://${uri.split('/')[0]}${availableApis[0]}${artifact.uri}`;
+        const {
+            artifacts: { artifacts, visualizations },
+            connection: { uri, availableApis, secretKey }
+        } = getState();
+        let item;
+        if (type === 'artifact') {
+            item = artifacts.find(a => a.uuid === uuid);
+        } else if (type === 'visualization') {
+            item = visualizations.find(a => a.uuid === uuid);
+        }
+        const url = `http://${uri.split('/')[0]}${availableApis[0]}${item.uri}`;
         const method = 'DELETE';
         const timestamp = Date.now();
         const body = JSON.stringify({
-            artifact
+            item,
+            type
         });
         const digest = makeB64Digest(secretKey, method, url, timestamp, body);
         fetch(url, {
@@ -47,7 +66,11 @@ export const deleteArtifact = (uuid) => {
         })
         .then((json) => {
             if (json.success) {
-                dispatch(removedArtifact(uuid));
+                if (type === 'artifact') {
+                    dispatch(removedArtifact(uuid));
+                } else if (type === 'visualization') {
+                    dispatch(removedVisualization(uuid));
+                }
             }
         })
         .then(() => dispatch(actions.refreshValidation()));
@@ -66,12 +89,21 @@ export const refreshArtifacts = () => {
         .then((response) => (response.json()))
         .then((json) => {
             json.artifacts.map(a0 => {
-                for (const artifact of artifacts) {
+                for (const artifact of artifacts.artifacts) {
                     if (artifact.uuid === a0.uuid) {
                         return false;
                     }
                 }
                 dispatch(newArtifact(a0));
+                return true;
+            });
+            json.visualizations.map(v0 => {
+                for (const artifact of artifacts.visualizations) {
+                    if (artifact.uuid === v0.uuid) {
+                        return false;
+                    }
+                }
+                dispatch(newVisualization(v0));
                 return true;
             });
         })

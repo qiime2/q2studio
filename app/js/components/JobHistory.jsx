@@ -5,6 +5,7 @@ import { ipcRenderer as ipc } from 'electron';
 import JobHistoryData from './JobHistoryData';
 import style from './JobHistory.css';
 
+
 class JobHistory extends React.Component {
     constructor(props) {
         super(props);

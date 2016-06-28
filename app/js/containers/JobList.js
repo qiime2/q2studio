@@ -5,11 +5,11 @@ import JobListFrame from '../components/JobListFrame.jsx';
 
 const mapStateToProps = ({
     jobs: { activeJobs, completedJobs, failedJobs },
-    joblist: { active } }) => ({
+    tabstate: { jobTab } }) => ({
         activeJobs,
         completedJobs,
         failedJobs,
-        active
+        jobTab
     });
 
 const mapDispatchToProps = (dispatch) => ({
