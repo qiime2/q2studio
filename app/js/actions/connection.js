@@ -1,5 +1,4 @@
 import actions from './';
-import { makeB64Digest } from '../util/auth';
 
 
 const establishConnectionHidden = (uri, secretKey) => ({

@@ -7,7 +7,7 @@ import traceback
 from flask import Blueprint, jsonify, request
 
 from .security import validate_request_authentication
-from qiime.sdk import Artifact, PluginManager, Visualization
+from qiime.sdk import (Artifact, PluginManager, Visualization)
 
 PLUGIN_MANAGER = PluginManager()
 

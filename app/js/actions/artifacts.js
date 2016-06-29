@@ -1,5 +1,5 @@
 import actions from './';
-import { makeB64Digest } from '../util/auth';
+import { fetchAPI } from '../util/auth';
 
 export const newArtifact = (artifact) => ({
     type: 'NEW_ARTIFACT',
@@ -48,22 +48,7 @@ export const deleteArtifact = (uuid, type) => {
             item,
             type
         });
-        const digest = makeB64Digest(secretKey, method, url, timestamp, body);
-        fetch(url, {
-            method,
-            headers: new Headers({
-                Authorization: `HMAC-SHA256 ${digest}`,
-                'Content-Type': 'application/json',
-                'X-QIIME-Timestamp': timestamp
-            }),
-            body
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response.json();
-        })
+        fetchAPI(secretKey, method, url, timestamp, body)
         .then((json) => {
             if (json.success) {
                 if (type === 'artifact') {
@@ -81,12 +66,12 @@ export const deleteArtifact = (uuid, type) => {
 export const refreshArtifacts = () => {
     return (dispatch, getState) => {
         dispatch(clearArtifacts());
-        const { artifacts, connection: { uri, availableApis }, currentDirectory } = getState();
+        const { artifacts, connection: { uri, secretKey }, currentDirectory } = getState();
         const path = encodeURIComponent(currentDirectory);
-        fetch(`http://${uri.split('/')[0]}${availableApis[0]}artifacts?path=${path}`, {
-            method: 'GET'
-        })
-        .then((response) => (response.json()))
+        const url = `http://${uri}/workspace/api/artifacts`;
+        const method = 'GET';
+        const timestamp = Date.now();
+        fetchAPI(secretKey, method, url, timestamp, undefined)
         .then((json) => {
             json.artifacts.map(a0 => {
                 for (const artifact of artifacts.artifacts) {

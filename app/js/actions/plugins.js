@@ -1,6 +1,5 @@
 import actions from './';
-import { makeB64Digest } from '../util/auth';
-
+import { fetchAPI } from '../util/auth';
 const foundPlugin = (plugin) => ({
     type: 'FOUND_PLUGIN',
     plugin
@@ -64,21 +63,7 @@ export const loadWorkflows = () => {
             const url = `http://${uri}${plugin.workflowsURI}`;
             const method = 'GET';
             const timestamp = Date.now();
-            const digest = makeB64Digest(secretKey, method, url, timestamp, undefined);
-            fetch(url, {
-                method,
-                headers: new Headers({
-                    Authorization: `HMAC-SHA256 ${digest}`,
-                    'Content-Type': 'application/json',
-                    'X-QIIME-Timestamp': timestamp
-                })
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
-                return response.json();
-            })
+            fetchAPI(secretKey, method, url, timestamp, undefined)
             .then((json) => {
                 Object.keys(json.methods).forEach(method => {
                     dispatch(foundWorkflow(plugin.name, json.methods[method]));
@@ -95,21 +80,7 @@ export const loadPlugins = () => {
         const url = `http://${uri}/api/plugins/`;
         const method = 'GET';
         const timestamp = Date.now();
-        const digest = makeB64Digest(secretKey, method, url, timestamp, undefined);
-        fetch(url, {
-            method,
-            headers: new Headers({
-                Authorization: `HMAC-SHA256 ${digest}`,
-                'Content-Type': 'application/json',
-                'X-QIIME-Timestamp': timestamp
-            })
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw Error(response.statusText);
-            }
-            return response.json();
-        })
+        fetchAPI(secretKey, method, url, timestamp, undefined)
         .then((json) => {
             json.plugins.map(plugin => (
                 dispatch(foundPlugin(plugin))

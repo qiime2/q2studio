@@ -1,3 +1,5 @@
+import collections
+
 from flask import Blueprint, jsonify, request, url_for
 
 from qiime.sdk import PluginManager
@@ -25,9 +27,9 @@ def inspect_plugin(plugin_name):
 @plugins.route('/<plugin_name>/methods', methods=['GET'])
 def get_plugin_methods(plugin_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
-    methods_dict = {}
+
+    methods_dict = collections.defaultdict(dict)
     for key, value in plugin.methods.items():
-        methods_dict[key] = {}
         methods_dict[key]['name'] = key
         methods_dict[key]['info'] = "Produces: {}".format(
             ", ".join([repr(type_[0])
@@ -35,10 +37,8 @@ def get_plugin_methods(plugin_name):
         )
         methods_dict[key]['description'] = value.name
         methods_dict[key]['requires'] = []
-        methods_dict[key]['inputArtifacts'] = [{
-            'name': name,
-            'type': repr(type_[0]),
-            'uri': 'artifacts/%s/%s/%s' % (plugin_name, key, name)}
+        methods_dict[key]['inputArtifacts'] = [
+            {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.inputs.items()
         ]
         methods_dict[key]['inputParameters'] = [
@@ -49,7 +49,8 @@ def get_plugin_methods(plugin_name):
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.outputs.items()
         ]
-        methods_dict[key]['jobUri'] = 'job/%s/%s' % (plugin_name, key)
+        methods_dict[key]['jobUri'] = url_for('jobs.create_job')
+
     return jsonify({'methods': methods_dict})
 
 
