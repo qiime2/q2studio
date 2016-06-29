@@ -80,7 +80,6 @@ export const loadWorkflows = () => {
                 return response.json();
             })
             .then((json) => {
-                console.table(json.methods);
                 Object.keys(json.methods).forEach(method => {
                     dispatch(foundWorkflow(plugin.name, json.methods[method]));
                     // dispatch(validateWorkflow(plugin, json.methods[method]));

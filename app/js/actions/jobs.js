@@ -125,7 +125,7 @@ export const linkInputArtifact = (input, artifacts) => ({
 
 export const fetchInputArtifacts = (workflow) => {
     return (dispatch, getState) => {
-        const { connection: { uri, availableApis }, currentDirectory } = getState();
+        const { connection: { uri, secretKey }, currentDirectory } = getState();
         const path = encodeURIComponent(currentDirectory);
         workflow.inputArtifacts.map(input => (
             fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}?path=${path}`, {

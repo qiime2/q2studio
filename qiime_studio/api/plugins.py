@@ -33,7 +33,7 @@ def get_plugin_methods(plugin_name):
             ", ".join([repr(type_[0])
                       for type_ in value.signature.outputs.values()])
         )
-        # methods_dict[key]['description'] = value.signature.name
+        methods_dict[key]['description'] = value.name
         methods_dict[key]['requires'] = []
         methods_dict[key]['inputArtifacts'] = [{
             'name': name,

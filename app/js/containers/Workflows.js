@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, { router }) => {
     const openWorkflow = (plugin, workflow) => {
-        dispatch(actions.fetchInputArtifacts(workflow));
+        // dispatch(actions.fetchInputArtifacts(workflow));
         router.push(`job/${plugin.name}/${workflow.name}`);
     };
     return ({
