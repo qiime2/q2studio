@@ -7,11 +7,9 @@ import traceback
 from flask import Blueprint, jsonify, request
 
 from .security import validate_request_authentication
-from qiime.sdk import (Artifact, PluginManager,
-                       SubprocessExecutor, Visualization)
+from qiime.sdk import Artifact, PluginManager, Visualization
 
 PLUGIN_MANAGER = PluginManager()
-SUBPROCESS_EXECUTOR = SubprocessExecutor()
 
 __JOBS = {}
 

@@ -48,7 +48,7 @@ const startRestAPI = (callback) => {
 const makeURL = (port, secretKey) => {
     const secret = encodeURIComponent(secretKey);
     const frag =
-        `#type=ESTABLISH_CONNECTION&uri=localhost%3A${port}%2Fapi%2F&secret_key=${secret}`;
+        `#type=ESTABLISH_CONNECTION&uri=localhost%3A${port}&secret_key=${secret}`;
     if (process.env.NODE_ENV === 'development') {
         return `http://localhost:4242/${frag}`;
     }

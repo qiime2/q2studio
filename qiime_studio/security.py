@@ -15,9 +15,11 @@ def validate_request_authentication():
             request.method.encode('utf8'),
             request.url.encode('utf8'),
             request.headers.get('X-QIIME-Timestamp', as_bytes=True),
-            request.headers.get('Content-Type', as_bytes=True),
-            request.headers.get('Content-Length', as_bytes=True)
+            request.headers.get('Content-Type', as_bytes=True)
         ]
+        if request.method != 'GET':
+            message.append(request.headers.get('Content-Length',
+                                               as_bytes=True))
         if (signature.encode('utf8') != make_b64_digest(message) or
                 time() - (request_date / 1000) > 60):
             abort(403)
