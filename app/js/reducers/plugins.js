@@ -1,7 +1,5 @@
 const initialState = [];
 
-import deepFreeze from 'deep-freeze';
-
 const addWorkflow = (plugin, workflow) => {
     const updatedPlugin = {
         ...plugin,
@@ -33,7 +31,6 @@ const addRequirement = (plugin, workflow, input) => {
 };
 
 const pluginsReducer = (state = initialState, action) => {
-    deepFreeze(state);
     switch (action.type) {
     case 'FOUND_PLUGIN': {
         const newState = [

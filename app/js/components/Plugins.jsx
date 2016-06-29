@@ -12,9 +12,9 @@ const Plugins = ({ plugins }) => (
         <h4>
             Available Plugins:
         </h4>
+        <Collapse accordion key="collapse">
         { plugins.length ?
-            <Collapse accordion key="collapse">
-                plugins.forEach(plugin =>
+                plugins.map(plugin =>
                     <Panel header={ plugin.name } key={ `${plugin.name}-panel` }>
                         <h6>
                             Workflows:
@@ -24,14 +24,14 @@ const Plugins = ({ plugins }) => (
                             plugin={ plugin }
                         />
                     </Panel>
-                )
-            </Collapse> :
+                ) :
             <div>
                 <h4>
                     No Plugins Found
                 </h4>
             </div>
         }
+        </Collapse>
     </div>
 );
 
