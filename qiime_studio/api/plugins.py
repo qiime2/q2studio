@@ -10,18 +10,18 @@ plugins = Blueprint('plugins', __name__)
 
 @plugins.route('/', methods=['GET'])
 def get_plugins():
-    plugins_dict = [
-        {'name': name,
-         'method_uri': url_for('.get_plugin_methods', plugin_name=name)}
-        for name in PLUGIN_MANAGER.plugins
-    ]
+    plugins_dict = [{
+        'name': name,
+        'method_uri': url_for('.get_plugin_methods', plugin_name=name)
+        'visualizer_uri': url_for('.get_plugin_visualizers', plugin_name=name)
+    } for name in PLUGIN_MANAGER.plugins]
 
     return jsonify({'plugins': plugins_dict})
 
 
 @plugins.route('/<plugin_name>', methods=['GET'])
 def inspect_plugin(plugin_name):
-    pass
+    plugin = PLUGIN_MANAGER.plugins[plugin_name]
 
 
 @plugins.route('/<plugin_name>/methods', methods=['GET'])

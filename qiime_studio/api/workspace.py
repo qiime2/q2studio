@@ -1,57 +1,100 @@
-from flask import Blueprint, jsonify, request
+import os
+
+from flask import Blueprint, jsonify, request, abort, url_for
 
 workspace = Blueprint('workspace', __name__)
+
+ARTIFACTS = {}
+VISUALIZATIONS = {}
+
+
+def load_artifacts(**kwargs):
+    return {k: Artifact.load(ARTIFACTS[v]) for k, v in kwargs.items()}
 
 
 @workspace.route('/', methods=['GET'])
 def get_workspace():
-    pass
+    return jsonify({'workspace': os.getcwd()})
 
 
 @workspace.route('/', methods=['PUT'])
 def change_workspace():
-    pass
+    request_body = request.get_json()
+    new_dir = request_body['workspace']
+    try:
+        os.chdir(new_dir)
+        return
+    except Exception:
+        # TODO: what's a good status code for this?
+        abort(500)
+
+def _result_record(result, route):
+    return {
+        'uuid': result.uuid,
+        'type': result.type,
+        'uri': url_for(route, result.uuid)
+    }
 
 
 @workspace.route('/artifacts', methods=['GET'])
 def get_artifacts():
-    # path = request.args.get('path', os.getcwd())
-    # artifact_paths = glob.glob(os.path.join(path, '*.qza'))
-    # artifacts = [artifact_struct(artifact, path)
-    #              for artifact, path in zip(map(Artifact.load, artifact_paths),
-    #                                        artifact_paths)]
-    # return jsonify({'artifacts': artifacts})
-    pass
+    global ARTIFACTS
+    ARTIFACTS = {}
+    path = os.getcwd()
+    artifact_paths = list(glob.glob(os.path.join(path, '*.qza')))
+    artifacts = []
+    for artifact, artifact_path in zip(map(Artifact.load, artifact_paths),
+                                       artifact_paths):
+        ARTIFACTS[artifact.uuid] = artifact_path
+        artifacts.append(_result_record(artifact, '.inspect_artifact'))
+
+    return jsonify({'artifacts': artifacts})
 
 
-@workspace.route('/artifacts/<name>', methods=['GET'])
-def inspect_artifact(name):
-    pass
+@workspace.route('/artifacts/<uuid>', methods=['GET'])
+def inspect_artifact(uuid):
+    try:
+        artifact = Artifact.load(ARTIFACTS[uuid])
+    except Exception:
+        abort(404)
+
+    return jsonify({'uuid': artifact.uuid, 'type': artifact.type})
 
 
-@workspace.route('/artifacts/<name>', methods=['DELETE'])
-def delete_artifact(name):
-    # result = {'success': True}
-    # artifact_json = request.get_json()['artifact']
-    # artifact = Artifact.load(artifact_json['path'])
-    # if str(artifact.uuid) == artifact_json['uuid']:
-    #     try:
-    #         os.remove(artifact_json['path'])
-    #     except OSError:
-    #         result['success'] = False
-    #
-    # return jsonify(result)
-    pass
+@workspace.route('/artifacts/<uuid>', methods=['DELETE'])
+def delete_artifact(uuid):
+    try:
+        os.remove(ARTIFACTS[uuid])
+    except OSError, KeyError:
+        abort(404)
+
 
 @workspace.route('/visualizations', methods=['GET'])
 def get_visualizations():
-    pass
+    global VISUALIZATIONS
+    VISUALIZATIONS = {}
+    path = os.getcwd()
+    viz_paths = list(glob.glob(os.path.join(path, '*.qzv')))
+    visualizations = []
+    for viz, viz_path in zip(map(Visualization.load, viz_paths), viz_paths):
+        VISUALIZATIONS[viz.uuid] = viz_path
+        visualizations.append(_result_record(viz, '.inspect_visualization'))
+
+    return jsonify({'visualizations': visualizations})
 
 
-@workspace.route('/visualizations/<name>', methods=['GET'])
-def inspect_visualization(name):
-    pass
+@workspace.route('/visualizations/<uuid>', methods=['GET'])
+def inspect_visualization(uuid):
+    try:
+        visualization = Visualization.load(VISUALIZATIONS[uuid])
+    except Exception:
+        abort(404)
 
-@workspace.route('/visualizations/<name>', methods=['DELETE'])
-def delete_visualization(name):
-    pass
+    return jsonify({'uuid': visualization.uuid, 'type': visualization.type})
+
+@workspace.route('/visualizations/<uuid>', methods=['DELETE'])
+def delete_visualization(uuid):
+    try:
+        os.remove(VISUALIZATIONS[uuid])
+    except OSError, KeyError:
+        abort(404)
