@@ -6,7 +6,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
-import App from './containers/App';
+import App from './components/pages/App';
 import Job from './containers/Job';
 import reducer from './reducers';
 import Auth from './containers/Auth';

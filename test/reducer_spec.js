@@ -93,11 +93,6 @@ describe('reducer', () => {
         expect(nextState.connection.connected).to.be.true;
     });
 
-    it('handles UPDATE_STATUS', () => {
-        const nextState = reducer(undefined, actions.updateConnectionStatus('Test message'));
-        expect(nextState.connection.message).to.equal('Test message');
-    });
-
     it('handles NEW_ACTIVE_JOB', () => {
         const job = { id: 12345 };
         const state = reducer(undefined, actions.newActiveJob(job));

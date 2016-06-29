@@ -6,9 +6,8 @@ import Directory from '../../containers/Directory';
 import Loading from '../../containers/Loading';
 import JobList from '../../containers/JobList';
 
-const App = ({ connected }) => (
+const App = () => (
     <div>
-        <Loading loaded={connected} />
         <div className="container">
             <div className="page-header">
                 <Directory />
@@ -20,9 +19,5 @@ const App = ({ connected }) => (
         </div>
     </div>
 );
-
-App.propTypes = {
-    connected: React.PropTypes.bool.isRequired
-};
 
 export default App;
