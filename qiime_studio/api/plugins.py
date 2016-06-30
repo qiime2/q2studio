@@ -22,47 +22,90 @@ def get_plugins():
 def inspect_plugin(plugin_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
 
+    plugin_dict = {}
+    plugin_dict['name'] = plugin.name
+    plugin_dict['version'] = plugin.version
+    plugin_dict['website'] = plugin.website
+    plugin_dict['package'] = plugin.package
+
+    return jsonify({'plugin': plugin_dict})
+
+
+def _build_data_dict(data):
+    dict_ = collections.defaultdict(dict)
+
+    for key, value in data.items():
+        dict_[key]['name'] = key
+        dict_[key]['info'] = "Produces: {}".format(
+            ", ".join([repr(type_[0])
+                      for type_ in value.signature.outputs.values()])
+        )
+        dict_[key]['description'] = value.name
+        dict_[key]['requires'] = []
+        dict_[key]['inputArtifacts'] = [
+            {'name': name, 'type': repr(type_[0])}
+            for name, type_ in value.signature.inputs.items()
+        ]
+        dict_[key]['inputParameters'] = [
+            {'name': name, 'type': repr(type_[0])}
+            for name, type_ in value.signature.parameters.items()
+        ]
+        dict_[key]['outputArtifacts'] = [
+            {'name': name, 'type': repr(type_[0])}
+            for name, type_ in value.signature.outputs.items()
+        ]
+        dict_[key]['jobUri'] = url_for('jobs.create_job')
+
+    return dict_
+
 
 @plugins.route('/<plugin_name>/methods', methods=['GET'])
 def get_plugin_methods(plugin_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
 
-    methods_dict = collections.defaultdict(dict)
-    for key, value in plugin.methods.items():
-        methods_dict[key]['name'] = key
-        methods_dict[key]['info'] = "Produces: {}".format(
-            ", ".join([repr(type_[0])
-                      for type_ in value.signature.outputs.values()])
-        )
-        methods_dict[key]['description'] = value.name
-        methods_dict[key]['requires'] = []
-        methods_dict[key]['inputArtifacts'] = [
-            {'name': name, 'type': repr(type_[0])}
-            for name, type_ in value.signature.inputs.items()
-        ]
-        methods_dict[key]['inputParameters'] = [
-            {'name': name, 'type': repr(type_[0])}
-            for name, type_ in value.signature.parameters.items()
-        ]
-        methods_dict[key]['outputArtifacts'] = [
-            {'name': name, 'type': repr(type_[0])}
-            for name, type_ in value.signature.outputs.items()
-        ]
-        methods_dict[key]['jobUri'] = url_for('jobs.create_job')
+    methods_dict = _build_data_dict(plugin.methods)
 
     return jsonify({'methods': methods_dict})
 
 
+def _build_inspect_dict(data):
+    dict_ = {}
+
+    dict_['id'] = data.id
+    dict_['inputs'] = data.signature.inputs
+    dict_['parameters'] = data.signature.parameters
+    dict_['outputs'] = data.signature.outputs
+    dict_['name'] = data.name
+    dict_['description'] = data.description
+    dict_['source'] = data.source
+
+    return dict_
+
+
 @plugins.route('/<plugin_name>/methods/<method_name>', methods=['GET'])
 def inspect_plugin_method(plugin_name, method_name):
-    pass
+    plugin = PLUGIN_MANAGER.plugins[plugin_name]
+    method = plugin.methods[method_name]
+
+    method_dict = _build_inspect_dict(method)
+
+    return jsonify({'method': method_dict})
 
 
 @plugins.route('/<plugin_name>/visualizers', methods=['GET'])
 def get_plugin_visualizers(plugin_name):
-    pass
+    plugin = PLUGIN_MANAGER.plugins[plugin_name]
+
+    visualizers_dict = _build_data_dict(plugin.visualizers)
+
+    return jsonify({'visualizers': visualizers_dict})
 
 
 @plugins.route('/<plugin_name>/visualizers/<method_name>', methods=['GET'])
 def inspect_plugin_visualizer(plugin_name, method_name):
-    pass
+    plugin = PLUGIN_MANAGER.plugins[plugin_name]
+    visualizer = plugin.visualizers[method_name]
+
+    visualizer_dict = _build_inspect_dict(visualizer)
+
+    return jsonify({'method': visualizer_dict})
