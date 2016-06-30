@@ -3,7 +3,7 @@ import qiime.sdk
 
 types = Blueprint('types', __name__)
 
-PLUGIN_MANAGER = PluginManager()
+PLUGIN_MANAGER = qiime.sdk.PluginManager()
 
 
 @types.route('/subtype', methods=['POST'])

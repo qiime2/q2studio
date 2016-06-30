@@ -32,16 +32,16 @@ const startRestAPI = (callback) => {
             started = true;
             callback.apply(null, data.toString('utf8').split(' '));
         } else {
-            console.log(`API: ${data}`); // eslint-disable-line no-console
+            process.stdout.write(`API: ${data}`);
         }
     });
 
     api.stderr.on('data', (data) => {
-        console.error(`API (error): ${data}`); // eslint-disable-line no-console
+        process.stderr.write(`API (error): ${data}`);
     });
 
     api.on('close', (code) => {
-        console.log(`API process exited with code ${code}`); // eslint-disable-line no-console
+        process.stdout.write(`API process exited with code ${code}`);
     });
 };
 

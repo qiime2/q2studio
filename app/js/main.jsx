@@ -14,7 +14,7 @@ import DevTools from './util/devtools';
 import JobHistory from './components/JobHistory';
 import ArtifactDetail from './components/ArtifactDetail';
 
-require('!style-loader!css-loader!../css/main.css');
+import '!style-loader!css-loader!../css/main.css';
 
 let store;
 

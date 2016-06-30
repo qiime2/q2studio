@@ -2,8 +2,11 @@ import collections
 import sys
 import tempfile
 import threading
+import uuid
+import datetime
 
 from flask import Blueprint, jsonify, request, abort, url_for
+import qiime.sdk
 
 from qiime_studio.util import redirected_stdio
 from .workspace import load_artifacts
@@ -13,7 +16,8 @@ jobs = Blueprint('jobs', __name__)
 # TODO: JOBS should go in a sqlite database in the event our WSGI server
 # decides to create more than one process
 JOBS = {}
-PLUGIN_MANAGER = PluginManager()
+PLUGIN_MANAGER = qiime.sdk.PluginManager()
+
 
 @jobs.route('/', methods=['GET'])
 def get_jobs():
@@ -30,6 +34,7 @@ def get_jobs():
 
 
 LOCK = threading.Lock()
+
 
 @jobs.route('/', methods=['POST'])
 def create_job():
@@ -61,21 +66,22 @@ def create_job():
     inputs = load_artifacts(inputs)
     inputs.update(parameters)
     job_id = str(uuid.uuid4())
+    now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
 
     JOBS[job_id] = {
         'uuid': job_id,
-        'completed': False
-        'error': False
+        'completed': False,
+        'error': False,
         'started': now,
         'finished': None,
         'stdout': None,
         'stderr': None,
-        'code': method.source,
+        'code': action.source,
         'actionId': action.id,
         'actionName': action.name,
         'inputs': {k: v.uuid for k, v in inputs.items()},
         'params': parameters,
-        'outputs': {k: None for k in outputs},
+        'outputs': {k: None for k in outputs}
     }
 
     # Add prefix just in case the file isn't unlinked, but we don't need a name
@@ -93,6 +99,7 @@ def create_job():
         'job': url_for('.inspect_job', job_id)
     })
 
+
 def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
     # This is needed for closure over stdout, stderr, outputs
     def callback(future):
@@ -101,15 +108,15 @@ def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
         stderr = _consume_fh(stderr_fh)
         try:
             results = future.result()
-            if type(result) is not tuple:
+            if type(results) is not tuple:
                 results = (results,)
         except Exception:
             # stderr should have the traceback already
-            result = None
+            results = None
 
-        if result is not None:
-            for result, path in zip(results, results):
-                artifact.save(path)
+        if results is not None:
+            for result, path in zip(results, outputs.values()):
+                result.save(path)
 
         job = JOBS[job_id]
         job['completed'] = True
@@ -138,7 +145,6 @@ def inspect_job(job_id):
 
 @jobs.route('/<job_id>', methods=['DELETE'])
 def delete_job(job_id):
-    success = True
     try:
         del JOBS[job_id]
     except KeyError:

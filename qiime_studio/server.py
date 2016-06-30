@@ -25,7 +25,8 @@ def start_server():
     studio.config['SECRET_KEY'] = secret_key = os.urandom(33)
     secret_key = base64.b64encode(secret_key).decode('ascii')
     # setup OS-assigned port
-    server = WSGIServer(('localhost', 0), studio)
+    server = WSGIServer(('localhost', 0), studio, log=sys.stdout,
+                        error_log=sys.stderr)
     server.start()
     # send key and port to parent process
     sys.stdout.write("%d %s" % (server.server_port, secret_key))

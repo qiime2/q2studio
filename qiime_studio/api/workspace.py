@@ -65,7 +65,7 @@ def inspect_artifact(uuid):
 def delete_artifact(uuid):
     try:
         os.remove(ARTIFACTS[uuid])
-    except OSError, KeyError:
+    except (OSError, KeyError):
         abort(404)
 
 
@@ -96,5 +96,5 @@ def inspect_visualization(uuid):
 def delete_visualization(uuid):
     try:
         os.remove(VISUALIZATIONS[uuid])
-    except OSError, KeyError:
+    except (OSError, KeyError):
         abort(404)

@@ -1,10 +1,9 @@
 import collections
 
-from flask import Blueprint, jsonify, request, url_for
+from flask import Blueprint, jsonify, url_for
+import qiime.sdk
 
-from qiime.sdk import PluginManager
-
-PLUGIN_MANAGER = PluginManager()
+PLUGIN_MANAGER = qiime.sdk.PluginManager()
 plugins = Blueprint('plugins', __name__)
 
 
@@ -12,7 +11,7 @@ plugins = Blueprint('plugins', __name__)
 def get_plugins():
     plugins_dict = [{
         'name': name,
-        'method_uri': url_for('.get_plugin_methods', plugin_name=name)
+        'method_uri': url_for('.get_plugin_methods', plugin_name=name),
         'visualizer_uri': url_for('.get_plugin_visualizers', plugin_name=name)
     } for name in PLUGIN_MANAGER.plugins]
 

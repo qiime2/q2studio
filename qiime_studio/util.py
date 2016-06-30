@@ -7,7 +7,7 @@ from contextlib import contextmanager
 @contextmanager
 def redirected_stdio(to=os.devnull, stdio=None):
     if stdio is None:
-       stdio = sys.stdout
+        stdio = sys.stdout
 
     stdio_fd = _get_fileno(stdio)
     # copy stdio_fd before it is overwritten
@@ -21,7 +21,7 @@ def redirected_stdio(to=os.devnull, stdio=None):
             with open(to, 'wb') as to_file:
                 os.dup2(to_file.fileno(), stdio_fd)  # $ exec > to
         try:
-            yield stdio # allow code to be run with the redirected stdio
+            yield stdio  # allow code to be run with the redirected stdio
         finally:
             # restore stdio to its previous value
             # NOTE: dup2 makes stdio_fd inheritable unconditionally
