@@ -62,8 +62,7 @@ export const loadWorkflows = () => {
         plugins.forEach(plugin => {
             const url = `http://${uri}${plugin.workflowsURI}`;
             const method = 'GET';
-            const timestamp = Date.now();
-            fetchAPI(secretKey, method, url, timestamp, undefined)
+            fetchAPI(secretKey, method, url)
             .then((json) => {
                 Object.keys(json.methods).forEach(method => {
                     dispatch(foundWorkflow(plugin.name, json.methods[method]));
@@ -79,8 +78,7 @@ export const loadPlugins = () => {
         const { connection: { uri, secretKey } } = getState();
         const url = `http://${uri}/api/plugins/`;
         const method = 'GET';
-        const timestamp = Date.now();
-        fetchAPI(secretKey, method, url, timestamp, undefined)
+        fetchAPI(secretKey, method, url)
         .then((json) => {
             json.plugins.map(plugin => (
                 dispatch(foundPlugin(plugin))

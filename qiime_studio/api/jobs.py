@@ -141,6 +141,7 @@ def inspect_job(job_id):
         return jsonify(JOBS[job_id])
     except:
         abort(404)
+    return ''
 
 
 @jobs.route('/<job_id>', methods=['DELETE'])
@@ -150,4 +151,4 @@ def delete_job(job_id):
     except KeyError:
         # This could trigger a reload of the jobs in the interface
         abort(404)
-    return
+    return ''

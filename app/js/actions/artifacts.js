@@ -66,31 +66,26 @@ export const deleteArtifact = (uuid, type) => {
 export const refreshArtifacts = () => {
     return (dispatch, getState) => {
         dispatch(clearArtifacts());
-        const { artifacts, connection: { uri, secretKey }, currentDirectory } = getState();
-        const path = encodeURIComponent(currentDirectory);
-        const url = `http://${uri}/workspace/api/artifacts`;
+        const { connection: { uri, secretKey } } = getState();
+        const url = `http://${uri}/api/workspace/artifacts`;
         const method = 'GET';
-        const timestamp = Date.now();
-        fetchAPI(secretKey, method, url, timestamp, undefined)
+        fetchAPI(secretKey, method, url)
         .then((json) => {
-            json.artifacts.map(a0 => {
-                for (const artifact of artifacts.artifacts) {
-                    if (artifact.uuid === a0.uuid) {
-                        return false;
-                    }
-                }
-                dispatch(newArtifact(a0));
-                return true;
-            });
-            json.visualizations.map(v0 => {
-                for (const artifact of artifacts.visualizations) {
-                    if (artifact.uuid === v0.uuid) {
-                        return false;
-                    }
-                }
-                dispatch(newVisualization(v0));
-                return true;
-            });
+            json.artifacts.forEach(artifact => dispatch(newArtifact(artifact)));
+        })
+        .then(() => dispatch(actions.refreshValidation()));
+    };
+};
+
+export const refreshVisualizations = () => {
+    return (dispatch, getState) => {
+        dispatch(clearArtifacts());
+        const { connection: { uri, secretKey } } = getState();
+        const url = `http://${uri}/api/workspace/visualizations`;
+        const method = 'GET';
+        fetchAPI(secretKey, method, url)
+        .then((json) => {
+            json.visualizations.forEach(viz => dispatch(newVisualization(viz)));
         })
         .then(() => dispatch(actions.refreshValidation()));
     };

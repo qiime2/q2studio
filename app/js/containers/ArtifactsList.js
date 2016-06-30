@@ -14,7 +14,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = (dispatch) => ({
     dispatchDeleteArtifact: (id, type) => dispatch(actions.deleteArtifact(id, type)),
-    refreshArtifacts: () => dispatch(actions.refreshArtifacts()),
+    refreshArtifacts: () => (dispatch(actions.refreshArtifacts()), dispatch(actions.refreshVisualizations())),
     changeArtifactTab: (tab) => dispatch(actions.changeArtifactTab(tab))
 });
 

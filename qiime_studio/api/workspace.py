@@ -1,6 +1,9 @@
 import os
+import glob
 
-from flask import Blueprint, jsonify, request, abort, url_for
+from flask import Blueprint, jsonify, request, abort, url_for\
+
+from qiime.sdk import Artifact, Visualization
 
 workspace = Blueprint('workspace', __name__)
 
@@ -23,16 +26,18 @@ def change_workspace():
     new_dir = request_body['workspace']
     try:
         os.chdir(new_dir)
-        return
+        return ''
     except Exception:
         # TODO: what's a good status code for this?
         abort(500)
 
-def _result_record(result, route):
+
+def _result_record(result, name, route):
     return {
-        'uuid': result.uuid,
-        'type': result.type,
-        'uri': url_for(route, result.uuid)
+        'name': name,
+        'uuid': str(result.uuid),
+        'type': repr(result.type),
+        'uri': url_for(route, uuid=result.uuid)
     }
 
 
@@ -43,10 +48,14 @@ def get_artifacts():
     path = os.getcwd()
     artifact_paths = list(glob.glob(os.path.join(path, '*.qza')))
     artifacts = []
-    for artifact, artifact_path in zip(map(Artifact.load, artifact_paths),
-                                       artifact_paths):
+    for artifact_path in artifact_paths:
+        try:
+            artifact = Artifact.load(artifact_path)
+        except Exception:
+            pass  # TODO: do better things when this happens
+        name, _ = os.path.splitext(os.path.basename(artifact_path))
+        artifacts.append(_result_record(artifact, name, '.inspect_artifact'))
         ARTIFACTS[artifact.uuid] = artifact_path
-        artifacts.append(_result_record(artifact, '.inspect_artifact'))
 
     return jsonify({'artifacts': artifacts})
 
@@ -65,6 +74,7 @@ def inspect_artifact(uuid):
 def delete_artifact(uuid):
     try:
         os.remove(ARTIFACTS[uuid])
+        return ''
     except (OSError, KeyError):
         abort(404)
 
@@ -76,9 +86,15 @@ def get_visualizations():
     path = os.getcwd()
     viz_paths = list(glob.glob(os.path.join(path, '*.qzv')))
     visualizations = []
-    for viz, viz_path in zip(map(Visualization.load, viz_paths), viz_paths):
+    for viz_path in viz_paths:
+        try:
+            viz = Visualization.load(viz_path)
+        except Exception:
+            pass  # TODO: do better things when this happens
+        name, _ = os.path.splitext(os.path.basename(viz_path))
         VISUALIZATIONS[viz.uuid] = viz_path
-        visualizations.append(_result_record(viz, '.inspect_visualization'))
+        visualizations.append(
+            _result_record(viz, name, '.inspect_visualization'))
 
     return jsonify({'visualizations': visualizations})
 
@@ -92,9 +108,11 @@ def inspect_visualization(uuid):
 
     return jsonify({'uuid': visualization.uuid, 'type': visualization.type})
 
+
 @workspace.route('/visualizations/<uuid>', methods=['DELETE'])
 def delete_visualization(uuid):
     try:
         os.remove(VISUALIZATIONS[uuid])
+        return ''
     except (OSError, KeyError):
         abort(404)

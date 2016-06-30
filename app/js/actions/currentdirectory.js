@@ -1,15 +1,21 @@
 import { remote } from 'electron';
 
-import { refreshArtifacts } from './artifacts';
+import { refreshArtifacts, refreshVisualizations } from './artifacts';
+import { fetchAPI } from '../util/auth';
 
 
 export const directoryChange = (directory) => {
-    return (dispatch) => {
-        dispatch({
-            type: 'DIRECTORY_CHANGE',
-            directory
-        });
-        dispatch(refreshArtifacts());
+    return (dispatch, getState) => {
+        const { connection: { uri, secretKey } } = getState();
+        const url = `http://${uri}/api/workspace/`;
+        const method = 'PUT';
+        fetchAPI(secretKey, method, url, {'workspace': directory})
+            .then(() => dispatch({
+                type: 'DIRECTORY_CHANGE',
+                directory
+            }))
+            .then(() => dispatch(refreshArtifacts()))
+            .then(() => dispatch(refreshVisualizations()));
     };
 };
 
@@ -21,6 +27,10 @@ export const directoryChangeDialog = (currPath) => {
             defaultpath: currPath,
             buttonlabel: 'Set Directory',
             properties: ['openDirectory']
-        }, (fps) => dispatch(directoryChange(fps[0])));
+        }, (fps) => {
+            if (fps) {
+                dispatch(directoryChange(fps[0]))
+            }
+        });
     };
 };
