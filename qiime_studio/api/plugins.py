@@ -9,13 +9,13 @@ plugins = Blueprint('plugins', __name__)
 
 @plugins.route('/', methods=['GET'])
 def get_plugins():
-    plugins_dict = [{
+    plugins = [{
         'name': name,
-        'method_uri': url_for('.get_plugin_methods', plugin_name=name),
-        'visualizer_uri': url_for('.get_plugin_visualizers', plugin_name=name)
+        'methodsURI': url_for('.get_plugin_methods', plugin_name=name),
+        'visualizersURI': url_for('.get_plugin_visualizers', plugin_name=name)
     } for name in PLUGIN_MANAGER.plugins]
 
-    return jsonify({'plugins': plugins_dict})
+    return jsonify({'plugins': plugins})
 
 
 @plugins.route('/<plugin_name>', methods=['GET'])
@@ -35,13 +35,9 @@ def _build_data_dict(data):
     dict_ = collections.defaultdict(dict)
 
     for key, value in data.items():
-        dict_[key]['name'] = key
-        dict_[key]['info'] = "Produces: {}".format(
-            ", ".join([repr(type_[0])
-                      for type_ in value.signature.outputs.values()])
-        )
-        dict_[key]['description'] = value.name
-        dict_[key]['requires'] = []
+        dict_[key]['id'] = key
+        dict_[key]['name'] = value.name
+        dict_[key]['description'] = value.description
         dict_[key]['inputs'] = [
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.inputs.items()
@@ -54,7 +50,6 @@ def _build_data_dict(data):
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.outputs.items()
         ]
-        dict_[key]['jobUri'] = url_for('jobs.create_job')
 
     return dict_
 

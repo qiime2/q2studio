@@ -12,26 +12,35 @@ const Plugins = ({ plugins }) => (
         <h4>
             Available Plugins:
         </h4>
-        <Collapse accordion key="collapse">
         { plugins.length ?
-                plugins.map(plugin =>
+            (<Collapse accordion key="collapse">
+                {plugins.map(plugin =>
                     <Panel header={ plugin.name } key={ `${plugin.name}-panel` }>
                         <h6>
-                            Workflows:
+                            Methods:
                         </h6>
                         <Workflows
-                            key={ `${plugin.name}-workflows` }
-                            plugin={ plugin }
+                            key={ `${plugin.name}-methods` }
+                            plugin={ plugin.name }
+                            listing={ plugin.methods }
+                            type='methods'
                         />
-                    </Panel>
-                ) :
-            <div>
-                <h4>
-                    No Plugins Found
-                </h4>
-            </div>
+                        <h6>
+                            Visualizers:
+                        </h6>
+                        <Workflows
+                            key={ `${plugin.name}-visualizers` }
+                            plugin={ plugin.name }
+                            listing={ plugin.visualizers }
+                            type='visualizers'
+                        />
+                    </Panel>)}
+            </Collapse>)
+            :
+            (<h5>
+                No Plugins Found
+            </h5>)
         }
-        </Collapse>
     </div>
 );
 

@@ -52,7 +52,7 @@ render(
         <Provider store={store}>
             <Router history={history}>
                 <Route path="/" component={App} />
-                <Route path="job/:pluginId/:jobId" component={Job} />
+                <Route path="job/:pluginId/:actionType/:jobId" component={Job} />
                 <Route path="type=:type&uri=:uri&secret_key=:secret_key" component={Auth} />
                 <Route path="job/:id" component={JobHistory} />
                 <Route path="artifact/:id" component={ArtifactDetail} />

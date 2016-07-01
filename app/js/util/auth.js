@@ -1,15 +1,16 @@
 import CryptoJS from 'crypto-js';
 
-const makeB64Digest = (secretKey, httpVerb, url, requestTime, body = JSON.stringify({})) => {
+const makeB64Digest = (secretKey, httpVerb, url, requestTime, body) => {
     const byteArray = CryptoJS.enc.Base64.parse(secretKey);
     const message = [
         httpVerb,
         url,
         requestTime,
-        'application/json'
+        'application/json',
+        (body || '')
     ];
 
-    if (httpVerb !== 'GET') { message.push(body.length) };
+    if (body !== undefined) { message.push(body.length) };
 
     const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, byteArray);
     message.forEach(value => {
@@ -31,7 +32,7 @@ export const fetchAPI = (secretKey, method, url, body_) => {
             'Content-Type': 'application/json',
             'X-QIIME-Timestamp': timestamp
         }),
-        body: method !== 'GET' ? body : null
+        body: (body || undefined)
     })
     .then((response) => {
         if (!response.ok) {

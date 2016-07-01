@@ -1,3 +1,5 @@
+import { remote } from 'electron';
+
 import actions from './';
 
 
@@ -12,5 +14,6 @@ export const establishConnection = (uri, secretKey) => {
     return (dispatch) => {
         dispatch(establishConnectionHidden(uri, secretKey));
         dispatch(actions.loadPlugins());
+        dispatch(actions.directoryChange(remote.app.getPath('home')));
     };
 };

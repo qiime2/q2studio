@@ -54,7 +54,7 @@ def get_artifacts():
             name, _ = os.path.splitext(os.path.basename(artifact_path))
             artifacts.append(
                 _result_record(artifact, name, '.inspect_artifact'))
-            ARTIFACTS[artifact.uuid] = artifact_path
+            ARTIFACTS[str(artifact.uuid)] = artifact_path
         except Exception:
             pass  # TODO: do better things when this happens
 
@@ -73,7 +73,9 @@ def inspect_artifact(uuid):
 
 @workspace.route('/artifacts/<uuid>', methods=['DELETE'])
 def delete_artifact(uuid):
+    print(ARTIFACTS)
     try:
+        print(ARTIFACTS[uuid])
         os.remove(ARTIFACTS[uuid])
         return ''
     except (OSError, KeyError):
@@ -91,7 +93,7 @@ def get_visualizations():
         try:
             viz = Visualization.load(viz_path)
             name, _ = os.path.splitext(os.path.basename(viz_path))
-            VISUALIZATIONS[viz.uuid] = viz_path
+            VISUALIZATIONS[str(viz.uuid)] = viz_path
             visualizations.append(
                 _result_record(viz, name, '.inspect_visualization'))
         except Exception:

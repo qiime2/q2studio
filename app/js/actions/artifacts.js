@@ -11,10 +11,6 @@ export const newVisualization = (visualization) => ({
     visualization
 });
 
-export const expectingArtifact = () => ({
-    type: 'EXPECTING_ARTIFACT'
-});
-
 export const removedArtifact = (uuid) => ({
     type: 'DELETE_ARTIFACT',
     uuid
@@ -29,39 +25,26 @@ export const clearArtifacts = () => ({
     type: 'CLEAR_ARTIFACTS'
 });
 
-export const deleteArtifact = (uuid, type) => {
+export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {
-        const {
-            artifacts: { artifacts, visualizations },
-            connection: { uri, availableApis, secretKey }
-        } = getState();
-        let item;
-        if (type === 'artifact') {
-            item = artifacts.find(a => a.uuid === uuid);
-        } else if (type === 'visualization') {
-            item = visualizations.find(a => a.uuid === uuid);
-        }
-        const url = `http://${uri.split('/')[0]}${availableApis[0]}${item.uri}`;
-        const method = 'DELETE';
-        const timestamp = Date.now();
-        const body = JSON.stringify({
-            item,
-            type
-        });
-        fetchAPI(secretKey, method, url, timestamp, body)
-        .then((json) => {
-            if (json.success) {
-                if (type === 'artifact') {
-                    dispatch(removedArtifact(uuid));
-                } else if (type === 'visualization') {
-                    dispatch(removedVisualization(uuid));
-                }
-            }
-        })
-        .then(() => dispatch(actions.refreshValidation()));
-    };
-};
+        const { connection: { uri, secretKey } } = getState();
+        const url = `http://${uri}/api/workspace/artifacts/${uuid}`
+        fetchAPI(secretKey, 'DELETE', url)
+        .then(() => dispatch(removedArtifact(uuid)))
+        .then(() => dispatch(actions.refreshValidation()))
+    }
+}
 
+export const deleteVisualization = (uuid) => {
+    return (dispatch, getState) => {
+        const { connection: { uri, secretKey } } = getState();
+        const url = `http://${uri}/api/workspace/visualizations/${uuid}`
+        fetchAPI(secretKey, 'DELETE', url)
+        .then(() => {
+            dispatch(removedVisualization(uuid))
+        });
+    }
+}
 
 export const refreshArtifacts = () => {
     return (dispatch, getState) => {

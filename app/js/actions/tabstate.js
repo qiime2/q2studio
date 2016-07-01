@@ -1,9 +1,5 @@
-export const changeJobTab = (tab) => ({
-    type: 'CHANGE_JOB_TAB',
-    tab
-});
-
-export const changeArtifactTab = (tab) => ({
-    type: 'CHANGE_ARTIFACT_TAB',
-    tab
+export const changeTab = (name, index) => ({
+    type: 'CHANGE_TAB',
+    name,
+    index
 });

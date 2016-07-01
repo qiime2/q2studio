@@ -7,7 +7,7 @@ const reducer = (state = initialState, action) => {
         const newState = {
             ...state
         };
-        newState[input.name] = artifacts;
+        newState[input] = artifacts;
         return newState;
     }
     case 'CLEAR_JOB_STATE': {

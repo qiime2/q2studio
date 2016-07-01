@@ -1,15 +1,15 @@
 import React from 'react';
 
 
-const Job = ({ plugin, workflow, inputs, submitJob, cancelJob }) => {
+const Job = ({ plugin, action, inputs, submitJob, cancelJob }) => {
     let counter = 1;
     return (
         <div className="container">
             <div className="page-header">
-                <h1>{plugin.name}: {workflow.description}</h1>
+                <h1>{plugin.name}: {action.description}</h1>
             </div>
-            <form onSubmit={(e) => submitJob(e, workflow)}>
-            { workflow.inputs.map(({ name }) =>
+            <form onSubmit={(e) => submitJob(e, action)}>
+            { action.inputs.map(({ name }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-dropdown${counter++}` }
@@ -35,7 +35,7 @@ const Job = ({ plugin, workflow, inputs, submitJob, cancelJob }) => {
                 </fieldset>
             )}
 
-            { workflow.parameters.map(({ name, type }) =>
+            { action.parameters.map(({ name, type }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-text-input${counter++}` }
@@ -55,7 +55,7 @@ const Job = ({ plugin, workflow, inputs, submitJob, cancelJob }) => {
                 <br />
                 <br />
 
-            { workflow.outputs.map(({ name, type }) =>
+            { action.outputs.map(({ name, type }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-text-output${counter++}` }
@@ -91,7 +91,7 @@ const Job = ({ plugin, workflow, inputs, submitJob, cancelJob }) => {
 Job.propTypes = {
     inputs: React.PropTypes.object,
     plugin: React.PropTypes.object,
-    workflow: React.PropTypes.object,
+    action: React.PropTypes.object,
     submitJob: React.PropTypes.func,
     cancelJob: React.PropTypes.func
 };

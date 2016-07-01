@@ -9,7 +9,6 @@ PLUGIN_MANAGER = qiime.sdk.PluginManager()
 @types.route('/subtype', methods=['POST'])
 def is_subtype():
     request_body = request.get_json()
-    print(request_body)
     list_a = list(map(qiime.sdk.parse_type, request_body['a']))
     list_b = list(map(qiime.sdk.parse_type, request_body['b']))
 

@@ -5,15 +5,15 @@ import JobListFrame from '../components/JobListFrame.jsx';
 
 const mapStateToProps = ({
     jobs: { activeJobs, completedJobs, failedJobs },
-    tabState: { jobTab } }) => ({
+    tabState: { jobs: { currentIndex } } }) => ({
         activeJobs,
         completedJobs,
         failedJobs,
-        jobTab
+        currentIndex
     });
 
 const mapDispatchToProps = (dispatch) => ({
-    changeJobTab: (tab) => dispatch(actions.changeJobTab(tab))
+    changeJobTab: (idx) => dispatch(actions.changeTab('jobs', idx))
 });
 
 export default connect(

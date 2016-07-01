@@ -13,7 +13,7 @@ const Workflow = ({ flow, onClick, disabled }) => (
             </span> : null
         }
         <span className={disabled ? 'col-md-4' : 'col-md-5'}>
-            { flow.info }
+            Produces: { flow.outputs.map(({ type }) => type).join(', ') }
         </span>
     </button>
 );

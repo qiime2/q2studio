@@ -53,7 +53,7 @@ def create_job():
     outputs = collections.OrderedDict()
     for key, value in action.signature.outputs.items():
         path = outputs_[key]
-        if action_type == 'method':
+        if action_type.startswith('method'):
             if not path.endswith('.qza'):
                 path += '.qza'
         else:

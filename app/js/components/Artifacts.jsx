@@ -3,7 +3,7 @@ import { ipcRenderer as ipc } from 'electron';
 
 import Artifact from './Artifact';
 
-const Artifacts = ({ data, type, dispatchDeleteArtifact }) => (
+const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualization }) => (
     <table className="table">
         <thead>
             <tr>
@@ -23,7 +23,13 @@ const Artifacts = ({ data, type, dispatchDeleteArtifact }) => (
                         deleteThis={() => {
                             if (confirm(
                                 'Are you sure you want to delete this Artifact?')) {
-                                dispatchDeleteArtifact(item.uuid, type);
+                                if (type === 'artifact') {
+                                    dispatchDeleteArtifact(item.uuid);
+                                } else if (type == 'visualization') {
+                                    dispatchDeleteVisualization(item.uuid);
+                                } else {
+                                    throw Error(`Unkown type '${type}'`)
+                                }
                             }
                         }}
                     />

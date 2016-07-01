@@ -7,7 +7,7 @@ const JobList = ({ jobs, jobTab }) => (
     <table className="table">
         <thead>
             <tr>
-                <th className="col-md-6">Workflow</th>
+                <th className="col-md-6">Action</th>
                 <th className="col-md-3">Started</th>
                 {jobTab !== 'active' ?
                     <th className="col-md-3">

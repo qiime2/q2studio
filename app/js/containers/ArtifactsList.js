@@ -5,20 +5,21 @@ import actions from '../actions';
 
 const mapStateToProps = ({
     artifacts: { artifacts, visualizations },
-    tabState: { artifactTab }
+    tabState: { artifacts: { currentIndex } }
 }) => ({
     artifacts,
     visualizations,
-    artifactTab
+    currentIndex
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    dispatchDeleteArtifact: (id, type) => dispatch(actions.deleteArtifact(id, type)),
+    dispatchDeleteArtifact: (id) => dispatch(actions.deleteArtifact(id)),
+    dispatchDeleteVisualization: (id) => dispatch(actions.deleteVisualization(id)),
     refreshArtifacts: () => {
         dispatch(actions.refreshArtifacts());
         dispatch(actions.refreshVisualizations());
     },
-    changeArtifactTab: (tab) => dispatch(actions.changeArtifactTab(tab))
+    changeArtifactTab: (idx) => dispatch(actions.changeTab('artifacts', idx))
 });
 
 export default connect(

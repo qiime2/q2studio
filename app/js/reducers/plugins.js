@@ -1,29 +1,43 @@
 const initialState = [];
 
-const addWorkflow = (plugin, workflow) => {
+const addMethod = (plugin, method) => {
     const updatedPlugin = {
         ...plugin,
-        workflows: [
-            ...plugin.workflows,
+        methods: [...plugin.methods, {...method, requires: []}]
+    };
+    return updatedPlugin;
+};
+
+const addVisualizer = (plugin, visualizer) => {
+    const updatedPlugin = {
+        ...plugin,
+        visualizers: [...plugin.visualizers, {...visualizer, requires: []}]
+    };
+    return updatedPlugin;
+};
+
+const setMethodRequirements = (plugin, method, requirements) => {
+    const updatedPlugin = {
+        ...plugin,
+        methods: [
+            ...plugin.methods.filter(w => w.name !== method.name),
             {
-                ...workflow
+                ...method,
+                requires: requirements
             }
         ]
     };
     return updatedPlugin;
 };
 
-const addRequirement = (plugin, workflow, input) => {
+const setVisualizerRequirements = (plugin, visualizer, requirements) => {
     const updatedPlugin = {
         ...plugin,
-        workflows: [
-            ...plugin.workflows.filter(w => w.name !== workflow.name),
+        visualizers: [
+            ...plugin.visualizers.filter(w => w.name !== visualizer.name),
             {
-                ...workflow,
-                requires: [
-                    ...workflow.requires,
-                    input
-                ]
+                ...visualizer,
+                requires: requirements
             }
         ]
     };
@@ -37,52 +51,41 @@ const pluginsReducer = (state = initialState, action) => {
             ...state,
             {
                 name: action.plugin.name,
-                workflowsURI: action.plugin.method_uri,
-                workflows: []
+                methods: [],
+                visualizers: []
             }
         ];
         return newState;
     }
-    case 'FOUND_WORKFLOW': {
+    case 'FOUND_METHOD': {
         const originalPlugin = state.find(plugin => plugin.name === action.plugin);
         const filteredState = state.filter(plugin => plugin.name !== action.plugin);
-        const newPlugin = addWorkflow(originalPlugin, action.workflow);
+        const newPlugin = addMethod(originalPlugin, action.method);
         const newState = [
             ...filteredState,
             newPlugin
         ];
         return newState;
     }
-    case 'VALIDATE_ARTIFACT': {
-        const originalPlugin = { ...state.find(p => p.name === action.plugin.name) };
-        const workflow = { ...originalPlugin.workflows.find(w => w.name === action.workflow.name) };
-        if (workflow.requires.indexOf(action.input) !== -1) {
-            const filteredState = state.filter(p => p.name !== action.plugin.name);
-            originalPlugin.workflows = originalPlugin.workflows.filter(w => (
-                w.name !== action.workflow.name
-            ));
-            workflow.requires = workflow.requires.filter(r => action.input !== r);
-            const newPlugin = addWorkflow(originalPlugin, workflow);
-            const newState = [
-                ...filteredState,
-                newPlugin
-            ];
-            return newState;
-        }
-        return state;
-    }
-    case 'MISSING_ARTIFACT': {
-        const originalPlugin = { ...state.find(p => p.name === action.plugin.name) };
-        const filteredState = state.filter(p => p.name !== action.plugin.name);
-        const workflow = { ...originalPlugin.workflows.find(w => w.name === action.workflow.name) };
-        if (workflow.requires.indexOf(action.input) !== -1) { return state; }
-        const newPlugin = addRequirement(originalPlugin, workflow, action.input);
+    case 'FOUND_VISUALIZER': {
+        const originalPlugin = state.find(plugin => plugin.name === action.plugin);
+        const filteredState = state.filter(plugin => plugin.name !== action.plugin);
+        const newPlugin = addVisualizer(originalPlugin, action.visualizer);
+        const newState = [
+            ...filteredState,
+            newPlugin
+        ];
+        return newState;
 
-        const newState = [
+    }
+    case 'MISSING_TYPES': {
+        const originalPlugin = { ...state.find(p => p.name === action.pluginName) };
+        const filteredState = state.filter(p => p.name !== action.pluginName);
+        const pluginCloner = action.actionType === 'methods' ? setMethodRequirements : setVisualizerRequirements
+        return [
             ...filteredState,
-            newPlugin
-        ];
-        return newState;
+            pluginCloner(originalPlugin, action.action, action.types)
+        ]
     }
     default:
         return state;

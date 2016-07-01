@@ -6,29 +6,45 @@ const foundPlugin = (plugin) => ({
     plugin
 });
 
-const foundWorkflow = (plugin, workflow) => ({
-    type: 'FOUND_WORKFLOW',
+const foundMethod = (plugin, method) => ({
+    type: 'FOUND_METHOD',
     plugin,
-    workflow
-});
+    method
+})
 
-export const loadWorkflows = () => {
+const foundVisualizer = (plugin, visualizer) => ({
+    type: 'FOUND_VISUALIZER',
+    plugin,
+    visualizer
+})
+
+export const loadVisualizers = (name, endpoint) => {
     return (dispatch, getState) => {
         const { plugins, connection: { uri, secretKey } } = getState();
-        plugins.forEach(plugin => {
-            const url = `http://${uri}${plugin.workflowsURI}`;
-            fetchAPI(secretKey, 'GET', url)
-            .then((json) => {
-                Object.keys(json.methods).forEach(method => {
-                    dispatch(foundWorkflow(plugin.name, json.methods[method]));
+        const url = `http://${uri}${endpoint}`
+        fetchAPI(secretKey, 'GET', url)
+            .then(({ visualizers }) => Object.keys(visualizers).forEach(
+                key => {
+                    dispatch(foundVisualizer(name, visualizers[key]))
                     dispatch(actions.foundTypes(
-                        json.methods[method].inputs.map(input => input.type)
-                    ));
-                });
-            });
-        });
+                        visualizers[key].inputs.map(input => input.type)));
+                }));
+    }
+}
+
+export const loadMethods = (name, endpoint) => {
+    return (dispatch, getState) => {
+        const { plugins, connection: { uri, secretKey } } = getState();
+        const url = `http://${uri}${endpoint}`
+        fetchAPI(secretKey, 'GET', url)
+            .then(({ methods }) => Object.keys(methods).forEach(
+                key => {
+                    dispatch(foundMethod(name, methods[key]));
+                    dispatch(actions.foundTypes(
+                        methods[key].inputs.map(input => input.type)));
+                }));
     };
-};
+}
 
 export const loadPlugins = () => {
     return (dispatch, getState) => {
@@ -36,11 +52,13 @@ export const loadPlugins = () => {
         const url = `http://${uri}/api/plugins/`;
         const method = 'GET';
         fetchAPI(secretKey, method, url)
-        .then((json) => {
-            json.plugins.map(plugin => (
-                dispatch(foundPlugin(plugin))
-            ));
-        })
-        .then(() => dispatch(loadWorkflows()));
-    };
+        .then( json => json.plugins.map(plugin => {
+            const x = dispatch(foundPlugin(plugin));
+            return x
+        }))
+        .then( actions => actions.map(({ plugin: { name, methodsURI, visualizersURI }}) => {
+            dispatch(loadMethods(name, methodsURI));
+            dispatch(loadVisualizers(name, visualizersURI));
+        }));
+    }
 };

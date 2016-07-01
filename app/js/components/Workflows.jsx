@@ -2,14 +2,14 @@ import React from 'react';
 
 import Workflow from './Workflow';
 
-const Workflows = ({ plugin, openWorkflow }) => (
+const Workflows = ({ plugin, listing, openWorkflow }) => (
     <div>
-        { [...plugin.workflows].sort((a, b) => a.name > b.name).map(workflow => (
+        { [...listing].sort((a, b) => a.name > b.name).map(action => (
             <Workflow
-                key={workflow.name}
-                flow={workflow}
-                disabled={workflow.requires.length !== 0}
-                onClick = {() => openWorkflow(plugin, workflow)}
+                key={action.name}
+                flow={action}
+                disabled={action.requires.length !== 0}
+                onClick = {() => openWorkflow(plugin, action)}
             />
         ))}
     </div>
@@ -18,7 +18,7 @@ const Workflows = ({ plugin, openWorkflow }) => (
 
 Workflows.propTypes = {
     openWorkflow: React.PropTypes.func,
-    plugin: React.PropTypes.object
+    plugin: React.PropTypes.string
 };
 
 export default Workflows;

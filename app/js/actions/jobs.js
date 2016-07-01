@@ -123,12 +123,16 @@ export const linkInputArtifact = (input, artifacts) => ({
     artifacts
 });
 
-export const fetchInputArtifacts = (workflow) => {
+export const setJob = (action, actionType) => {
     return (dispatch, getState) => {
         const {
             artifacts: { artifacts },
-            connection: { uri, secretKey }
+            superTypes: { yes }
         } = getState();
-        workflow.inputs.forEach(({ type, name }) => {});
+        action.inputs.forEach(({ type, name }) => {
+            const subtypes = yes[type]
+            dispatch(linkInputArtifact(name, artifacts.filter(
+                ({ type: atype }) => subtypes.has(atype))));
+        });
     };
 };
