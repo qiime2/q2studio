@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
+const Job = ({ plugin, workflow, inputs, submitJob, cancelJob }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -9,7 +9,7 @@ const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
                 <h1>{plugin.name}: {workflow.description}</h1>
             </div>
             <form onSubmit={(e) => submitJob(e, workflow)}>
-            { workflow.inputArtifacts.map(({ name }) =>
+            { workflow.inputs.map(({ name }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-dropdown${counter++}` }
@@ -21,8 +21,8 @@ const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
                         className="form-control"
                         name={`in-${name}`}
                     >
-                        { inputArtifacts[name] !== undefined ?
-                            inputArtifacts[name].map(artifact =>
+                        { inputs[name] !== undefined ?
+                            inputs[name].map(artifact =>
                                 <option
                                     key={artifact.uuid}
                                     value={artifact.path}
@@ -35,7 +35,7 @@ const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
                 </fieldset>
             )}
 
-            { workflow.inputParameters.map(({ name, type }) =>
+            { workflow.parameters.map(({ name, type }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-text-input${counter++}` }
@@ -55,7 +55,7 @@ const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
                 <br />
                 <br />
 
-            { workflow.outputArtifacts.map(({ name, type }) =>
+            { workflow.outputs.map(({ name, type }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-text-output${counter++}` }
@@ -89,7 +89,7 @@ const Job = ({ plugin, workflow, inputArtifacts, submitJob, cancelJob }) => {
   );};
 
 Job.propTypes = {
-    inputArtifacts: React.PropTypes.object,
+    inputs: React.PropTypes.object,
     plugin: React.PropTypes.object,
     workflow: React.PropTypes.object,
     submitJob: React.PropTypes.func,

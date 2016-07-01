@@ -6,7 +6,9 @@ import artifacts from './artifacts';
 import connection from './connection';
 import jobs from './jobs';
 import currentDirectory from './currentdirectory';
-import tabstate from './tabstate';
+import tabState from './tabstate';
+import currentJob from './currentjob';
+import superTypes from './supertypes';
 
 const reducer = combineReducers({
     plugins,
@@ -15,7 +17,9 @@ const reducer = combineReducers({
     jobs,
     currentDirectory,
     routing,
-    tabstate
+    tabState,
+    currentJob,
+    superTypes
 });
 
 export default reducer;

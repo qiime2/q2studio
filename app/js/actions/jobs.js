@@ -125,14 +125,10 @@ export const linkInputArtifact = (input, artifacts) => ({
 
 export const fetchInputArtifacts = (workflow) => {
     return (dispatch, getState) => {
-        const { connection: { uri, secretKey }, currentDirectory } = getState();
-        const path = encodeURIComponent(currentDirectory);
-        workflow.inputArtifacts.map(input => (
-            fetch(`http://${uri.split('/')[0]}${availableApis[0]}${input.uri}?path=${path}`, {
-                method: 'GET'
-            })
-            .then(response => response.json())
-            .then(({ input_artifacts }) => dispatch(linkInputArtifact(input, input_artifacts)))
-        ));
+        const {
+            artifacts: { artifacts },
+            connection: { uri, secretKey }
+        } = getState();
+        workflow.inputs.forEach(({ type, name }) => {});
     };
 };

@@ -73,7 +73,7 @@ export const refreshArtifacts = () => {
         .then((json) => {
             json.artifacts.forEach(artifact => dispatch(newArtifact(artifact)));
         })
-        .then(() => dispatch(actions.refreshValidation()));
+        .then(() => dispatch(actions.checkTypes()));
     };
 };
 
@@ -86,7 +86,6 @@ export const refreshVisualizations = () => {
         fetchAPI(secretKey, method, url)
         .then((json) => {
             json.visualizations.forEach(viz => dispatch(newVisualization(viz)));
-        })
-        .then(() => dispatch(actions.refreshValidation()));
+        });
     };
 };

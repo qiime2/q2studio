@@ -5,7 +5,7 @@ import actions from '../actions';
 
 const mapStateToProps = ({
     artifacts: { artifacts, visualizations },
-    tabstate: { artifactTab }
+    tabState: { artifactTab }
 }) => ({
     artifacts,
     visualizations,
@@ -14,7 +14,10 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = (dispatch) => ({
     dispatchDeleteArtifact: (id, type) => dispatch(actions.deleteArtifact(id, type)),
-    refreshArtifacts: () => (dispatch(actions.refreshArtifacts()), dispatch(actions.refreshVisualizations())),
+    refreshArtifacts: () => {
+        dispatch(actions.refreshArtifacts());
+        dispatch(actions.refreshVisualizations());
+    },
     changeArtifactTab: (tab) => dispatch(actions.changeArtifactTab(tab))
 });
 

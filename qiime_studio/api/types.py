@@ -9,13 +9,18 @@ PLUGIN_MANAGER = qiime.sdk.PluginManager()
 @types.route('/subtype', methods=['POST'])
 def is_subtype():
     request_body = request.get_json()
+    print(request_body)
     list_a = list(map(qiime.sdk.parse_type, request_body['a']))
     list_b = list(map(qiime.sdk.parse_type, request_body['b']))
 
-    results = {}
+    yes = {}
+    no = {}
     for b in list_b:
-        results[repr(b)] = subtypes = []
+        yes[repr(b)] = yays = []
+        no[repr(b)] = nays = []
         for a in list_a:
             if a <= b:
-                subtypes.append(repr(a))
-    return jsonify({'supertypes': results})
+                yays.append(repr(a))
+            else:
+                nays.append(repr(a))
+    return jsonify({'yes': yes, 'no': no})

@@ -4,6 +4,7 @@ import * as pluginActionCreators from './plugins';
 import * as connectionActionCreators from './connection';
 import * as currentDirectoryActionCreators from './currentdirectory';
 import * as tabActionCreators from './tabstate';
+import * as typeActionCreators from './types';
 
 const actions = {
     ...artifactActionCreators,
@@ -11,7 +12,8 @@ const actions = {
     ...pluginActionCreators,
     ...connectionActionCreators,
     ...currentDirectoryActionCreators,
-    ...tabActionCreators
+    ...tabActionCreators,
+    ...typeActionCreators
 };
 
 export default actions;

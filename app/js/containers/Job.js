@@ -5,13 +5,13 @@ import actions from '../actions';
 import Job from '../components/pages/Job';
 
 const mapStateToProps = (state, { params: { pluginId, jobId } }) => {
-    const { jobs: { inputArtifacts } } = state;
+    const { jobs: { inputs } } = state;
     const plugin = state.plugins.find(p => p.name === pluginId);
     const workflow = plugin.workflows.find(w => w.name === jobId);
     return ({
         plugin,
         workflow,
-        inputArtifacts
+        inputs
     });
 };
 

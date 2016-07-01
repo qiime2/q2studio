@@ -9,7 +9,7 @@ const establishConnectionHidden = (uri, secretKey) => ({
 
 
 export const establishConnection = (uri, secretKey) => {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(establishConnectionHidden(uri, secretKey));
         dispatch(actions.loadPlugins());
     };

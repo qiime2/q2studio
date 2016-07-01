@@ -9,7 +9,7 @@ export const directoryChange = (directory) => {
         const { connection: { uri, secretKey } } = getState();
         const url = `http://${uri}/api/workspace/`;
         const method = 'PUT';
-        fetchAPI(secretKey, method, url, {'workspace': directory})
+        fetchAPI(secretKey, method, url, { workspace: directory })
             .then(() => dispatch({
                 type: 'DIRECTORY_CHANGE',
                 directory
@@ -29,7 +29,7 @@ export const directoryChangeDialog = (currPath) => {
             properties: ['openDirectory']
         }, (fps) => {
             if (fps) {
-                dispatch(directoryChange(fps[0]))
+                dispatch(directoryChange(fps[0]));
             }
         });
     };

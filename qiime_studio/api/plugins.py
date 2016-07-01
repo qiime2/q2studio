@@ -42,15 +42,15 @@ def _build_data_dict(data):
         )
         dict_[key]['description'] = value.name
         dict_[key]['requires'] = []
-        dict_[key]['inputArtifacts'] = [
+        dict_[key]['inputs'] = [
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.inputs.items()
         ]
-        dict_[key]['inputParameters'] = [
+        dict_[key]['parameters'] = [
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.parameters.items()
         ]
-        dict_[key]['outputArtifacts'] = [
+        dict_[key]['outputs'] = [
             {'name': name, 'type': repr(type_[0])}
             for name, type_ in value.signature.outputs.items()
         ]

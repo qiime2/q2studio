@@ -51,11 +51,12 @@ def get_artifacts():
     for artifact_path in artifact_paths:
         try:
             artifact = Artifact.load(artifact_path)
+            name, _ = os.path.splitext(os.path.basename(artifact_path))
+            artifacts.append(
+                _result_record(artifact, name, '.inspect_artifact'))
+            ARTIFACTS[artifact.uuid] = artifact_path
         except Exception:
             pass  # TODO: do better things when this happens
-        name, _ = os.path.splitext(os.path.basename(artifact_path))
-        artifacts.append(_result_record(artifact, name, '.inspect_artifact'))
-        ARTIFACTS[artifact.uuid] = artifact_path
 
     return jsonify({'artifacts': artifacts})
 
@@ -89,12 +90,12 @@ def get_visualizations():
     for viz_path in viz_paths:
         try:
             viz = Visualization.load(viz_path)
+            name, _ = os.path.splitext(os.path.basename(viz_path))
+            VISUALIZATIONS[viz.uuid] = viz_path
+            visualizations.append(
+                _result_record(viz, name, '.inspect_visualization'))
         except Exception:
             pass  # TODO: do better things when this happens
-        name, _ = os.path.splitext(os.path.basename(viz_path))
-        VISUALIZATIONS[viz.uuid] = viz_path
-        visualizations.append(
-            _result_record(viz, name, '.inspect_visualization'))
 
     return jsonify({'visualizations': visualizations})
 
