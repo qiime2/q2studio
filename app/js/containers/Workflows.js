@@ -11,7 +11,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch, { router , type}) => {
     const openWorkflow = (plugin, action) => {
         dispatch(actions.setJob(action, type));
-        router.push(`job/${plugin}/${type}/${action.name}`);
+        router.push(`job/${plugin}/${type}/${action.id}`);
     };
     return ({
         openWorkflow

@@ -73,9 +73,7 @@ def inspect_artifact(uuid):
 
 @workspace.route('/artifacts/<uuid>', methods=['DELETE'])
 def delete_artifact(uuid):
-    print(ARTIFACTS)
     try:
-        print(ARTIFACTS[uuid])
         os.remove(ARTIFACTS[uuid])
         return ''
     except (OSError, KeyError):

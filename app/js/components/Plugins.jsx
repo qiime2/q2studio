@@ -16,24 +16,32 @@ const Plugins = ({ plugins }) => (
             (<Collapse accordion key="collapse">
                 {plugins.map(plugin =>
                     <Panel header={ plugin.name } key={ `${plugin.name}-panel` }>
-                        <h6>
-                            Methods:
-                        </h6>
-                        <Workflows
-                            key={ `${plugin.name}-methods` }
-                            plugin={ plugin.name }
-                            listing={ plugin.methods }
-                            type='methods'
-                        />
-                        <h6>
-                            Visualizers:
-                        </h6>
-                        <Workflows
-                            key={ `${plugin.name}-visualizers` }
-                            plugin={ plugin.name }
-                            listing={ plugin.visualizers }
-                            type='visualizers'
-                        />
+                        { plugin.methods.length ?
+                            <div>
+                                <h6>
+                                    Methods:
+                                </h6>
+                                <Workflows
+                                    key={ `${plugin.name}-methods` }
+                                    plugin={ plugin.name }
+                                    listing={ plugin.methods }
+                                    type='methods'
+                                />
+                            </div> : null
+                        }
+                        { plugin.visualizers.length ?
+                            <div>
+                                <h6>
+                                    Visualizers:
+                                </h6>
+                                <Workflows
+                                    key={ `${plugin.name}-visualizers` }
+                                    plugin={ plugin.name }
+                                    listing={ plugin.visualizers }
+                                    type='visualizers'
+                                />
+                            </div> : null
+                        }
                     </Panel>)}
             </Collapse>)
             :

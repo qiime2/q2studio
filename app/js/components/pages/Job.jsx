@@ -8,7 +8,7 @@ const Job = ({ plugin, action, inputs, submitJob, cancelJob }) => {
             <div className="page-header">
                 <h1>{plugin.name}: {action.description}</h1>
             </div>
-            <form onSubmit={(e) => submitJob(e, action)}>
+            <form onSubmit={submitJob}>
             { action.inputs.map(({ name }) =>
                 <fieldset
                     className="form-group"
@@ -25,7 +25,7 @@ const Job = ({ plugin, action, inputs, submitJob, cancelJob }) => {
                             inputs[name].map(artifact =>
                                 <option
                                     key={artifact.uuid}
-                                    value={artifact.path}
+                                    value={artifact.uuid}
                                 >
                                     {artifact.name} - {`(${artifact.uuid})`}
                                 </option>

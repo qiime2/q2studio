@@ -1,7 +1,9 @@
 import collections
+import io
 import sys
 import tempfile
 import threading
+import traceback
 import uuid
 import datetime
 
@@ -48,7 +50,7 @@ def create_job():
     outputs_ = request_body['outputs']
 
     plugin = PLUGIN_MANAGER.plugins[plugin]
-    action = getattr(plugin, "%ss" % action_type)[action]
+    action = getattr(plugin, action_type)[action]
 
     outputs = collections.OrderedDict()
     for key, value in action.signature.outputs.items():
@@ -62,9 +64,8 @@ def create_job():
 
         outputs[key] = path
 
-    parameters = action.signature.decode_parameters(parameters)
-    inputs = load_artifacts(inputs)
-    inputs.update(parameters)
+    parameters = action.signature.decode_parameters(**parameters)
+    inputs = load_artifacts(**inputs)
     job_id = str(uuid.uuid4())
     now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
 
@@ -84,19 +85,21 @@ def create_job():
         'outputs': {k: None for k in outputs}
     }
 
+    inputs.update(parameters)
+
     # Add prefix just in case the file isn't unlinked, but we don't need a name
     # either way as the context manager works on file-descripters
     stdout = tempfile.TemporaryFile(prefix='qiime-studio-stdout')
     stderr = tempfile.TemporaryFile(prefix='qiime-studio-stderr')
-    with (LOCK,  # Lock to avoid fd: 1, 2, from being reassigned concurrently.
-          redirected_stdio(to=stdout, stdio=sys.stdout),
-          redirected_stdio(to=stderr, stdio=sys.stderr)):
-        future = action.async(**inputs)
-        future.add_done_callback(
-            _callback_factory(job_id, outputs, stdout, stderr))
+    with LOCK:  # Lock to avoid fd: 1, 2, from being reassigned concurrently.
+        with redirected_stdio(to=stdout, stdio=sys.stdout):
+            with redirected_stdio(to=stderr, stdio=sys.stderr):
+                future = action.async(**inputs)
+                future.add_done_callback(
+                    _callback_factory(job_id, outputs, stdout, stderr))
 
     return jsonify({
-        'job': url_for('.inspect_job', job_id)
+        'job': url_for('.inspect_job', job_id=job_id)
     })
 
 
@@ -104,26 +107,30 @@ def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
     # This is needed for closure over stdout, stderr, outputs
     def callback(future):
         now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
-        stdout = _consume_fh(stdout_fh)
-        stderr = _consume_fh(stderr_fh)
         try:
             results = future.result()
             if type(results) is not tuple:
                 results = (results,)
         except Exception:
-            # stderr should have the traceback already
             results = None
+            fh = io.TextIOWrapper(stderr_fh)
+            traceback.print_exc(file=fh)
+            fh.flush()
+        stdout = _consume_fh(stdout_fh)
+        stderr = _consume_fh(stderr_fh)
+
+        job = JOBS[job_id]
 
         if results is not None:
             for result, path in zip(results, outputs.values()):
                 result.save(path)
+            job['outputs'] = {k: v.uuid for k, v in zip(outputs, results)}
 
-        job = JOBS[job_id]
         job['completed'] = True
-        job['stdout'] = stdout
-        job['stderr'] = stderr
+        job['error'] = results is None
+        job['stdout'] = stdout.decode('utf8')
+        job['stderr'] = stderr.decode('utf8')
         job['finished'] = now
-        job['outputs'] = {k: v.uuid for k, v in zip(outputs, results)}
 
     return callback
 
@@ -139,7 +146,7 @@ def _consume_fh(fh):
 def inspect_job(job_id):
     try:
         return jsonify(JOBS[job_id])
-    except:
+    except KeyError:
         abort(404)
     return ''
 

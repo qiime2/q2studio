@@ -5,7 +5,7 @@ const JobRow = ({ data, onClick }) => (
     <tr>
         <td>
             <a style={{ cursor: 'pointer' }} onClick={onClick}>
-                { data.workflow }
+                { data.actionName }
             </a>
         </td>
         <td>

@@ -32,12 +32,12 @@ export const refreshValidation = () => {
             plugin.methods.forEach(method => {
                 dispatch(missingTypes(plugin.name, 'methods', method,
                                       method.inputs.filter(input =>
-                                          !artifacts.find(({ type }) => (console.log(input.type), yes[input.type].has(type))))))
+                                          !artifacts.find(({ type }) => yes[input.type].has(type)))))
             })
             plugin.visualizers.forEach(visualizer => {
                 dispatch(missingTypes(plugin.name, 'visualizers', visualizer,
                                       visualizer.inputs.filter(input =>
-                                          !artifacts.find(({ type }) => (console.log(input.type), yes[input.type].has(type))))))
+                                          !artifacts.find(({ type }) => yes[input.type].has(type)))))
             })
         })
     }

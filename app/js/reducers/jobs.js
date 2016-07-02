@@ -17,7 +17,6 @@ const jobReducer = (state = initialState, action) => {
         return newState;
     }
     case 'JOB_COMPLETED': {
-        const job = state.activeJobs.find(a => a.uuid === action.job.uuid);
         const newState = {
             ...state,
             activeJobs: [
@@ -25,21 +24,15 @@ const jobReducer = (state = initialState, action) => {
             ]
         };
 
-        if (action.job.job.error) {
+        if (action.job.error) {
             newState.failedJobs = [
                 ...state.failedJobs,
-                {
-                    ...job,
-                    ...action.job.job
-                }
+                action.job
             ];
         } else {
             newState.completedJobs = [
                 ...state.completedJobs,
-                {
-                    ...job,
-                    ...action.job.job
-                }
+                action.job
             ];
         }
 
