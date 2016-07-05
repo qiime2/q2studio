@@ -2,25 +2,22 @@ import React from 'react';
 
 import Artifacts from './Artifacts';
 import Tabs from './Tabs';
-import Metadata from './Metadata';
 
 const ArtifactsListFrame = ({
     artifacts,
     visualizations,
-    metadata,
     changeArtifactTab,
     refreshArtifacts,
     currentIndex,
     ...props
 }) => {
     const lookup = [artifacts, visualizations];
-    const names = ['artifact', 'visualization', 'metadata'];
+    const names = ['artifact', 'visualization'];
     return (<Tabs
-        tabs={ ['Artifacts', 'Visualizations', 'Metadata'] }
-        getCount={ (idx) => (idx < 2 ? lookup[idx].length : metadata.length) }
+        tabs={ ['Artifacts', 'Visualizations'] }
+        getCount={ (idx) => lookup[idx].length }
         contents={ lookup.map((listing, idx) => (
-            <Artifacts data={ listing } type={ names[idx] } { ...props } />)
-        ).concat(<Metadata metadata={ metadata } />) }
+            <Artifacts data={ listing } type={ names[idx] } { ...props } />)) }
         currentIndex={ currentIndex }
         changeTab={ changeArtifactTab }
         refresh={ refreshArtifacts }
@@ -33,7 +30,6 @@ ArtifactsListFrame.propTypes = {
     refreshArtifacts: React.PropTypes.func,
     artifacts: React.PropTypes.array,
     visualizations: React.PropTypes.array,
-    metadata: React.PropTypes.array,
     currentIndex: React.PropTypes.number
 };
 
