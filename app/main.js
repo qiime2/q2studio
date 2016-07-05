@@ -76,7 +76,7 @@ const createWindow = () => {
 
 ipc.on('open-job-page', (event, data) => {
     const jobWindow = new BrowserWindow({ parent: win });
-    let url = `file://${__dirname}/index.html/#job/${data.uuid}`;
+    let url = `file://${__dirname}/index.html#job/${data.uuid}`;
     if (process.env.NODE_ENV === 'development') {
         url = `http://localhost:4242/#job/${data.uuid}`;
     }
@@ -88,7 +88,7 @@ ipc.on('open-job-page', (event, data) => {
 
 ipc.on('open-artifact-page', (event, data) => {
     const artifactWindow = new BrowserWindow({ parent: win });
-    let url = `file://${__dirname}/index.html/#artifact/${data.uuid}`;
+    let url = `file://${__dirname}/index.html#artifact/${data.uuid}`;
     if (process.env.NODE_ENV === 'development') {
         url = `http://localhost:4242/#artifact/${data.uuid}`;
     }
