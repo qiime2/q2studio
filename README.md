@@ -1,19 +1,11 @@
 # qiime-studio
-A web interface for QIIME 2
+A web interface for QIIME 2. 
 
-To install:
+For user install instructions please visit [Installing and using QIIME 2](https://github.com/qiime2/qiime2/wiki/Installing-and-using-QIIME-2)
+
+
+Developer installation instructions (hot module reloading):
 ```bash
-npm install
 pip install -e .
-```
-
-To develop:
-```bash
 npm run dev
-```
-
-To build static:
-```bash
-npm run build
-npm start
 ```
