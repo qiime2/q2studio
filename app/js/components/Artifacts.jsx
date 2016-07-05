@@ -25,10 +25,10 @@ const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualiza
                                 'Are you sure you want to delete this Artifact?')) {
                                 if (type === 'artifact') {
                                     dispatchDeleteArtifact(item.uuid);
-                                } else if (type == 'visualization') {
+                                } else if (type === 'visualization') {
                                     dispatchDeleteVisualization(item.uuid);
                                 } else {
-                                    throw Error(`Unkown type '${type}'`)
+                                    throw Error(`Unkown type '${type}'`);
                                 }
                             }
                         }}
@@ -42,7 +42,8 @@ const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualiza
 Artifacts.propTypes = {
     data: React.PropTypes.array,
     type: React.PropTypes.string,
-    dispatchDeleteArtifact: React.PropTypes.func
+    dispatchDeleteArtifact: React.PropTypes.func,
+    dispatchDeleteVisualization: React.PropTypes.func
 };
 
 export default Artifacts;

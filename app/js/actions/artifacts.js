@@ -28,23 +28,23 @@ export const clearArtifacts = () => ({
 export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {
         const { connection: { uri, secretKey } } = getState();
-        const url = `http://${uri}/api/workspace/artifacts/${uuid}`
+        const url = `http://${uri}/api/workspace/artifacts/${uuid}`;
         fetchAPI(secretKey, 'DELETE', url)
         .then(() => dispatch(removedArtifact(uuid)))
-        .then(() => dispatch(actions.refreshValidation()))
-    }
-}
+        .then(() => dispatch(actions.refreshValidation()));
+    };
+};
 
 export const deleteVisualization = (uuid) => {
     return (dispatch, getState) => {
         const { connection: { uri, secretKey } } = getState();
-        const url = `http://${uri}/api/workspace/visualizations/${uuid}`
+        const url = `http://${uri}/api/workspace/visualizations/${uuid}`;
         fetchAPI(secretKey, 'DELETE', url)
         .then(() => {
-            dispatch(removedVisualization(uuid))
+            dispatch(removedVisualization(uuid));
         });
-    }
-}
+    };
+};
 
 export const refreshArtifacts = () => {
     return (dispatch, getState) => {

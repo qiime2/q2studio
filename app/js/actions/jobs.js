@@ -21,10 +21,10 @@ const pollJobStatus = (dispatch, getState) => {
         .then((json) => {
             if (json.completed) {
                 dispatch(jobCompleted(json));
-                dispatch(actions.refreshArtifacts())
-                dispatch(actions.refreshVisualizations())
+                dispatch(actions.refreshArtifacts());
+                dispatch(actions.refreshVisualizations());
             }
-        })
+        });
     });
 };
 
@@ -44,7 +44,6 @@ export const startJob = (data) => {
 };
 
 
-
 export const clearJobState = () => ({
     type: 'CLEAR_JOB_STATE'
 });
@@ -55,14 +54,14 @@ export const linkInputArtifact = (input, artifacts) => ({
     artifacts
 });
 
-export const setJob = (action, actionType) => {
+export const setJob = (action) => {
     return (dispatch, getState) => {
         const {
             artifacts: { artifacts },
             superTypes: { yes }
         } = getState();
         action.inputs.forEach(({ type, name }) => {
-            const subtypes = yes[type]
+            const subtypes = yes[type];
             dispatch(linkInputArtifact(name, artifacts.filter(
                 ({ type: atype }) => subtypes.has(atype))));
         });

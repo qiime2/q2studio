@@ -25,7 +25,7 @@ const Plugins = ({ plugins }) => (
                                     key={ `${plugin.name}-methods` }
                                     plugin={ plugin.name }
                                     listing={ plugin.methods }
-                                    type='methods'
+                                    type="methods"
                                 />
                             </div> : null
                         }
@@ -38,7 +38,7 @@ const Plugins = ({ plugins }) => (
                                     key={ `${plugin.name}-visualizers` }
                                     plugin={ plugin.name }
                                     listing={ plugin.visualizers }
-                                    type='visualizers'
+                                    type="visualizers"
                                 />
                             </div> : null
                         }

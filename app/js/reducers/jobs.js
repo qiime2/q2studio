@@ -1,7 +1,7 @@
 const initialState = {
     activeJobs: [],
     completedJobs: [],
-    failedJobs: [],
+    failedJobs: []
 };
 
 const jobReducer = (state = initialState, action) => {
