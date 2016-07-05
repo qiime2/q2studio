@@ -3,7 +3,7 @@ const initialState = [];
 const addMethod = (plugin, method) => {
     const updatedPlugin = {
         ...plugin,
-        methods: [...plugin.methods, {...method, requires: []}]
+        methods: [...plugin.methods, { ...method, requires: [] }]
     };
     return updatedPlugin;
 };
@@ -11,7 +11,7 @@ const addMethod = (plugin, method) => {
 const addVisualizer = (plugin, visualizer) => {
     const updatedPlugin = {
         ...plugin,
-        visualizers: [...plugin.visualizers, {...visualizer, requires: []}]
+        visualizers: [...plugin.visualizers, { ...visualizer, requires: [] }]
     };
     return updatedPlugin;
 };
@@ -76,16 +76,16 @@ const pluginsReducer = (state = initialState, action) => {
             newPlugin
         ];
         return newState;
-
     }
     case 'MISSING_TYPES': {
         const originalPlugin = { ...state.find(p => p.name === action.pluginName) };
         const filteredState = state.filter(p => p.name !== action.pluginName);
-        const pluginCloner = action.actionType === 'methods' ? setMethodRequirements : setVisualizerRequirements
+        const pluginCloner = (action.actionType === 'methods'
+                                ? setMethodRequirements : setVisualizerRequirements);
         return [
             ...filteredState,
             pluginCloner(originalPlugin, action.action, action.types)
-        ]
+        ];
     }
     default:
         return state;

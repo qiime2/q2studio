@@ -18,7 +18,7 @@ const missingTypes = (pluginName, actionType, action, types) => ({
     actionType,
     action,
     types: types.map(({ type }) => type)
-})
+});
 
 
 export const refreshValidation = () => {
@@ -31,17 +31,17 @@ export const refreshValidation = () => {
         plugins.forEach(plugin => {
             plugin.methods.forEach(method => {
                 dispatch(missingTypes(plugin.name, 'methods', method,
-                                      method.inputs.filter(input =>
-                                          !artifacts.find(({ type }) => yes[input.type].has(type)))))
-            })
+                    method.inputs.filter(input =>
+                        !artifacts.find(({ type }) => yes[input.type].has(type)))));
+            });
             plugin.visualizers.forEach(visualizer => {
                 dispatch(missingTypes(plugin.name, 'visualizers', visualizer,
-                                      visualizer.inputs.filter(input =>
-                                          !artifacts.find(({ type }) => yes[input.type].has(type)))))
-            })
-        })
-    }
-}
+                      visualizer.inputs.filter(input =>
+                          !artifacts.find(({ type }) => yes[input.type].has(type)))));
+            });
+        });
+    };
+};
 
 
 export const checkTypes = () => {
@@ -60,6 +60,6 @@ export const checkTypes = () => {
         // TODO: don't hit the server if there is nothing new to ask...
         fetchAPI(secretKey, 'POST', url, body)
         .then(json => dispatch(memoizeSubtype(json)))
-        .then(() => dispatch(refreshValidation()))
+        .then(() => dispatch(refreshValidation()));
     };
 };

@@ -18,7 +18,8 @@ const Workflows = ({ plugin, listing, openWorkflow }) => (
 
 Workflows.propTypes = {
     openWorkflow: React.PropTypes.func,
-    plugin: React.PropTypes.string
+    plugin: React.PropTypes.string,
+    listing: React.PropTypes.array
 };
 
 export default Workflows;

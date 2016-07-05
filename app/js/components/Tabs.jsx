@@ -1,22 +1,23 @@
 import React from 'react';
 
-import actions from '../actions'
-
 
 const Tabs = (props) => {
-    const { name, tabs, getCount, contents, currentIndex, changeTab, refresh } = props;
+    const { tabs, getCount, contents, currentIndex, changeTab, refresh } = props;
     return (
         <div className="panel panel-default">
             <div className="panel-heading">
                 <ul className="nav nav-pills">
                     {tabs.map((tab, idx) => (
-                    <li key={tab} role="presentation" className={idx === currentIndex ? 'active' : null}>
-                        <a onClick={() => changeTab(idx)}>
-                            { tabs[idx] }
-                            { getCount && getCount(idx) ?
-                                <span className="badge">{getCount(idx)}</span> : null}
-                        </a>
-                    </li>
+                        <li key={tab}
+                            role="presentation"
+                            className={idx === currentIndex ? 'active' : null}
+                        >
+                            <a onClick={() => changeTab(idx)}>
+                                { tabs[idx] }
+                                { getCount && getCount(idx) ?
+                                    <span className="badge">{getCount(idx)}</span> : null}
+                            </a>
+                        </li>
                     ))}
                     {refresh ?
                         (<li className="pull-right">
@@ -26,7 +27,10 @@ const Tabs = (props) => {
                                 aria-label="Refresh"
                                 onClick={refresh}
                             >
-                                <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                <span
+                                    className="glyphicon glyphicon-refresh"
+                                    aria-hidden="true"
+                                ></span>
                             </button>
                         </li>)
                         :
@@ -46,7 +50,9 @@ Tabs.propTypes = {
     counts: React.PropTypes.array,
     contents: React.PropTypes.array,
     currentIndex: React.PropTypes.number,
-    changeTab: React.PropTypes.func
+    changeTab: React.PropTypes.func,
+    getCount: React.PropTypes.func,
+    refresh: React.PropTypes.func
 };
 
 export default Tabs;

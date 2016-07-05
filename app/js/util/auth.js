@@ -10,11 +10,11 @@ const makeB64Digest = (secretKey, httpVerb, url, requestTime, body) => {
         (body || '')
     ];
 
-    if (body !== undefined) { message.push(body.length) };
+    if (body !== undefined) { message.push(body.length); }
 
     const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, byteArray);
     message.forEach(value => {
-        hmac.update(value.toString())
+        hmac.update(value.toString());
     });
     const hash = hmac.finalize().toString(CryptoJS.enc.Base64);
 
@@ -38,6 +38,6 @@ export const fetchAPI = (secretKey, method, url, body_) => {
         if (!response.ok) {
             throw Error(response.statusText);
         }
-        return response.text().then(value => value ? JSON.parse(value) : {})
-    })
+        return response.text().then(value => (value ? JSON.parse(value) : {}));
+    });
 };

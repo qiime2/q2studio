@@ -25,7 +25,7 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
             outputs: {},
             action: jobId,
             plugin: pluginId,
-            actionType,
+            actionType
         };
         for (const [key, value] of formData.entries()) {
             if (value.trim().length === 0) {

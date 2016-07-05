@@ -86,13 +86,6 @@ describe('reducer', () => {
         expect(nextState.connection.secretKey).to.equal(secretKey);
     });
 
-    it('handles SUCCESFULLY_CONNECTED', () => {
-        const state = reducer(undefined, doNothingAction);
-        expect(state.connection.connected).to.be.false;
-        const nextState = reducer(state, actions.successfullyConnected(true));
-        expect(nextState.connection.connected).to.be.true;
-    });
-
     it('handles NEW_ACTIVE_JOB', () => {
         const job = { id: 12345 };
         const state = reducer(undefined, actions.newActiveJob(job));
@@ -120,33 +113,26 @@ describe('reducer', () => {
 
     it('handles CLEAR_JOB_STATE', () => {
         const state = {
-            jobs: {
-                activeJobs: [],
-                failedJobs: [],
-                inputArtifacts: { table: [{ name: 'test' }] }
+            currentJob: {
+                table: [{ name: 'test' }]
             }
         };
         const nextState = reducer(state, actions.clearJobState());
-        expect(nextState.jobs).to.eql({
-            activeJobs: [],
-            failedJobs: [],
-            inputArtifacts: {}
-        });
+        expect(nextState.currentJob).to.eql({});
     });
 
     it('handles LINK_INPUT_ARTIFACT', () => {
-        const input = { name: 'table' };
         const artifacts = [{ name: 'fake artifact' }];
-        const state = reducer(undefined, actions.linkInputArtifact(input, artifacts));
-        expect(state.jobs.inputArtifacts).to.include.key('table');
-        expect(state.jobs.inputArtifacts.table).to.eql(artifacts);
+        const state = reducer(undefined, actions.linkInputArtifact('table', artifacts));
+        expect(state.currentJob).to.include.key('table');
+        expect(state.currentJob.table).to.eql(artifacts);
     });
 
     it('handles FOUND_PLUGIN', () => {
         const plugin = {
             name: 'Test Plugin',
-            workflows: [],
-            workflowsURI: undefined
+            methods: [],
+            visualizers: []
         };
         const action = {
             type: 'FOUND_PLUGIN',
@@ -157,81 +143,36 @@ describe('reducer', () => {
         expect(state.plugins).to.include.something.eql(plugin);
     });
 
-    it('handles FOUND_WORKFLOW', () => {
+    it('handles FOUND_METHOD', () => {
         const initialState = {
             plugins: [{
                 name: 'diversity',
-                workflows: []
+                methods: [],
+                visualizations: []
             }]
         };
         const expectedState = {
             name: 'diversity',
-            workflows: [{
-                name: 'beta_diversity',
-                description: 'Produces: DistanceMatrix'
-            }]
+            methods: [{
+                name: 'Beta diversity',
+                requires: []
+            }],
+            visualizations: []
         };
 
         const state = reducer(initialState, doNothingAction);
         const action = {
-            type: 'FOUND_WORKFLOW',
+            type: 'FOUND_METHOD',
             plugin: 'diversity',
-            workflow: {
-                name: 'beta_diversity',
-                description: 'Produces: DistanceMatrix'
+            method: {
+                name: 'Beta diversity'
+                // Many more things, but we just want to make sure the object
+                // is attached
             }
         };
 
         deepFreeze(state);
         const nextState = reducer(state, action);
         expect(nextState.plugins).to.include.something.that.eql(expectedState);
-    });
-
-    it('handles VALIDATE_ARTIFACT', () => {
-        const workflow = { name: 'test', requires: ['table'] };
-        const plugin = {
-            name: 'test',
-            workflows: [
-                workflow
-            ]
-        };
-        const state = {
-            plugins: [
-                plugin
-            ]
-        };
-        const action = {
-            type: 'VALIDATE_ARTIFACT',
-            plugin,
-            workflow,
-            input: 'table'
-        };
-        const nextState = reducer(state, action);
-        expect(nextState.plugins[0].workflows[0].requires).to.be.empty;
-    });
-
-    it('handles MISSING_ARTIFACT', () => {
-        const workflow = { name: 'test', requires: [] };
-        const plugin = {
-            name: 'test',
-            workflows: [
-                workflow
-            ]
-        };
-        const state = {
-            plugins: [
-                plugin
-            ]
-        };
-        const action = {
-            type: 'MISSING_ARTIFACT',
-            plugin,
-            workflow,
-            input: 'table'
-        };
-        const nextState = reducer(state, action);
-        expect(nextState.plugins[0].workflows[0].requires).to.not.be.empty;
-        expect(nextState.plugins[0].workflows[0].requires).to.include.something
-            .that.equals('table');
     });
 });
