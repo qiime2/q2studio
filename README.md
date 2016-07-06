@@ -7,5 +7,6 @@ For user install instructions please visit [Installing and using QIIME 2](https:
 Developer installation instructions (hot module reloading):
 ```bash
 pip install -e .
+npm install
 npm run dev
 ```
