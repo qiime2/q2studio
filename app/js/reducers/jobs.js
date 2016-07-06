@@ -26,12 +26,12 @@ const jobReducer = (state = initialState, action) => {
 
         if (action.job.error) {
             newState.failedJobs = [
-                ...state.failedJobs,
+                ...state.failedJobs.filter(a => a.uuid !== action.job.uuid),
                 action.job
             ];
         } else {
             newState.completedJobs = [
-                ...state.completedJobs,
+                ...state.completedJobs.filter(a => a.uuid !== action.job.uuid),
                 action.job
             ];
         }

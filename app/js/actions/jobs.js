@@ -14,6 +14,40 @@ export const jobCompleted = (job) => ({
     job
 });
 
+const registerPath = (visualization) => ({
+    type: 'REGISTER_PATH',
+    visualization
+});
+
+export const watchForVisualization = (jobUUID, router, url) => {
+    return (dispatch, getState) => {
+        const { connection: { secretKey, uri } } = getState();
+        const update = () => {
+            const job = getState().jobs.completedJobs.find(j => j.uuid === jobUUID);
+            if (job) {
+                const visUUID = job.outputs.visualization;
+                let vis = getState().artifacts.visualizations.find(v => v.uuid === visUUID);
+                if (!vis) {
+                    setTimeout(update, 1000);
+                    return;
+                }
+                fetchAPI(secretKey, 'GET', `http://${uri}/api/workspace/view/${vis.uuid}`)
+                .then((json) => {
+                    vis = {
+                        ...vis,
+                        filePath: json.filePath
+                    };
+                    return dispatch(registerPath(vis));
+                })
+                .then((action) => router.push(`${url}/${action.visualization.uuid}`));
+            } else {
+                setTimeout(update, 1000);
+            }
+        };
+        update();
+    };
+};
+
 const pollJobStatus = (dispatch, getState) => {
     const { connection: { uri, secretKey }, jobs: { activeJobs } } = getState();
     activeJobs.forEach(job => {
@@ -32,13 +66,14 @@ export const startJob = (data) => {
     return (dispatch, getState) => {
         const { connection: { uri, secretKey } } = getState();
         const url = `http://${uri}/api/jobs/`;
-        fetchAPI(secretKey, 'POST', url, data)
+        return fetchAPI(secretKey, 'POST', url, data)
         .then(({ job }) => fetchAPI(secretKey, 'GET', `http://${uri}${job}`))
         .then((json) => {
             dispatch(actions.newActiveJob(json));
             if (jobInterval === undefined) {
                 jobInterval = setInterval(() => pollJobStatus(dispatch, getState), 1000);
             }
+            return json;
         });
     };
 };
@@ -46,6 +81,11 @@ export const startJob = (data) => {
 
 export const clearJobState = () => ({
     type: 'CLEAR_JOB_STATE'
+});
+
+export const clearWindowState = (id) => ({
+    type: 'CLEAR_WINDOW_STATE',
+    id
 });
 
 export const linkInputArtifact = (input, artifacts) => ({

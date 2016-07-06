@@ -22,7 +22,9 @@ const JobList = ({ jobs, jobTab }) => (
                     <JobRow
                         data={job}
                         key={job.uuid}
-                        onClick={() => ipc.send('open-job-page', job)}
+                        onClick={() => ipc.send('open-new-page', {
+                            url: `job/${job.uuid}`
+                        })}
                     />
                 ) : <tr><td>{`No ${jobTab} jobs...`}</td></tr>
             }

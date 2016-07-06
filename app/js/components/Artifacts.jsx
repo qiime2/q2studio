@@ -19,7 +19,9 @@ const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualiza
                     <Artifact
                         key={item.uuid}
                         data={item}
-                        onClick={() => ipc.send('open-artifact-page', item)}
+                        onClick={() => ipc.send('open-new-page', {
+                            url: `artifact/${item.uuid}`
+                        })}
                         deleteThis={() => {
                             if (confirm(
                                 'Are you sure you want to delete this Artifact?')) {
