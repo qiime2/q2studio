@@ -104,3 +104,6 @@ assets/
 
 # QIIME stuff:
 *.qz*
+
+# vi
+.*.swp
