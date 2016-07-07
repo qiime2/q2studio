@@ -32,12 +32,12 @@ def change_workspace():
         abort(500)
 
 
-def _result_record(result, name, route):
+def _result_record(metadata, name, route):
     return {
         'name': name,
-        'uuid': str(result.uuid),
-        'type': repr(result.type),
-        'uri': url_for(route, uuid=result.uuid)
+        'uuid': str(metadata.uuid),
+        'type': repr(metadata.type),
+        'uri': url_for(route, uuid=metadata.uuid)
     }
 
 
@@ -50,11 +50,11 @@ def get_artifacts():
     artifacts = []
     for artifact_path in artifact_paths:
         try:
-            artifact = Artifact.load(artifact_path)
+            metadata = Artifact.peek(artifact_path)
             name, _ = os.path.splitext(os.path.basename(artifact_path))
             artifacts.append(
-                _result_record(artifact, name, '.inspect_artifact'))
-            ARTIFACTS[str(artifact.uuid)] = artifact_path
+                _result_record(metadata, name, '.inspect_artifact'))
+            ARTIFACTS[str(metadata.uuid)] = artifact_path
         except Exception:
             pass  # TODO: do better things when this happens
 
@@ -64,11 +64,11 @@ def get_artifacts():
 @workspace.route('/artifacts/<uuid>', methods=['GET'])
 def inspect_artifact(uuid):
     try:
-        artifact = Artifact.load(ARTIFACTS[uuid])
+        metadata = Artifact.peek(ARTIFACTS[uuid])
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': artifact.uuid, 'type': artifact.type})
+    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
 @workspace.route('/artifacts/<uuid>', methods=['DELETE'])
@@ -89,11 +89,11 @@ def get_visualizations():
     visualizations = []
     for viz_path in viz_paths:
         try:
-            viz = Visualization.load(viz_path)
+            metadata = Visualization.peek(viz_path)
             name, _ = os.path.splitext(os.path.basename(viz_path))
-            VISUALIZATIONS[str(viz.uuid)] = viz_path
+            VISUALIZATIONS[str(metadata.uuid)] = viz_path
             visualizations.append(
-                _result_record(viz, name, '.inspect_visualization'))
+                _result_record(metadata, name, '.inspect_visualization'))
         except Exception:
             pass  # TODO: do better things when this happens
 
@@ -103,11 +103,11 @@ def get_visualizations():
 @workspace.route('/visualizations/<uuid>', methods=['GET'])
 def inspect_visualization(uuid):
     try:
-        visualization = Visualization.load(VISUALIZATIONS[uuid])
+        metadata = Visualization.peek(VISUALIZATIONS[uuid])
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': visualization.uuid, 'type': visualization.type})
+    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
 @workspace.route('/visualizations/<uuid>', methods=['DELETE'])
