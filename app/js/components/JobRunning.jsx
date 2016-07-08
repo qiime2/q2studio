@@ -14,4 +14,6 @@ const JobRunning = () => (
     </div>
 );
 
+JobRunning.displayName = 'JobRunning';
+
 export default JobRunning;

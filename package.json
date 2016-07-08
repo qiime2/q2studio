@@ -35,7 +35,7 @@
     "react-router": "^2.4.1",
     "react-router-redux": "^4.0.2",
     "redux": "^3.5.2",
-    "redux-electron-store": "^0.3.10",
+    "redux-electron-store": "^0.3.11",
     "redux-thunk": "^2.0.1",
     "which": "^1.2.10"
   },

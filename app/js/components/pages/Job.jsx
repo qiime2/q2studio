@@ -78,7 +78,7 @@ const Job = ({ plugin, action, inputs, submitJob, cancelJob, children }) => {
                     Cancel
                 </button>
                 <button
-                    disabled={children && children.type.name === 'JobRunning'}
+                    disabled={children && children.type.displayName === 'JobRunning'}
                     className="btn btn-primary pull-right"
                     type="submit"
                 >
