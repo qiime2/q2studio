@@ -1,17 +1,21 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { remote } from 'electron';
 
 import actions from '../actions';
 import Job from '../components/pages/Job';
 
-const mapStateToProps = (state, { params: { pluginId, jobId, actionType } }) => {
-    const { currentJob } = state;
+const mapStateToProps = (state, { params: { pluginId, jobId, actionType, uuid } }) => {
+    const { currentJob: inputs } = state;
     const plugin = state.plugins.find(p => p.name === pluginId);
     const action = plugin[actionType].find(w => w.id === jobId);
+    const active = state.jobs.activeJobs.find(j => j.uuid === uuid);
     return ({
         plugin,
         action,
-        inputs: currentJob
+        actionType,
+        inputs,
+        active
     });
 };
 
@@ -47,10 +51,24 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
                 continue;
             }
         }
-        dispatch(actions.startJob(job));
-        router.push('/');
+        dispatch(actions.startJob(job))
+        .then((jobJSON) => {
+            if (actionType !== 'methods') {
+                const uri = `job/${pluginId}/${actionType}/${jobId}`;
+                dispatch(actions.watchForVisualization(jobJSON.uuid, router, uri));
+                router.push(`${uri}/running/${jobJSON.uuid}`);
+            }
+        });
+        if (actionType === 'methods') { router.push('/'); }
     },
-    cancelJob: () => { router.goBack(); dispatch(actions.clearJobState()); }
+    cancelJob: () => {
+        if (actionType === 'methods') {
+            router.goBack();
+        } else {
+            remote.getCurrentWindow().close();
+        }
+        dispatch(actions.clearJobState());
+    }
 });
 
 export default withRouter(

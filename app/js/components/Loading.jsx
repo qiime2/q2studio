@@ -1,6 +1,6 @@
 import React from 'react';
 
-import style from './Loading.css';
+import style from '../../css/Loading.css';
 
 const Loading = ({ loaded, status }) => (
     loaded ?

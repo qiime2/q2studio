@@ -9,6 +9,8 @@ import currentDirectory from './currentdirectory';
 import tabState from './tabstate';
 import currentJob from './currentjob';
 import superTypes from './supertypes';
+import windowState from './windowState';
+
 
 const reducer = combineReducers({
     plugins,
@@ -19,7 +21,8 @@ const reducer = combineReducers({
     routing,
     tabState,
     currentJob,
-    superTypes
+    superTypes,
+    windowState
 });
 
 export default reducer;

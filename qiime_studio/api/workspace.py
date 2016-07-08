@@ -1,5 +1,6 @@
 import os
 import glob
+import tempfile
 
 from flask import Blueprint, jsonify, request, abort, url_for\
 
@@ -9,6 +10,7 @@ workspace = Blueprint('workspace', __name__)
 
 ARTIFACTS = {}
 VISUALIZATIONS = {}
+ACTIVE_VIS = {}
 
 
 def load_artifacts(**kwargs):
@@ -68,7 +70,7 @@ def inspect_artifact(uuid):
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
+    return jsonify({'uuid': str(metadata.uuid), 'type': repr(metadata.type)})
 
 
 @workspace.route('/artifacts/<uuid>', methods=['DELETE'])
@@ -107,7 +109,7 @@ def inspect_visualization(uuid):
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
+    return jsonify({'uuid': str(metadata.uuid), 'type': repr(metadata.type)})
 
 
 @workspace.route('/visualizations/<uuid>', methods=['DELETE'])
@@ -116,4 +118,25 @@ def delete_visualization(uuid):
         os.remove(VISUALIZATIONS[uuid])
         return ''
     except (OSError, KeyError):
+        abort(404)
+
+
+@workspace.route('/view/<uuid>', methods=['GET'])
+def view_visualization(uuid):
+    try:
+        vis = Visualization.load(VISUALIZATIONS[uuid])
+        filePath = vis.get_index_paths(relative=False)['html']
+        ACTIVE_VIS[uuid] = vis
+    except Exception:
+        abort(404)
+
+    return jsonify({'filePath': filePath})
+
+
+@workspace.route('/view/<uuid>', methods=['DELETE'])
+def unview_visualization(uuid):
+    try:
+        del ACTIVE_VIS[uuid]
+        return ''
+    except KeyError:
         abort(404)

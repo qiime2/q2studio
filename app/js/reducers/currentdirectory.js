@@ -1,6 +1,6 @@
-import { remote } from 'electron';
-
-const initialState = remote.app.getPath('home');
+// remote.app.getPath('home') breaks redux-electron-store/webpack as the
+// renderer side is trying to be imported into the main process code
+const initialState = '';
 
 const directoryReducer = (state = initialState, action) => {
     switch (action.type) {

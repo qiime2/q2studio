@@ -1,7 +1,6 @@
 import React from 'react';
 
-
-const Job = ({ plugin, action, inputs, submitJob, cancelJob }) => {
+const Job = ({ plugin, action, inputs, submitJob, cancelJob, children }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -79,19 +78,24 @@ const Job = ({ plugin, action, inputs, submitJob, cancelJob }) => {
                     Cancel
                 </button>
                 <button
+                    disabled={children && children.type.displayName === 'JobRunning'}
                     className="btn btn-primary pull-right"
                     type="submit"
                 >
                     Go!
                 </button>
             </form>
+            { children }
         </div>
-  );};
+  );
+};
 
 Job.propTypes = {
     inputs: React.PropTypes.object,
     plugin: React.PropTypes.object,
     action: React.PropTypes.object,
+    actionType: React.PropTypes.string,
+    children: React.PropTypes.element,
     submitJob: React.PropTypes.func,
     cancelJob: React.PropTypes.func
 };

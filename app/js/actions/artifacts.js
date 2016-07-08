@@ -25,6 +25,20 @@ export const clearArtifacts = () => ({
     type: 'CLEAR_ARTIFACTS'
 });
 
+export const getVisualization = (vis) => {
+    return (dispatch, getState) => {
+        const { connection: { uri, secretKey } } = getState();
+        fetchAPI(secretKey, 'GET', `http://${uri}/api/workspace/view/${vis.uuid}`)
+        .then((json) => {
+            const newVis = {
+                ...vis,
+                filePath: json.filePath
+            };
+            return dispatch(actions.registerPath(newVis));
+        });
+    };
+};
+
 export const deleteArtifact = (uuid) => {
     return (dispatch, getState) => {
         const { connection: { uri, secretKey } } = getState();
