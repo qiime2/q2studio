@@ -43,7 +43,7 @@ def _build_data_dict(data):
             for name, type_ in value.signature.inputs.items()
         ]
         dict_[key]['parameters'] = [
-            {'name': name, 'type': repr(type_[0])}
+            {'name': name, 'type': repr(type_[0]), 'ast': type_[0].to_ast()}
             for name, type_ in value.signature.parameters.items()
         ]
         dict_[key]['outputs'] = [

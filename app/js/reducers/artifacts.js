@@ -1,6 +1,7 @@
 const initialState = {
     artifacts: [],
-    visualizations: []
+    visualizations: [],
+    metadata: []
 };
 
 const artifactsReducer = (state = initialState, action) => {
@@ -33,6 +34,20 @@ const artifactsReducer = (state = initialState, action) => {
         }
         return state;
     }
+    case 'NEW_METADATA': {
+        const { metadata } = action;
+        if (state.metadata.find(m => m.filepath === metadata.filepath) === undefined) {
+            const newState = {
+                ...state,
+                metadata: [
+                    ...state.metadata,
+                    metadata
+                ]
+            };
+            return newState;
+        }
+        return state;
+    }
     case 'DELETE_ARTIFACT': {
         return {
             ...state,
@@ -50,7 +65,22 @@ const artifactsReducer = (state = initialState, action) => {
         };
     }
     case 'CLEAR_ARTIFACTS': {
-        return initialState;
+        return {
+            ...state,
+            artifacts: []
+        };
+    }
+    case 'CLEAR_VISUALIZATIONS': {
+        return {
+            ...state,
+            visualizations: []
+        };
+    }
+    case 'CLEAR_METADATA': {
+        return {
+            ...state,
+            metadata: []
+        };
     }
     default:
         return state;

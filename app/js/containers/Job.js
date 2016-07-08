@@ -6,7 +6,7 @@ import actions from '../actions';
 import Job from '../components/pages/Job';
 
 const mapStateToProps = (state, { params: { pluginId, jobId, actionType, uuid } }) => {
-    const { currentJob: inputs } = state;
+    const { currentJob: inputs, artifacts: { metadata } } = state;
     const plugin = state.plugins.find(p => p.name === pluginId);
     const action = plugin[actionType].find(w => w.id === jobId);
     const active = state.jobs.activeJobs.find(j => j.uuid === uuid);
@@ -15,7 +15,8 @@ const mapStateToProps = (state, { params: { pluginId, jobId, actionType, uuid } 
         action,
         actionType,
         inputs,
-        active
+        active,
+        metadata
     });
 };
 
@@ -31,6 +32,7 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
             plugin: pluginId,
             actionType
         };
+        let catbuffer = [];
         for (const [key, value] of formData.entries()) {
             if (value.trim().length === 0) {
                 alert(`${key} must not be blank.`);
@@ -47,6 +49,18 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
             case 'out':
                 job.outputs[name] = value;
                 break;
+            case 'metadata':
+                job.parameters[name] = value;
+                break;
+            case 'metadatacat1':
+                // TODO: FIX ALL OF THIS.
+                catbuffer = [];
+                catbuffer.push(value);
+                break;
+            case 'metadatacat2':
+                catbuffer.push(value);
+                job.parameters[name] = catbuffer;
+                break;
             default:
                 continue;
             }
@@ -58,6 +72,9 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
                 dispatch(actions.watchForVisualization(jobJSON.uuid, router, uri));
                 router.push(`${uri}/running/${jobJSON.uuid}`);
             }
+        })
+        .catch((error) => {
+            alert(error);
         });
         if (actionType === 'methods') { router.push('/'); }
     },

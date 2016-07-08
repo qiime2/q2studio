@@ -11,6 +11,11 @@ export const newVisualization = (visualization) => ({
     visualization
 });
 
+export const newMetadata = (metadata) => ({
+    type: 'NEW_METADATA',
+    metadata
+});
+
 export const removedArtifact = (uuid) => ({
     type: 'DELETE_ARTIFACT',
     uuid
@@ -23,6 +28,14 @@ export const removedVisualization = (uuid) => ({
 
 export const clearArtifacts = () => ({
     type: 'CLEAR_ARTIFACTS'
+});
+
+export const clearVisualizations = () => ({
+    type: 'CLEAR_VISUALIZATIONS'
+});
+
+export const clearMetadata = () => ({
+    type: 'CLEAR_METADATA'
 });
 
 export const getVisualization = (vis) => {
@@ -76,13 +89,25 @@ export const refreshArtifacts = () => {
 
 export const refreshVisualizations = () => {
     return (dispatch, getState) => {
-        dispatch(clearArtifacts());
+        dispatch(clearVisualizations());
         const { connection: { uri, secretKey } } = getState();
         const url = `http://${uri}/api/workspace/visualizations`;
         const method = 'GET';
         fetchAPI(secretKey, method, url)
         .then((json) => {
             json.visualizations.forEach(viz => dispatch(newVisualization(viz)));
+        });
+    };
+};
+
+export const refreshMetadata = () => {
+    return (dispatch, getState) => {
+        dispatch(clearMetadata());
+        const { connection: { uri, secretKey } } = getState();
+        const url = `http://${uri}/api/workspace/metadata`;
+        fetchAPI(secretKey, 'GET', url)
+        .then((json) => {
+            json.metadata.forEach(entry => dispatch(newMetadata(entry)));
         });
     };
 };
