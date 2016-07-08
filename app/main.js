@@ -101,6 +101,11 @@ ipc.on('open-new-page', (event, data) => {
         ...(data.settings || {}),
         parent: win
     });
+    const id = `window ${newWindow.id}`;
+    newWindow.on('close', () => {
+        win.webContents.send('child-window-closed', { id });
+    });
+
     const url = process.env.NODE_ENV === 'development' ?
         `http://localhost:4242/#${data.url}` :
         `file://${__dirname}/index.html#${data.url}`;
@@ -111,8 +116,8 @@ ipc.on('open-new-page', (event, data) => {
 // Have to figure out how to get this to work correctly. Webpack puts this main in /build,
 // so this relative path doesn't actually work and crashes Electron beyond repair when
 // a reducer is attempted to be hotswapped (requires kill signals sent to shutdown)
-// ipc.on('renderer-reload', (event) => {
-//     delete require.cache[require.resolve('./js/reducers')];
-//     store.replaceReducer(require('./js/reducers'));
-//     event.returnValue = true; // eslint-disable-line no-param-reassign
-// });
+ipc.on('renderer-reload', (event) => {
+    delete require.cache[require.resolve('../app/js/reducers')];
+    store.replaceReducer(require('../app/js/reducers'));
+    event.returnValue = true; // eslint-disable-line no-param-reassign
+});

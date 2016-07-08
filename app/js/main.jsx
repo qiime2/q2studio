@@ -5,7 +5,7 @@ import { Router, Route, hashHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { electronEnhancer } from 'redux-electron-store';
-import { ipcRenderer as ipc, remote } from 'electron';
+import { ipcRenderer as ipc } from 'electron';
 
 import App from './components/pages/App';
 import Job from './containers/Job';
@@ -31,7 +31,8 @@ const enhancerSettings = {
         currentDirectory: true,
         tabState: true,
         currentJob: true,
-        superTypes: true
+        superTypes: true,
+        windowState: true
     }
 };
 
@@ -40,6 +41,10 @@ const enhancer = process.env.NODE_ENV === 'production' ?
     compose(applyMiddleware(thunk), electronEnhancer(enhancerSettings), DevTools.instrument());
 
 const store = createStore(reducer, enhancer);
+
+ipc.on('child-window-closed', (event, data) => {
+    store.dispatch(actions.clearWindowState(data.id));
+});
 
 if (process.env.NODE_ENV === 'development') {
     if (module.hot) {

@@ -83,11 +83,6 @@ export const clearJobState = () => ({
     type: 'CLEAR_JOB_STATE'
 });
 
-export const clearWindowState = (id) => ({
-    type: 'CLEAR_WINDOW_STATE',
-    id
-});
-
 export const linkInputArtifact = (input, artifacts) => ({
     type: 'LINK_INPUT_ARTIFACT',
     input,

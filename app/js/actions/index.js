@@ -5,6 +5,7 @@ import * as connectionActionCreators from './connection';
 import * as currentDirectoryActionCreators from './currentdirectory';
 import * as tabActionCreators from './tabstate';
 import * as typeActionCreators from './types';
+import * as windowStateActionCreators from './windowstate';
 
 const actions = {
     ...artifactActionCreators,
@@ -13,7 +14,8 @@ const actions = {
     ...connectionActionCreators,
     ...currentDirectoryActionCreators,
     ...tabActionCreators,
-    ...typeActionCreators
+    ...typeActionCreators,
+    ...windowStateActionCreators
 };
 
 export default actions;

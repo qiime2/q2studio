@@ -132,9 +132,11 @@ def view_visualization(uuid):
 
     return jsonify({'filePath': filePath})
 
+
 @workspace.route('/view/<uuid>', methods=['DELETE'])
 def unview_visualization(uuid):
     try:
         del ACTIVE_VIS[uuid]
+        return ''
     except KeyError:
         abort(404)
