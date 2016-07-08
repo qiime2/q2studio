@@ -4,7 +4,7 @@ import style from '../../css/Visualization.css';
 
 const Visualization = ({ vis }) => (
     <div>
-        { vis.filePath ? <webview className={style.webview} src={`file://${vis.filePath}`}></webview> : 'no filepath?' }
+        { vis && vis.filePath ? <webview className={style.webview} src={`file://${vis.filePath}`}></webview> : 'no filepath?' }
     </div>
 );
 

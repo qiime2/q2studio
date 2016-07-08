@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 
 import ArtifactDetail from '../components/ArtifactDetail';
+import actions from '../actions';
+
 
 const mapStateToProps = (state, { params: { uuid } }) => {
     const artifact = (state.artifacts.artifacts.find(a => a.uuid === uuid) ||
@@ -8,6 +10,11 @@ const mapStateToProps = (state, { params: { uuid } }) => {
     return { artifact };
 };
 
+const mapDispatchToProps = (dispatch) => ({
+    getVisualization: (vis) => dispatch(actions.getVisualization(vis))
+});
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(ArtifactDetail);

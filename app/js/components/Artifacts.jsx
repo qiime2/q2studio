@@ -45,7 +45,8 @@ Artifacts.propTypes = {
     data: React.PropTypes.array,
     type: React.PropTypes.string,
     dispatchDeleteArtifact: React.PropTypes.func,
-    dispatchDeleteVisualization: React.PropTypes.func
+    dispatchDeleteVisualization: React.PropTypes.func,
+    getVisualization: React.PropTypes.func
 };
 
 export default Artifacts;

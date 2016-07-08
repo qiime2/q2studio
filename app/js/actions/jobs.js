@@ -14,7 +14,7 @@ export const jobCompleted = (job) => ({
     job
 });
 
-const registerPath = (visualization) => ({
+export const registerPath = (visualization) => ({
     type: 'REGISTER_PATH',
     visualization
 });
@@ -37,7 +37,7 @@ export const watchForVisualization = (jobUUID, router, url) => {
                         ...vis,
                         filePath: json.filePath
                     };
-                    return dispatch(registerPath(vis));
+                    return dispatch(actions.registerPath(vis));
                 })
                 .then((action) => router.push(`${url}/${action.visualization.uuid}`));
             } else {
