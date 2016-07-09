@@ -1,7 +1,8 @@
 const initialState = {
     artifacts: [],
     visualizations: [],
-    metadata: []
+    metadata: [],
+    artifactDirectory: undefined
 };
 
 const artifactsReducer = (state = initialState, action) => {
@@ -80,6 +81,19 @@ const artifactsReducer = (state = initialState, action) => {
         return {
             ...state,
             metadata: []
+        };
+    }
+    case 'SET_ARTIFACT_DIR': {
+        return {
+            ...state,
+            artifactDirectory: action.path
+        };
+    }
+    case 'CHANGE_TAB': {
+        if (action.name !== 'createArtifact') { return state; }
+        return {
+            ...state,
+            artifactDirectory: undefined
         };
     }
     default:

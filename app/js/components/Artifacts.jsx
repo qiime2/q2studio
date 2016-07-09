@@ -2,15 +2,16 @@ import React from 'react';
 import { ipcRenderer as ipc } from 'electron';
 
 import Artifact from './Artifact';
+import ArtifactGenerator from '../containers/ArtifactGenerator';
 
 const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualization }) => (
     <table className="table">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>UUID</th>
-                <th>Type</th>
-                <th></th>
+                <th className="col-xs-3">Name</th>
+                <th className="col-xs-5">UUID</th>
+                <th className="col-xs-2">Type</th>
+                <th className="col-xs-2"></th>
             </tr>
         </thead>
         <tbody>
@@ -37,6 +38,7 @@ const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualiza
                     />
                 )) : <tr><td>{`No available ${type}s...`}</td></tr>
             }
+            { type === 'artifact' ? <ArtifactGenerator /> : null }
         </tbody>
     </table>
 );

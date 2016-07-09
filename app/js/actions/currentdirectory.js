@@ -35,3 +35,24 @@ export const directoryChangeDialog = (currPath) => {
         });
     };
 };
+
+const setArtifactDir = (path) => ({
+    type: 'SET_ARTIFACT_DIR',
+    path
+});
+
+export const selectArtifactDirectory = () => {
+    return (dispatch, getState) => {
+        const currPath = getState().currentDirectory;
+        remote.dialog.showOpenDialog({
+            title: 'Choose Artifact Directory',
+            defaultpath: currPath,
+            buttonlabel: 'Set Artifact Directory',
+            properties: ['openDirectory']
+        }, (fps) => {
+            if (fps) {
+                dispatch(setArtifactDir(fps[0]));
+            }
+        });
+    };
+};

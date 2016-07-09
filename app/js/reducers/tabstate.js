@@ -24,7 +24,8 @@ const makeTabReducer = (name, defaultIndex = 0) => {
 const reducer = combineReducers({
     jobs: makeTabReducer('jobs'),
     artifacts: makeTabReducer('artifacts'),
-    plugin: makeTabReducer('plugin')
+    plugin: makeTabReducer('plugin'),
+    createArtifact: makeTabReducer('createArtifact')
 });
 
 export default reducer;
