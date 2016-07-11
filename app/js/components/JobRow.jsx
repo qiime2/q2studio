@@ -1,5 +1,6 @@
 import React from 'react';
-
+import Timer from './Timer'
+var moment = require('moment');
 
 const JobRow = ({ data, onClick }) => (
     <tr>
@@ -9,19 +10,23 @@ const JobRow = ({ data, onClick }) => (
             </a>
         </td>
         <td>
-            {data.started}
+            { moment.utc(data.started).format('M-D-Y hh:mm:ss') }
         </td>
         {data.finished ?
             <td>
-            {data.finished}
-            </td> : null
-        }
+            { moment.utc(data.finished).format('M-D-Y hh:mm:ss') }
+            </td> 
+            :
+            <td>
+            <Timer start={ data.started } /> 
+            </td>
+    }
     </tr>
 );
 
 JobRow.propTypes = {
     data: React.PropTypes.object,
-    onClick: React.PropTypes.func
+    onClick: React.PropTypes.func,
 };
 
 export default JobRow;

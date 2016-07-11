@@ -5,7 +5,7 @@ import tempfile
 import threading
 import traceback
 import uuid
-import datetime
+import time
 
 from flask import Blueprint, jsonify, request, abort, url_for
 import qiime.sdk
@@ -67,7 +67,7 @@ def create_job():
     parameters = action.signature.decode_parameters(**parameters)
     inputs = load_artifacts(**inputs)
     job_id = str(uuid.uuid4())
-    now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
+    now = int(time.time() * 1000)
 
     JOBS[job_id] = {
         'uuid': job_id,
@@ -106,7 +106,7 @@ def create_job():
 def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
     # This is needed for closure over stdout, stderr, outputs
     def callback(future):
-        now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
+        now = int(time.time() * 1000)
         try:
             results = future.result()
             if type(results) is not tuple:
