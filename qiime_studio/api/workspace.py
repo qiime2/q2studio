@@ -63,6 +63,11 @@ def get_artifacts():
     return jsonify({'artifacts': artifacts})
 
 
+@workspace.route('/artifacts', methods=['POST'])
+def create_artifact():
+    return ''
+
+
 @workspace.route('/artifacts/<uuid>', methods=['GET'])
 def inspect_artifact(uuid):
     try:
