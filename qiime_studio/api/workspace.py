@@ -140,3 +140,26 @@ def unview_visualization(uuid):
         return ''
     except KeyError:
         abort(404)
+
+
+@workspace.route('/metadata', methods=['GET'])
+def get_metadata():
+    path = os.getcwd()
+    metadata_paths = list(glob.glob(os.path.join(path, '*.txt')))
+    metadata_paths += list(glob.glob(os.path.join(path, '*.tsv')))
+    metadata = []
+    for metadata_path in metadata_paths:
+        try:
+            with open(metadata_path) as fh:
+                header = "#SampleID"
+                assert(fh.read(len(header)) == header)
+            metadata.append({
+                "name": os.path.basename(metadata_path),
+                "filepath": metadata_path
+            })
+        except Exception:
+            pass  # TODO: do better things when this happens
+
+    return jsonify({'metadata': metadata})
+
+# TODO: More sophisticated handling of metadata in the future.

@@ -35,9 +35,12 @@ export const fetchAPI = (secretKey, method, url, body_) => {
         body: (body || undefined)
     })
     .then((response) => {
+        const parsed = response.text().then(value => (value ? JSON.parse(value) : {}));
         if (!response.ok) {
-            throw Error(response.statusText);
+            return parsed.then((json) => {
+                throw Error(`${response.statusText} - ${json.error}`);
+            });
         }
-        return response.text().then(value => (value ? JSON.parse(value) : {}));
+        return parsed;
     });
 };

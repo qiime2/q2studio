@@ -1,6 +1,9 @@
 import React from 'react';
 
-const Job = ({ plugin, action, inputs, submitJob, cancelJob, children }) => {
+import _ from 'lodash';
+
+
+const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children }) => {
     let counter = 1;
     return (
         <div className="container">
@@ -34,7 +37,7 @@ const Job = ({ plugin, action, inputs, submitJob, cancelJob, children }) => {
                 </fieldset>
             )}
 
-            { action.parameters.map(({ name, type }) =>
+            { action.parameters.map(({ name, type, ast }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-text-input${counter++}` }
@@ -42,12 +45,79 @@ const Job = ({ plugin, action, inputs, submitJob, cancelJob, children }) => {
                     <label htmlFor={`param-${name}`}>
                         Input Parameter: { name }
                     </label>
-                    <input
-                        type="text-field"
-                        className="form-control"
-                        name={`param-${name}`}
-                        placeholder={ type }
-                    />
+                    { ast.predicate.name && ast.predicate.name === 'Choices' ?
+                        (
+                        <select
+                            className="form-control"
+                            name={`param-${name}`}
+                        >
+                            {
+                                _.sortBy(ast.predicate.choices).map(choice =>
+                                    <option
+                                        key={choice}
+                                        value={choice}
+                                    >
+                                        {choice}
+                                    </option>
+                                )
+                            }
+                        </select>
+                        )
+                        : type === 'Metadata' ?
+                        (
+                            <select
+                                className="form-control"
+                                name={`metadata-${name}`}
+                            >
+                                { metadata ?
+                                    metadata.map(entry =>
+                                        <option
+                                            key={entry.name}
+                                            value={entry.filepath}
+                                        >
+                                            {entry.name}
+                                        </option>
+                                    ) : null
+                                }
+                            </select>
+                        )
+                        : type === 'MetadataCategory' ?
+                        (
+                            <fieldset>
+                                <select
+                                    className="form-control"
+                                    name={`metadatacat1-${name}`}
+                                >
+                                    { metadata ?
+                                        metadata.map(entry =>
+                                            <option
+                                                key={entry.name}
+                                                value={entry.filepath}
+                                            >
+                                                {entry.name}
+                                            </option>
+                                        ) : null
+                                    }
+                                </select>
+                                <input
+                                    type="text-field"
+                                    className="form-control"
+                                    name={`metadatacat2-${name}`}
+                                    placeholder={ type }
+                                />
+                            </fieldset>
+                        )
+                        :
+                        (
+                            <input
+                                type="text-field"
+                                className="form-control"
+                                name={`param-${name}`}
+                                placeholder={ type }
+                            />
+                        )
+                    }
+
                 </fieldset>
             )}
                 <br />
@@ -85,6 +155,8 @@ const Job = ({ plugin, action, inputs, submitJob, cancelJob, children }) => {
                     Go!
                 </button>
             </form>
+            <br />
+            <br />
             { children }
         </div>
   );
@@ -96,6 +168,7 @@ Job.propTypes = {
     action: React.PropTypes.object,
     actionType: React.PropTypes.string,
     children: React.PropTypes.element,
+    metadata: React.PropTypes.array,
     submitJob: React.PropTypes.func,
     cancelJob: React.PropTypes.func
 };

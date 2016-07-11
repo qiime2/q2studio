@@ -8,7 +8,9 @@ import uuid
 import datetime
 
 from flask import Blueprint, jsonify, request, abort, url_for
+import qiime
 import qiime.sdk
+import qiime.plugin
 
 from qiime_studio.util import redirected_stdio
 from .workspace import load_artifacts
@@ -63,9 +65,27 @@ def create_job():
                 path += '.qzv'
 
         outputs[key] = path
+    try:
+        # TODO: make this better
+        json_params = {}
+        for key, (type_, _) in action.signature.parameters.items():
+            if type_ == qiime.plugin.Metadata:
+                parameters[key] = qiime.Metadata.load(parameters[key])
+                json_params[key] = '<metadata>'
+            elif type_ == qiime.plugin.MetadataCategory:
+                parameters[key] = qiime.Metadata.load(
+                    parameters[key][0]).get_category(parameters[key][1])
+                json_params[key] = '<metadata>'
+            else:
+                json_params[key] = parameters[key]
 
-    parameters = action.signature.decode_parameters(**parameters)
-    inputs = load_artifacts(**inputs)
+        parameters = action.signature.decode_parameters(**parameters)
+        inputs = load_artifacts(**inputs)
+    except Exception as e:
+        r = jsonify({'error': str(e)})
+        r.status_code = 400
+        return r
+
     job_id = str(uuid.uuid4())
     now = '{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
 
@@ -81,7 +101,7 @@ def create_job():
         'actionId': action.id,
         'actionName': action.name,
         'inputs': {k: v.uuid for k, v in inputs.items()},
-        'params': parameters,
+        'params': json_params,
         'outputs': {k: None for k in outputs}
     }
 

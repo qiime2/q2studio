@@ -70,7 +70,7 @@ describe('reducer', () => {
         };
         const nextState = reducer(state, actions.clearArtifacts());
         expect(nextState.artifacts.artifacts).to.be.empty;
-        expect(nextState.artifacts.visualizations).to.be.empty;
+        expect(nextState.artifacts.visualizations).to.not.be.empty;
     });
 
     it('handles ESTABLISH_CONNECTION', () => {

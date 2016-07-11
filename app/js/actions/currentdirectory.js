@@ -1,6 +1,6 @@
 import { remote } from 'electron';
 
-import { refreshArtifacts, refreshVisualizations } from './artifacts';
+import { refreshArtifacts, refreshVisualizations, refreshMetadata } from './artifacts';
 import { fetchAPI } from '../util/auth';
 
 
@@ -15,7 +15,8 @@ export const directoryChange = (directory) => {
                 directory
             }))
             .then(() => dispatch(refreshArtifacts()))
-            .then(() => dispatch(refreshVisualizations()));
+            .then(() => dispatch(refreshVisualizations()))
+            .then(() => dispatch(refreshMetadata()));
     };
 };
 
