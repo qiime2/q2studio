@@ -37,7 +37,7 @@ export const directoryChangeDialog = (currPath) => {
 };
 
 const setArtifactDir = (path) => ({
-    type: 'SET_ARTIFACT_DIR',
+    type: 'SET_ARTIFACT_PATH',
     path
 });
 
@@ -45,10 +45,9 @@ export const selectArtifactDirectory = () => {
     return (dispatch, getState) => {
         const currPath = getState().currentDirectory;
         remote.dialog.showOpenDialog({
-            title: 'Choose Artifact Directory',
+            title: 'Choose Artifact Directory or File',
             defaultpath: currPath,
-            buttonlabel: 'Set Artifact Directory',
-            properties: ['openDirectory']
+            properties: ['openFile', 'openDirectory']
         }, (fps) => {
             if (fps) {
                 dispatch(setArtifactDir(fps[0]));

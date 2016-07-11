@@ -38,14 +38,11 @@ export const clearMetadata = () => ({
     type: 'CLEAR_METADATA'
 });
 
-export const createArtifact = (dirPath, type) => {
+export const createArtifact = (formData) => {
     return (dispatch, getState) => {
         const { connection: { uri, secretKey } } = getState();
-        const body = {
-            path: dirPath,
-            type
-        };
-        fetchAPI(secretKey, 'POST', `http://${uri}/api/workspace/artifacts`, body)
+        fetchAPI(secretKey, 'POST', `http://${uri}/api/workspace/artifacts`, formData)
+        .catch((error) => alert(error))
         .then(() => dispatch(actions.refreshArtifacts()));
     };
 };

@@ -4,21 +4,26 @@ import actions from '../actions';
 import ArtifactGenerator from '../components/ArtifactGenerator';
 
 const mapStateToProps = ({ tabState: { createArtifact: { currentIndex } }, ...state }) => ({
-    dirPath: state.artifacts.artifactDirectory,
+    sysPath: state.artifacts.sysCreationPath,
     active: currentIndex
 });
 
 const mapDispatchToProps = (dispatch) => ({
     toggleCreation: (idx) => dispatch(actions.changeTab('createArtifact', (idx + 1) % 2)),
     selectDirectory: () => dispatch(actions.selectArtifactDirectory()),
-    createArtifact: (e, dirPath) => {
+    createArtifact: (e, idx) => {
         e.preventDefault();
-        if (dirPath === undefined) {
-            alert('Please choose a valid directory to convert to Artifact');
-            return false;
-        }
         const fd = new FormData(e.target);
-        dispatch(actions.createArtifact(dirPath, fd));
+        const data = {};
+        for (const [key, value] of fd) {
+            if (value === '' || value === undefined) {
+                alert(`${key} must not be blank!`);
+                return false;
+            }
+            data[key] = value;
+        }
+        dispatch(actions.createArtifact(data));
+        dispatch(actions.changeTab('createArtifact', (idx + 1) % 2));
         return true;
     }
 });

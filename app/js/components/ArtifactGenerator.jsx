@@ -7,60 +7,85 @@ const ArtifactGenerator = ({
     toggleCreation,
     createArtifact,
     selectDirectory,
-    dirPath
+    sysPath
 }) => (
-    <table className="table">
-        <thead>
+    <form onSubmit={(e) => createArtifact(e, active)}>
+        <table className="table">
+            <thead>
+                <tr>
+                    <th className="col-xs-1"></th>
+                    <th className="col-xs-5"></th>
+                    <th className="col-xs-3"></th>
+                    <th className="col-xs-3"></th>
+                </tr>
+            </thead>
+            <tbody>
+        { active === 0 ?
             <tr>
-                <th className="col-xs-6"></th>
-                <th className="col-xs-4"></th>
-                <th className="col-xs-1"></th>
-            </tr>
-        </thead>
-        <tbody>
-    { active === 0 ?
-        <tr>
-            <td></td>
-            <td></td>
-            <td><button
-                type="button"
-                className="close"
-                aria-label="Create Artifact"
-                onClick={() => toggleCreation(active)}
-            >
-                <span
-                    className="glyphicon glyphicon-plus"
-                    aria-hidden="true"
-                ></span>
-            </button></td>
-        </tr> :
-        <tr>
-            <td style={style}>
-                <div className="input-group">
-                    <span className="input-group-btn">
-                        <button
-                            type="button"
-                            className="btn btn-primary pull-left"
-                            onClick={selectDirectory}
-                        >
-                            <span
-                                className="glyphicon glyphicon-import"
-                            ></span>
-                            <span> Import</span>
-                        </button>
-                    </span>
+                <td><button
+                    type="button"
+                    className="btn btn-xs btn-success pull-left"
+                    aria-label="Create Artifact"
+                    onClick={() => toggleCreation(active)}
+                >
+                    <span
+                        style={{ color: 'white' }}
+                        className="glyphicon glyphicon-plus"
+                        aria-hidden="true"
+                    ></span>
+                </button></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr> :
+            <tr>
+                <td style={style}>
+                    <button
+                        type="button"
+                        className="btn btn-xs btn-danger pull-left"
+                        aria-label="Close Artifact Creation"
+                        onClick={() => toggleCreation(active)}
+                    >
+                        <span
+                            style={{ color: 'white' }}
+                            className="glyphicon glyphicon-remove"
+                            aria-hidden="true"
+                        ></span>
+                    </button>
+                </td>
+                <td style={style}>
+                    <div className="input-group">
+                        <span className="input-group-btn">
+                            <button
+                                type="button"
+                                className="btn btn-primary pull-left"
+                                onClick={selectDirectory}
+                            >
+                                <span
+                                    className="glyphicon glyphicon-import"
+                                ></span>
+                                <span> Import</span>
+                            </button>
+                        </span>
+                        <input
+                            name="path"
+                            type="text"
+                            className="form-control"
+                            style={{ width: '100%' }}
+                            placeholder="Data Directory Path"
+                            value={sysPath || ''}
+                        />
+                    </div>
+                </td>
+                <td style={style}>
                     <input
+                        name="name"
                         type="text"
-                        disabled="true"
                         className="form-control"
-                        style={{ width: '100%' }}
-                        placeholder="Data Directory Path"
-                        value={dirPath || ''}
+                        placeholder="Name"
                     />
-                </div>
-            </td>
-            <td style={style}>
-                <form onSubmit={(e) => createArtifact(e, dirPath)}>
+                </td>
+                <td style={style}>
                     <div className="input-group">
                         <input
                             name="type"
@@ -69,36 +94,23 @@ const ArtifactGenerator = ({
                             placeholder="Semantic Type"
                         />
                         <span className="input-group-btn">
-                            <button type="submit" className="btn btn-success pull-right">
+                            <button type="submit" className="btn btn-success">
                                 Go!
                             </button>
                         </span>
                     </div>
-                </form>
-            </td>
-            <td style={style}>
-                <button
-                    type="button"
-                    className="close"
-                    aria-label="Create Artifact"
-                    onClick={() => toggleCreation(active)}
-                >
-                    <span
-                        className="glyphicon glyphicon-remove"
-                        aria-hidden="true"
-                    ></span>
-                </button>
-            </td>
-        </tr>
-    }
-        </tbody>
-    </table>
+                </td>
+            </tr>
+        }
+            </tbody>
+        </table>
+    </form>
 );
 
 ArtifactGenerator.propTypes = {
     active: React.PropTypes.number,
     toggleCreation: React.PropTypes.func,
-    dirPath: React.PropTypes.string,
+    sysPath: React.PropTypes.string,
     selectDirectory: React.PropTypes.func,
     createArtifact: React.PropTypes.func
 };
