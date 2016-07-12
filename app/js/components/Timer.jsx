@@ -1,23 +1,21 @@
 import React from 'react';
-var moment = require('moment');
+const moment = require('moment');
 
 class Timer extends React.Component {
 
     componentDidMount() {
         this.interval = setInterval(() => {
             const diff = Date.now() - +this.props.start;
-            const formattedDate = moment.utc(diff).format('HH:mm:ss')
-            // var formattedDate = dateFormat(diff, "h:MM:ss");
-            this.elem.innerHTML =  formattedDate + "";
-        }, 900)
+            const formattedDate = String(moment.utc(diff).format('HH:mm:ss'));
+            this.elem.innerHTML = formattedDate;
+        }, 900);
     }
     componentWillUnmount() {
         clearInterval(this.interval);
     }
     render() {
-        const start = this.props.start; 
         return (
-            <span 
+            <span
                 ref={(e) => {
                     this.elem = e;
                 }}

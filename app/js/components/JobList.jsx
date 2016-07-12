@@ -10,7 +10,7 @@ const JobList = ({ jobs, jobTab }) => (
                 <th className="col-md-6">Action</th>
                 <th className="col-md-3">Started</th>
                 <th className="col-md-3">
-                    {jobTab !== 'active' ? 'Finished':'Elapsed'}
+                    {jobTab !== 'active' ? 'Finished' : 'Elapsed'}
                 </th>
             </tr>
         </thead>
