@@ -6,7 +6,7 @@ const JobRow = ({ data, onClick }) => (
     <tr>
         <td>
             <a style={{ cursor: 'pointer' }} onClick={onClick}>
-                { data.actionName }
+                {data.actionName}
             </a>
         </td>
         <td>

@@ -4,14 +4,14 @@ const Artifact = ({ data, onClick, deleteThis }) => (
     <tr>
         <td>
             <a style={{ cursor: 'pointer' }} onClick={onClick}>
-                { data.name }
+                {data.name}
             </a>
         </td>
         <td>
-            { data.uuid }
+            {data.uuid}
         </td>
         <td>
-            { data.type }
+            {data.type}
         </td>
         <td>
             <button

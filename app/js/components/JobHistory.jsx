@@ -1,5 +1,6 @@
 import React from 'react';
 import { highlightBlock } from 'highlight.js';
+import { ipcRenderer as ipc } from 'electron';
 
 import JobHistoryData from './JobHistoryData';
 import style from '../../css/JobHistory.css';
@@ -8,11 +9,17 @@ import style from '../../css/JobHistory.css';
 class JobHistory extends React.Component {
     constructor(props) {
         super(props);
-        this.order = ['UUID', 'Completed', 'Error', 'Inputs', 'Params',
-                      'Outputs', 'Started', 'Finished', 'stdout', 'stderr'];
+        this.state = { job: {}, ...props };
+        this.order = ['UUID', 'Completed', 'Error', 'Started', 'Finished', 'stdout', 'stderr'];
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        ipc.on('pass-job-data', (event, data) => {
+            this.setState({ job: data });
+        });
+    }
+
+    componentDidUpdate() {
         highlightBlock(document.querySelector('pre code'));
     }
 
@@ -20,7 +27,7 @@ class JobHistory extends React.Component {
         return (
             <div className="container">
                 <div className="page-header">
-                    <h1>{this.props.job.actionName}</h1>
+                    <h1>{this.state.job.workflow}</h1>
                 </div>
                 <div className="panel panel-default">
                     <div className="panel-heading">
@@ -33,7 +40,7 @@ class JobHistory extends React.Component {
                                     <JobHistoryData
                                         key={key}
                                         name={key}
-                                        value={this.props.job[key.toLowerCase()]}
+                                        value={this.state.job[key.toLowerCase()]}
                                     />
                                 )}
                             </tbody>
@@ -46,7 +53,7 @@ class JobHistory extends React.Component {
                     </div>
                     <div className="panel-body">
                         <pre className={style.pre}><code className={`python ${style.code}`}>
-                            { this.props.job.code }
+                            {this.state.job.code}
                         </code></pre>
                     </div>
                 </div>
@@ -56,7 +63,7 @@ class JobHistory extends React.Component {
 }
 
 JobHistory.propTypes = {
-    job: React.PropTypes.object
+    location: React.PropTypes.object
 };
 
 export default JobHistory;

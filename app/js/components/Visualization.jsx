@@ -13,7 +13,7 @@ class Visualization extends React.Component {
                     Visualization:
                 </div>
                 <div className="panel-body">
-                    { vis && vis.filePath ?
+                    {vis && vis.filePath ?
                         <webview
                             className={style.webview}
                             src={`file://${vis.filePath}`}

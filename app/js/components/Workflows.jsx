@@ -4,12 +4,12 @@ import Workflow from './Workflow';
 
 const Workflows = ({ plugin, listing, openWorkflow }) => (
     <div>
-        { [...listing].sort((a, b) => a.name > b.name).map(action => (
+        {[...listing].sort((a, b) => a.name > b.name).map(action => (
             <Workflow
                 key={action.name}
                 flow={action}
                 disabled={action.requires.length !== 0}
-                onClick = {() => openWorkflow(plugin, action)}
+                onClick={() => openWorkflow(plugin, action)}
             />
         ))}
     </div>

@@ -30,10 +30,11 @@ const Metadata = ({ metadata, dispatchDeleteMetadata }) => (
         </table>
         <span>
             Metadata files must be valid QIIME 1 mapping files (see
-            <a onClick={(e) => {
-                e.preventDefault();
-                shell.openExternal('http://keemei.qiime.org/');
-            }}
+            <a
+                onClick={(e) => {
+                    e.preventDefault();
+                    shell.openExternal('http://keemei.qiime.org/');
+                }}
             > keemei.qiime.org</a>).
         </span>
     </div>

@@ -8,13 +8,14 @@ const Tabs = (props) => {
             <div className="panel-heading">
                 <ul className="nav nav-pills">
                     {tabs.map((tab, idx) => (
-                        <li key={tab}
+                        <li
+                            key={tab}
                             role="presentation"
                             className={idx === currentIndex ? 'active' : null}
                         >
                             <a onClick={() => changeTab(idx)}>
-                                { tabs[idx] }
-                                { getCount && getCount(idx) ?
+                                {tabs[idx]}
+                                {getCount && getCount(idx) ?
                                     <span className="badge">{getCount(idx)}</span> : null}
                             </a>
                         </li>
@@ -39,7 +40,7 @@ const Tabs = (props) => {
                 </ul>
             </div>
             <div className="panel-body">
-                { contents[currentIndex] }
+                {contents[currentIndex]}
             </div>
         </div>
     );

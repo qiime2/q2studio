@@ -10,7 +10,7 @@ const Loading = ({ loaded, status }) => (
                 <div className={style.loader}>
                 </div>
                 <p className={style.label}>
-                    { status }
+                    {status}
                 </p>
             </div>
         </div>
