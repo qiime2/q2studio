@@ -118,6 +118,6 @@ ipc.on('open-new-page', (event, data) => {
 // a reducer is attempted to be hotswapped (requires kill signals sent to shutdown)
 ipc.on('renderer-reload', (event) => {
     delete require.cache[require.resolve('../app/js/reducers')];
-    store.replaceReducer(require('../app/js/reducers'));
+    store.replaceReducer(require('../app/js/reducers').default);
     event.returnValue = true; // eslint-disable-line no-param-reassign
 });

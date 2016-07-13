@@ -63,6 +63,23 @@ def get_artifacts():
     return jsonify({'artifacts': artifacts})
 
 
+@workspace.route('/artifacts', methods=['POST'])
+def create_artifact():
+    try:
+        request_body = request.get_json()
+        artifact = Artifact.import_data(request_body['type'],
+                                        request_body['path'])
+        path = os.path.join(os.getcwd(), request_body['name'])
+        if not path.endswith('.qza'):
+            path += '.qza'
+        artifact.save(path)
+        return ''
+    except Exception as e:
+        r = jsonify({'error': str(e)})
+        r.status_code = 400
+        return r
+
+
 @workspace.route('/artifacts/<uuid>', methods=['GET'])
 def inspect_artifact(uuid):
     try:
