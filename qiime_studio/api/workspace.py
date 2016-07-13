@@ -74,7 +74,7 @@ def create_artifact():
             path += '.qza'
         artifact.save(path)
         return ''
-    except TypeError as e:
+    except Exception as e:
         r = jsonify({'error': str(e)})
         r.status_code = 400
         return r
