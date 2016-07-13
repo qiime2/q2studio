@@ -9,11 +9,9 @@ const JobList = ({ jobs, jobTab }) => (
             <tr>
                 <th className="col-md-6">Action</th>
                 <th className="col-md-3">Started</th>
-                {jobTab !== 'active' ?
-                    <th className="col-md-3">
-                        Finished
-                    </th> : null
-                }
+                <th className="col-md-3">
+                    {jobTab !== 'active' ? 'Finished' : 'Elapsed'}
+                </th>
             </tr>
         </thead>
         <tbody>
