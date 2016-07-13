@@ -1,5 +1,5 @@
 import React from 'react';
-const moment = require('moment');
+import moment from 'moment';
 
 class Timer extends React.Component {
 
