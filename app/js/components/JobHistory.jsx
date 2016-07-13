@@ -1,5 +1,6 @@
 import React from 'react';
 import { highlightBlock } from 'highlight.js';
+import ReactMarkdown from 'react-markdown';
 
 import JobHistoryData from './JobHistoryData';
 import style from '../../css/JobHistory.css';
@@ -13,7 +14,13 @@ class JobHistory extends React.Component {
     }
 
     componentDidMount() {
-        highlightBlock(document.querySelector('pre code'));
+        for (const codeBlock of document.querySelectorAll('pre')) {
+            codeBlock.className += ` ${style.pre}`;
+        }
+        for (const codeBlock of document.querySelectorAll('pre code')) {
+            highlightBlock(codeBlock);
+            codeBlock.className += ` ${style.code}`;
+        }
     }
 
     render() {
@@ -45,9 +52,7 @@ class JobHistory extends React.Component {
                         Job Code:
                     </div>
                     <div className="panel-body">
-                        <pre className={style.pre}><code className={`python ${style.code}`}>
-                            { this.props.job.code }
-                        </code></pre>
+                        <ReactMarkdown className="python" source={ this.props.job.code } />
                     </div>
                 </div>
             </div>

@@ -31,6 +31,7 @@
     "rc-collapse": "^1.6.3",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
+    "react-markdown": "^2.4.2",
     "react-redux": "^4.4.1",
     "react-router": "^2.4.1",
     "react-router-redux": "^4.0.2",
