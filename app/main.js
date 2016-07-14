@@ -68,7 +68,7 @@ const makeURL = (port, secretKey) => {
 
 const createWindow = () => {
     // Create the browser window.
-    win = new BrowserWindow({ width: 1024, height: 800 });
+    win = new BrowserWindow({ width: 1024, height: 800, x: 5, y: 5 });
 
     startRestAPI((port, secret) => win.loadURL(makeURL(port, secret)));
 

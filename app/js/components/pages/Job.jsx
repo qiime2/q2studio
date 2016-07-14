@@ -145,14 +145,14 @@ const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children 
                     className="btn btn-danger"
                     onClick={cancelJob}
                 >
-                    Cancel
+                    {children === null ? 'Cancel' : 'Exit'}
                 </button>
                 <button
                     disabled={children && children.type.displayName === 'JobRunning'}
                     className="btn btn-primary pull-right"
                     type="submit"
                 >
-                    Go!
+                    {children === null ? 'Go!' : 'Run again!'}
                 </button>
             </form>
             <br />
