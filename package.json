@@ -24,6 +24,7 @@
     "dev": "npm run dev:main && concurrently --kill-others \"npm run dev:render\" \"npm run dev:start\""
   },
   "dependencies": {
+    "bootstrap-css-only": "^3.3.6",
     "crypto-js": "^3.1.6",
     "electron-prebuilt": "^1.2.1",
     "highlight.js": "^9.4.0",

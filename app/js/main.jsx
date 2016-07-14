@@ -19,6 +19,7 @@ import JobRunning from './components/JobRunning';
 
 import actions from './actions';
 
+import '!style-loader!css-loader!bootstrap-css-only';
 import '!style-loader!css-loader!../css/main.css';
 
 

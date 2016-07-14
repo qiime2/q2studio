@@ -42,6 +42,10 @@ module.exports = function extendConfig(override, isDev) {
                 {
                     test: /\.json$/,
                     loader: 'json-loader'
+                },
+                {
+                    test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
+                    loader: 'url-loader'
                 }
             ]
         },
