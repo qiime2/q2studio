@@ -57,6 +57,7 @@ export const loadPlugins = () => {
                 ({ plugin: { name, methodsURI, visualizersURI } }) => {
                     dispatch(loadMethods(name, methodsURI));
                     dispatch(loadVisualizers(name, visualizersURI));
-                }));
+                }))
+        .then(() => actions.checkTypes());
     };
 };
