@@ -6,8 +6,7 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
-__version__ = "0.0.1"
-
 from .server import start_server
+__version__ = "0.0.1"
 
 __all__ = ['start_server']

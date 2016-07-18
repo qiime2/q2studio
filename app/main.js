@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) 2016--, QIIME development team.
+//
+// Distributed under the terms of the Modified BSD License.
+//
+// The full license is in the file LICENSE, distributed with this software.
+// ----------------------------------------------------------------------------
+
 import { spawn } from 'child_process';
 import { app, BrowserWindow, ipcMain as ipc } from 'electron';
 import path from 'path';

@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) 2016--, QIIME development team.
+//
+// Distributed under the terms of the Modified BSD License.
+//
+// The full license is in the file LICENSE, distributed with this software.
+// ----------------------------------------------------------------------------
+
 import React from 'react';
 import { render } from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
@@ -20,7 +28,6 @@ import JobRunning from './components/JobRunning';
 import actions from './actions';
 
 import '!style-loader!css-loader!bootstrap-css-only';
-import '!style-loader!css-loader!../css/main.css';
 
 
 const enhancerSettings = {
