@@ -1,8 +1,17 @@
+// ----------------------------------------------------------------------------
+// Copyright (c) 2016--, QIIME development team.
+//
+// Distributed under the terms of the Modified BSD License.
+//
+// The full license is in the file LICENSE, distributed with this software.
+// ----------------------------------------------------------------------------
+
 import React from 'react';
 import { highlightBlock } from 'highlight.js';
 import ReactMarkdown from 'react-markdown';
 
 import JobHistoryData from './JobHistoryData';
+import '!style-loader!css-loader!../../css/hljs.css';
 import style from '../../css/JobHistory.css';
 
 
