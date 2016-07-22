@@ -89,46 +89,45 @@ def create_job():
 
         parameters = action.signature.decode_parameters(**parameters)
         inputs = load_artifacts(**inputs)
+
+        job_id = str(uuid.uuid4())
+        now = int(time.time() * 1000)
+
+        JOBS[job_id] = {
+            'uuid': job_id,
+            'completed': False,
+            'error': False,
+            'started': now,
+            'finished': None,
+            'stdout': None,
+            'stderr': None,
+            'code': action.source,
+            'actionId': action.id,
+            'actionName': action.name,
+            'inputs': {k: v.uuid for k, v in inputs.items()},
+            'params': json_params,
+            'outputs': {k: None for k in outputs}
+        }
+
+        inputs.update(parameters)
+
+        # Add prefix just in case the file isn't unlinked, but we don't need a
+        # name either way as the context manager works on file-descripters
+        stdout = tempfile.TemporaryFile(prefix='qiime-studio-stdout')
+        stderr = tempfile.TemporaryFile(prefix='qiime-studio-stderr')
+        with LOCK:  # Lock to avoid fd: 1, 2 from being reassigned concurrently
+            with redirected_stdio(to=stdout, stdio=sys.stdout):
+                with redirected_stdio(to=stderr, stdio=sys.stderr):
+                    future = action.async(**inputs)
+                    future.add_done_callback(
+                        _callback_factory(job_id, outputs, stdout, stderr))
+        return jsonify({
+            'job': url_for('.inspect_job', job_id=job_id)
+        })
     except Exception as e:
         r = jsonify({'error': str(e)})
         r.status_code = 400
         return r
-
-    job_id = str(uuid.uuid4())
-    now = int(time.time() * 1000)
-
-    JOBS[job_id] = {
-        'uuid': job_id,
-        'completed': False,
-        'error': False,
-        'started': now,
-        'finished': None,
-        'stdout': None,
-        'stderr': None,
-        'code': action.source,
-        'actionId': action.id,
-        'actionName': action.name,
-        'inputs': {k: v.uuid for k, v in inputs.items()},
-        'params': json_params,
-        'outputs': {k: None for k in outputs}
-    }
-
-    inputs.update(parameters)
-
-    # Add prefix just in case the file isn't unlinked, but we don't need a name
-    # either way as the context manager works on file-descripters
-    stdout = tempfile.TemporaryFile(prefix='qiime-studio-stdout')
-    stderr = tempfile.TemporaryFile(prefix='qiime-studio-stderr')
-    with LOCK:  # Lock to avoid fd: 1, 2, from being reassigned concurrently.
-        with redirected_stdio(to=stdout, stdio=sys.stdout):
-            with redirected_stdio(to=stderr, stdio=sys.stderr):
-                future = action.async(**inputs)
-                future.add_done_callback(
-                    _callback_factory(job_id, outputs, stdout, stderr))
-
-    return jsonify({
-        'job': url_for('.inspect_job', job_id=job_id)
-    })
 
 
 def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
