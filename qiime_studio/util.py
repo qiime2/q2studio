@@ -8,8 +8,11 @@
 
 import os
 import sys
-from contextlib import contextmanager
 
+from contextlib import contextmanager
+from functools import wraps
+
+from flask import jsonify
 
 # Taken whole-sale from: http://stackoverflow.com/a/22434262/579416
 @contextmanager
@@ -42,3 +45,15 @@ def _get_fileno(file_or_fd):
     if not isinstance(fd, int):
         raise ValueError("Expected a file (`.fileno()`) or a file descriptor")
     return fd
+
+
+def fail_gracefully(func):
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            r = jsonify({'error': str(e)})
+            r.status_code = 400
+            return r
+    return func_wrapper
