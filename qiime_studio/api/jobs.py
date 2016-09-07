@@ -143,17 +143,22 @@ def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
         stdout = _consume_fh(stdout_fh)
         stderr = _consume_fh(stderr_fh)
 
-        job = JOBS[job_id]
+        try:
+            job = JOBS[job_id]
 
-        if results is not None:
-            for result, path in zip(results, outputs.values()):
-                result.save(path)
-            job['outputs'] = {k: v.uuid for k, v in zip(outputs, results)}
+            if results is not None:
+                for result, path in zip(results, outputs.values()):
+                    result.save(path)
+                job['outputs'] = {k: v.uuid for k, v in zip(outputs, results)}
+
+            error, stderr = results is None, stderr.decode('utf8')
+        except Exception as e:
+            error, stderr = True, str(e)
 
         job['completed'] = True
-        job['error'] = results is None
+        job['error'] = error
         job['stdout'] = stdout.decode('utf8')
-        job['stderr'] = stderr.decode('utf8')
+        job['stderr'] = stderr
         job['finished'] = now
 
     return callback
