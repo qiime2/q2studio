@@ -13,6 +13,7 @@ import tempfile
 from flask import Blueprint, jsonify, request, abort, url_for\
 
 from qiime.sdk import Artifact, Visualization
+from ..util import fail_gracefully
 
 workspace = Blueprint('workspace', __name__)
 
@@ -72,20 +73,16 @@ def get_artifacts():
 
 
 @workspace.route('/artifacts', methods=['POST'])
+@fail_gracefully
 def create_artifact():
-    try:
-        request_body = request.get_json()
-        artifact = Artifact.import_data(request_body['type'],
-                                        request_body['path'])
-        path = os.path.join(os.getcwd(), request_body['name'])
-        if not path.endswith('.qza'):
-            path += '.qza'
-        artifact.save(path)
-        return ''
-    except Exception as e:
-        r = jsonify({'error': str(e)})
-        r.status_code = 400
-        return r
+    request_body = request.get_json()
+    artifact = Artifact.import_data(request_body['type'],
+                                    request_body['path'])
+    path = os.path.join(os.getcwd(), request_body['name'])
+    if not path.endswith('.qza'):
+        path += '.qza'
+    artifact.save(path)
+    return ''
 
 
 @workspace.route('/artifacts/<uuid>', methods=['GET'])

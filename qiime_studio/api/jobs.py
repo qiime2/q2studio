@@ -22,6 +22,7 @@ import qiime.plugin
 
 from qiime_studio.util import redirected_stdio
 from .workspace import load_artifacts
+from ..util import fail_gracefully
 
 jobs = Blueprint('jobs', __name__)
 
@@ -49,6 +50,7 @@ LOCK = threading.Lock()
 
 
 @jobs.route('/', methods=['POST'])
+@fail_gracefully
 def create_job():
     # TODO: handle errors in the request body
     request_body = request.get_json()
@@ -73,61 +75,56 @@ def create_job():
                 path += '.qzv'
 
         outputs[key] = path
-    try:
-        # TODO: make this better
-        json_params = {}
-        for key, (type_, _) in action.signature.parameters.items():
-            if type_ == qiime.plugin.Metadata:
-                parameters[key] = qiime.Metadata.load(parameters[key])
-                json_params[key] = '<metadata>'
-            elif type_ == qiime.plugin.MetadataCategory:
-                parameters[key] = qiime.Metadata.load(
-                    parameters[key][0]).get_category(parameters[key][1])
-                json_params[key] = '<metadata>'
-            else:
-                json_params[key] = parameters[key]
+    # TODO: make this better
+    json_params = {}
+    for key, (type_, _) in action.signature.parameters.items():
+        if type_ == qiime.plugin.Metadata:
+            parameters[key] = qiime.Metadata.load(parameters[key])
+            json_params[key] = '<metadata>'
+        elif type_ == qiime.plugin.MetadataCategory:
+            parameters[key] = qiime.Metadata.load(
+                parameters[key][0]).get_category(parameters[key][1])
+            json_params[key] = '<metadata>'
+        else:
+            json_params[key] = parameters[key]
 
-        parameters = action.signature.decode_parameters(**parameters)
-        inputs = load_artifacts(**inputs)
+    parameters = action.signature.decode_parameters(**parameters)
+    inputs = load_artifacts(**inputs)
 
-        job_id = str(uuid.uuid4())
-        now = int(time.time() * 1000)
+    job_id = str(uuid.uuid4())
+    now = int(time.time() * 1000)
 
-        JOBS[job_id] = {
-            'uuid': job_id,
-            'completed': False,
-            'error': False,
-            'started': now,
-            'finished': None,
-            'stdout': None,
-            'stderr': None,
-            'code': action.source,
-            'actionId': action.id,
-            'actionName': action.name,
-            'inputs': {k: v.uuid for k, v in inputs.items()},
-            'params': json_params,
-            'outputs': {k: None for k in outputs}
-        }
+    JOBS[job_id] = {
+        'uuid': job_id,
+        'completed': False,
+        'error': False,
+        'started': now,
+        'finished': None,
+        'stdout': None,
+        'stderr': None,
+        'code': action.source,
+        'actionId': action.id,
+        'actionName': action.name,
+        'inputs': {k: v.uuid for k, v in inputs.items()},
+        'params': json_params,
+        'outputs': {k: None for k in outputs}
+    }
 
-        inputs.update(parameters)
+    inputs.update(parameters)
 
-        # Add prefix just in case the file isn't unlinked, but we don't need a
-        # name either way as the context manager works on file-descripters
-        stdout = tempfile.TemporaryFile(prefix='qiime-studio-stdout')
-        stderr = tempfile.TemporaryFile(prefix='qiime-studio-stderr')
-        with LOCK:  # Lock to avoid fd: 1, 2 from being reassigned concurrently
-            with redirected_stdio(to=stdout, stdio=sys.stdout):
-                with redirected_stdio(to=stderr, stdio=sys.stderr):
-                    future = action.async(**inputs)
-                    future.add_done_callback(
-                        _callback_factory(job_id, outputs, stdout, stderr))
-        return jsonify({
-            'job': url_for('.inspect_job', job_id=job_id)
-        })
-    except Exception as e:
-        r = jsonify({'error': str(e)})
-        r.status_code = 400
-        return r
+    # Add prefix just in case the file isn't unlinked, but we don't need a
+    # name either way as the context manager works on file-descripters
+    stdout = tempfile.TemporaryFile(prefix='qiime-studio-stdout')
+    stderr = tempfile.TemporaryFile(prefix='qiime-studio-stderr')
+    with LOCK:  # Lock to avoid fd: 1, 2 from being reassigned concurrently
+        with redirected_stdio(to=stdout, stdio=sys.stdout):
+            with redirected_stdio(to=stderr, stdio=sys.stderr):
+                future = action.async(**inputs)
+                future.add_done_callback(
+                    _callback_factory(job_id, outputs, stdout, stderr))
+    return jsonify({
+        'job': url_for('.inspect_job', job_id=job_id)
+    })
 
 
 def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
@@ -146,17 +143,22 @@ def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
         stdout = _consume_fh(stdout_fh)
         stderr = _consume_fh(stderr_fh)
 
-        job = JOBS[job_id]
+        try:
+            job = JOBS[job_id]
 
-        if results is not None:
-            for result, path in zip(results, outputs.values()):
-                result.save(path)
-            job['outputs'] = {k: v.uuid for k, v in zip(outputs, results)}
+            if results is not None:
+                for result, path in zip(results, outputs.values()):
+                    result.save(path)
+                job['outputs'] = {k: v.uuid for k, v in zip(outputs, results)}
+
+            error, stderr = results is None, stderr.decode('utf8')
+        except Exception as e:
+            error, stderr = True, str(e)
 
         job['completed'] = True
-        job['error'] = results is None
+        job['error'] = error
         job['stdout'] = stdout.decode('utf8')
-        job['stderr'] = stderr.decode('utf8')
+        job['stderr'] = stderr
         job['finished'] = now
 
     return callback
