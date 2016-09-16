@@ -122,8 +122,6 @@ def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
         now = int(time.time() * 1000)
         try:
             results = future.result()
-            if not isinstance(results, tuple):
-                results = (results,)
         except Exception:
             results = None
             fh = io.TextIOWrapper(stderr_fh)
