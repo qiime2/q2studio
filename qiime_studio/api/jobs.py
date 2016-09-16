@@ -59,22 +59,11 @@ def create_job():
     action_type = request_body['actionType']
     inputs = request_body['inputs']
     parameters = request_body['parameters']
-    outputs_ = request_body['outputs']
+    outputs = request_body['outputs']
 
     plugin = PLUGIN_MANAGER.plugins[plugin]
     action = getattr(plugin, action_type)[action]
 
-    outputs = collections.OrderedDict()
-    for key, value in action.signature.outputs.items():
-        path = outputs_[key]
-        if action_type.startswith('method'):
-            if not path.endswith('.qza'):
-                path += '.qza'
-        else:
-            if not path.endswith('.qzv'):
-                path += '.qzv'
-
-        outputs[key] = path
     # TODO: make this better
     json_params = {}
     for key, (type_, _) in action.signature.parameters.items():
@@ -133,8 +122,6 @@ def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
         now = int(time.time() * 1000)
         try:
             results = future.result()
-            if not isinstance(results, tuple):
-                results = (results,)
         except Exception:
             results = None
             fh = io.TextIOWrapper(stderr_fh)
@@ -145,11 +132,12 @@ def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
 
         try:
             job = JOBS[job_id]
-
+            job['outputs'] = {}
             if results is not None:
-                for result, path in zip(results, outputs.values()):
-                    result.save(path)
-                job['outputs'] = {k: v.uuid for k, v in zip(outputs, results)}
+                for key, path in outputs.items():
+                    artifact = getattr(results, key)
+                    artifact.save(path)
+                    job['outputs'][key] = str(artifact.uuid)
 
             error, stderr = results is None, stderr.decode('utf8')
         except Exception as e:
