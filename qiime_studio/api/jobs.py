@@ -132,11 +132,12 @@ def _callback_factory(job_id, outputs, stdout_fh, stderr_fh):
 
         try:
             job = JOBS[job_id]
-
+            job['outputs'] = {}
             if results is not None:
-                for result, path in zip(results, outputs.values()):
-                    result.save(path)
-                job['outputs'] = {k: v.uuid for k, v in zip(outputs, results)}
+                for key, path in outputs.items():
+                    artifact = getattr(results, key)
+                    artifact.save(path)
+                    job['outputs'][key] = str(artifact.uuid)
 
             error, stderr = results is None, stderr.decode('utf8')
         except Exception as e:
