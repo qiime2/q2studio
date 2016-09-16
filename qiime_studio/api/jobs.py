@@ -59,22 +59,11 @@ def create_job():
     action_type = request_body['actionType']
     inputs = request_body['inputs']
     parameters = request_body['parameters']
-    outputs_ = request_body['outputs']
+    outputs = request_body['outputs']
 
     plugin = PLUGIN_MANAGER.plugins[plugin]
     action = getattr(plugin, action_type)[action]
 
-    outputs = collections.OrderedDict()
-    for key, value in action.signature.outputs.items():
-        path = outputs_[key]
-        if action_type.startswith('method'):
-            if not path.endswith('.qza'):
-                path += '.qza'
-        else:
-            if not path.endswith('.qzv'):
-                path += '.qzv'
-
-        outputs[key] = path
     # TODO: make this better
     json_params = {}
     for key, (type_, _) in action.signature.parameters.items():
