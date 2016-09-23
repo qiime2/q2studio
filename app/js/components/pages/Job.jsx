@@ -45,7 +45,7 @@ const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children 
                 </fieldset>
             )}
 
-            { action.parameters.map(({ name, type, ast }) =>
+            { action.parameters.map(({ name, type, ast, default: def }) =>
                 <fieldset
                     className="form-group"
                     key={ `${name}-text-input${counter++}` }
@@ -122,6 +122,7 @@ const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children 
                                 className="form-control"
                                 name={`param-${name}`}
                                 placeholder={ type }
+                                defaultValue={ def }
                             />
                         )
                     }
