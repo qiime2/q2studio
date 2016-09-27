@@ -18,7 +18,7 @@ const JobRunning = () => (
             <div className={style.c3}></div>
             <div className={style.c4}></div>
         </div>
-        <span>loading</span>
+        <span>Running.</span>
     </div>
 );
 
