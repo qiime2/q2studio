@@ -19,8 +19,8 @@ from flask import Blueprint, jsonify, request, abort, url_for
 import qiime
 import qiime.sdk
 import qiime.plugin
+from qiime.util import redirected_stdio
 
-from qiime_studio.util import redirected_stdio
 from .workspace import load_artifacts
 from ..util import fail_gracefully
 
@@ -105,12 +105,10 @@ def create_job():
     # name either way as the context manager works on file-descripters
     stdout = tempfile.TemporaryFile(prefix='qiime-studio-stdout')
     stderr = tempfile.TemporaryFile(prefix='qiime-studio-stderr')
-    with LOCK:  # Lock to avoid fd: 1, 2 from being reassigned concurrently
-        with redirected_stdio(to=stdout, stdio=sys.stdout):
-            with redirected_stdio(to=stderr, stdio=sys.stderr):
-                future = action.async(**inputs)
-                future.add_done_callback(
-                    _callback_factory(job_id, outputs, stdout, stderr))
+    with redirected_stdio(stdout=stdout, stderr=stderr):
+        future = action.async(**inputs)
+        future.add_done_callback(
+            _callback_factory(job_id, outputs, stdout, stderr))
     return jsonify({
         'job': url_for('.inspect_job', job_id=job_id)
     })
