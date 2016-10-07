@@ -115,6 +115,16 @@ const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children 
                                 />
                             </fieldset>
                         )
+                        : type === 'Bool' ?
+                            <div className="checkbox">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name={`param-${name}`}
+                                        defaultValue={ def }
+                                    /> {name}
+                                </label>
+                            </div>
                         :
                         (
                             <input
