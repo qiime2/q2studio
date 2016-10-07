@@ -46,8 +46,8 @@ def change_workspace():
 def _result_record(metadata, name, route):
     return {
         'name': name,
-        'uuid': str(metadata.uuid),
-        'type': repr(metadata.type),
+        'uuid': metadata.uuid,
+        'type': metadata.type,
         'uri': url_for(route, uuid=metadata.uuid)
     }
 
@@ -65,7 +65,7 @@ def get_artifacts():
             name, _ = os.path.splitext(os.path.basename(artifact_path))
             artifacts.append(
                 _result_record(metadata, name, '.inspect_artifact'))
-            ARTIFACTS[str(metadata.uuid)] = artifact_path
+            ARTIFACTS[metadata.uuid] = artifact_path
         except Exception:
             pass  # TODO: do better things when this happens
 
@@ -92,7 +92,7 @@ def inspect_artifact(uuid):
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': str(metadata.uuid), 'type': repr(metadata.type)})
+    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
 @workspace.route('/artifacts/<uuid>', methods=['DELETE'])
@@ -115,7 +115,7 @@ def get_visualizations():
         try:
             metadata = Visualization.peek(viz_path)
             name, _ = os.path.splitext(os.path.basename(viz_path))
-            VISUALIZATIONS[str(metadata.uuid)] = viz_path
+            VISUALIZATIONS[metadata.uuid] = viz_path
             visualizations.append(
                 _result_record(metadata, name, '.inspect_visualization'))
         except Exception:
@@ -131,8 +131,7 @@ def inspect_visualization(uuid):
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': str(metadata.uuid), 'type': repr(metadata.type)})
-
+    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 @workspace.route('/visualizations/<uuid>', methods=['DELETE'])
 def delete_visualization(uuid):
