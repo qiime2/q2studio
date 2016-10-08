@@ -74,15 +74,6 @@ def create_job():
             parameters[key] = qiime.Metadata.load(
                 parameters[key][0]).get_category(parameters[key][1])
             json_params[key] = '<metadata>'
-        elif type_ == qiime.plugin.Bool:
-            # web forms exclude unchecked values, so we have to artificially
-            # "fill in the blanks" for the missing boolean parameters
-            try:
-                checked = parameters[key]
-            except:
-                checked = 'off'
-            parameters[key] = ('%s' % (checked == 'on')).lower()
-            json_params[key] = parameters[key]
         else:
             json_params[key] = parameters[key]
 
