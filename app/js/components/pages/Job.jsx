@@ -18,7 +18,7 @@ const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children 
             <div className="page-header">
                 <h1>{plugin.name}: {action.description}</h1>
             </div>
-            <form onSubmit={submitJob}>
+            <form onSubmit={(e) => submitJob(e, action.parameters)}>
             { action.inputs.map(({ name }) =>
                 <fieldset
                     className="form-group"
@@ -115,6 +115,16 @@ const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children 
                                 />
                             </fieldset>
                         )
+                        : type === 'Bool' ?
+                            <div className="checkbox">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name={`param-${name}`}
+                                        defaultValue={ def }
+                                    /> {name}
+                                </label>
+                            </div>
                         :
                         (
                             <input

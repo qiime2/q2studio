@@ -29,8 +29,9 @@ const mapStateToProps = (state, { params: { pluginId, jobId, actionType, uuid } 
 };
 
 const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actionType } }) => ({
-    submitJob: (e) => {
+    submitJob: (e, parameters) => {
         e.preventDefault();
+        const booleans = parameters.filter(param => param.type === 'Bool');
         const formData = new FormData(e.target);
         const job = {
             inputs: {},
@@ -52,7 +53,11 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
                 job.inputs[name] = value;
                 break;
             case 'param':
-                job.parameters[name] = value;
+                if (booleans.find(bool => bool.name === name) && value === 'on') {
+                    job.parameters[name] = 'true';
+                } else {
+                    job.parameters[name] = value;
+                }
                 break;
             case 'out':
                 job.outputs[name] = value;
@@ -70,7 +75,12 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
                 job.parameters[name] = catbuffer;
                 break;
             default:
-                continue;
+                break;
+            }
+        }
+        for (const bool of booleans) {
+            if (!job.parameters[bool.name]) {
+                job.parameters[bool.name] = 'false';
             }
         }
         dispatch(actions.startJob(job))
@@ -95,6 +105,7 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
         dispatch(actions.clearJobState());
     }
 });
+
 
 export default withRouter(
     connect(
