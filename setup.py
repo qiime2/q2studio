@@ -12,7 +12,7 @@ with open("README.md") as fh:
     long_description = fh.read()
 
 setup(
-    name='qiime-studio',
+    name='q2studio',
     version='0.0.1',
     long_description=long_description,
     packages=find_packages(),
