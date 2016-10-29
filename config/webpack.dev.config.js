@@ -35,7 +35,14 @@ module.exports = extendConfig((config) => {
             ]
         },
         devServer: {
-            contentBase: 'build'
+            contentBase: 'build',
+            quiet: false,
+            noInfo: false,
+            stats: {
+                assets: false,
+                colors: true,
+                chunkModules: false
+            }
         },
         target: 'electron-renderer'
     };

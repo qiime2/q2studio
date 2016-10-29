@@ -1,12 +1,12 @@
 {
-  "name": "qiime-studio",
+  "name": "q2studio",
   "version": "0.0.1",
   "description": "A web-based interface for QIIME 2.",
   "author": "QIIME 2 Development Team",
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git://github.com/qiime2/qiime-studio.git"
+    "url": "git://github.com/qiime2/q2studio.git"
   },
   "scripts": {
     "lint:css": "stylelint 'app/**/*.css' --config config/stylelint.yaml",
@@ -77,6 +77,15 @@
     "webpack": "^1.12.15",
     "webpack-dev-server": "^1.14.1",
     "xvfb-maybe": "^0.1.3"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
   },
   "private": true
 }
