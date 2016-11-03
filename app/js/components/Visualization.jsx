@@ -27,14 +27,16 @@ class Visualization extends React.Component {
                             src={`file://${vis.filePath}`}
                             ref={(e) => {
                                 const webview = e;
-                                webview.addEventListener('dom-ready', () => {
-                                    webview.executeJavaScript(
-                                        'document.body.offsetHeight',
-                                        false,
-                                        (height) => {
-                                            webview.style.height = `${height + 50}px`;
-                                        });
-                                });
+                                if (webview) {
+                                    webview.addEventListener('dom-ready', () => {
+                                        webview.executeJavaScript(
+                                            'document.body.offsetHeight',
+                                            false,
+                                            (height) => {
+                                                webview.style.height = `${height + 50}px`;
+                                            });
+                                    });
+                                }
                             }}
                         >
                         </webview>
