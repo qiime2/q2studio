@@ -66,11 +66,11 @@ def create_job():
 
     # TODO: make this better
     json_params = {}
-    for key, (type_, _) in action.signature.parameters.items():
-        if type_ == qiime.plugin.Metadata:
+    for key, spec in action.signature.parameters.items():
+        if spec.qiime_type == qiime.plugin.Metadata:
             parameters[key] = qiime.Metadata.load(parameters[key])
             json_params[key] = '<metadata>'
-        elif type_ == qiime.plugin.MetadataCategory:
+        elif spec.qiime_type == qiime.plugin.MetadataCategory:
             parameters[key] = qiime.Metadata.load(
                 parameters[key][0]).get_category(parameters[key][1])
             json_params[key] = '<metadata>'
