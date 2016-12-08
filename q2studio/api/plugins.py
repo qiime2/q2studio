@@ -47,19 +47,19 @@ def _build_data_dict(data):
         dict_[key]['name'] = value.name
         dict_[key]['description'] = value.description
         dict_[key]['inputs'] = [
-            {'name': name, 'type': repr(type_[0])}
-            for name, type_ in value.signature.inputs.items()
+            {'name': name, 'type': repr(spec.qiime_type)}
+            for name, spec in value.signature.inputs.items()
         ]
         dict_[key]['parameters'] = [
             {'name': name,
-             'type': repr(type_[0]),
-             'ast': type_[0].to_ast(),
+             'type': repr(spec.qiime_type),
+             'ast': spec.qiime_type.to_ast(),
              'default': value.signature.defaults.get(name)}
-            for name, type_ in value.signature.parameters.items()
+            for name, spec in value.signature.parameters.items()
         ]
         dict_[key]['outputs'] = [
-            {'name': name, 'type': repr(type_[0])}
-            for name, type_ in value.signature.outputs.items()
+            {'name': name, 'type': repr(spec.qiime_type)}
+            for name, spec in value.signature.outputs.items()
         ]
 
     return dict_
