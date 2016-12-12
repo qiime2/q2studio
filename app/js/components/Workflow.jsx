@@ -12,12 +12,13 @@ const Workflow = ({ flow, onClick, disabled }) => (
     <button type="button" disabled={disabled} className="list-group-item"
         style={{ backgroundColor: disabled ? '#f9f9f9' : '' }} onClick={ onClick }
     >
-        <span className={disabled ? 'col-md-3 col-xs-4' : 'col-md-7 col-sm-6 col-xs-6'}>
+        <span className="col-lg-4 col-md-4 col-sm-5 col-xs-5">
             { flow.name }
         </span>
+        <span className="col-lg-4 col-md-4 col-sm-2 col-xs-2">
         {disabled ?
-            <span className="col-md-5 col-sm-3 col-xs-3">
-                <span className="visible-md-block">
+            <span>
+                <span className="visible-lg-block visible-md-block">
                   {`Requires: ${flow.requires.join(', ')}`}
                 </span>
                 <span
@@ -28,7 +29,8 @@ const Workflow = ({ flow, onClick, disabled }) => (
                 ></span>
             </span> : null
         }
-        <span className={disabled ? 'col-md-4 col-xs-5' : 'col-md-5 col-sm-6 col-xs-6'}>
+        </span>
+        <span className="col-lg-4 col-md-4 col-sm-5 col-xs-5">
             Produces: { flow.outputs.map(({ type }) => type).join(', ') }
         </span>
     </button>
