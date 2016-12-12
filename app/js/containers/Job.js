@@ -19,7 +19,6 @@ const mapStateToProps = (state, { params: { pluginId, jobId, actionType, uuid } 
     const action = plugin[actionType].find(w => w.id === jobId);
     const active = state.jobs.activeJobs.find(j => j.uuid === uuid);
     return ({
-        plugin,
         action,
         actionType,
         inputs,
