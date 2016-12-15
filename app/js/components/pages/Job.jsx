@@ -11,12 +11,13 @@ import React from 'react';
 import _ from 'lodash';
 
 
-const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children }) => {
+const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
     let counter = 1;
     return (
         <div className="container">
             <div className="page-header">
-                <h1>{plugin.name}: {action.description}</h1>
+                <h1>{action.name}</h1>
+                <h4>{action.description}</h4>
             </div>
             <form onSubmit={(e) => submitJob(e, action.parameters)}>
             { action.inputs.map(({ name }) =>
@@ -183,7 +184,6 @@ const Job = ({ plugin, action, inputs, metadata, submitJob, cancelJob, children 
 
 Job.propTypes = {
     inputs: React.PropTypes.object,
-    plugin: React.PropTypes.object,
     action: React.PropTypes.object,
     actionType: React.PropTypes.string,
     children: React.PropTypes.element,
