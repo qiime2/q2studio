@@ -1,14 +1,12 @@
 # ----------------------------------------------------------------------------
-# Copyright (c) 2016--, QIIME development team.
+# Copyright (c) 2016-2017, QIIME 2 development team.
 #
 # Distributed under the terms of the Modified BSD License.
 #
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
-import collections
 import io
-import sys
 import tempfile
 import threading
 import traceback
@@ -16,10 +14,10 @@ import uuid
 import time
 
 from flask import Blueprint, jsonify, request, abort, url_for
-import qiime
-import qiime.sdk
-import qiime.plugin
-from qiime.util import redirected_stdio
+import qiime2
+import qiime2.sdk
+import qiime2.plugin
+from qiime2.util import redirected_stdio
 
 from .workspace import load_artifacts
 from ..util import fail_gracefully
@@ -29,7 +27,7 @@ jobs = Blueprint('jobs', __name__)
 # TODO: JOBS should go in a sqlite database in the event our WSGI server
 # decides to create more than one process
 JOBS = {}
-PLUGIN_MANAGER = qiime.sdk.PluginManager()
+PLUGIN_MANAGER = qiime2.sdk.PluginManager()
 
 
 @jobs.route('/', methods=['GET'])
@@ -67,11 +65,11 @@ def create_job():
     # TODO: make this better
     json_params = {}
     for key, spec in action.signature.parameters.items():
-        if spec.qiime_type == qiime.plugin.Metadata:
-            parameters[key] = qiime.Metadata.load(parameters[key])
+        if spec.qiime_type == qiime2.plugin.Metadata:
+            parameters[key] = qiime2.Metadata.load(parameters[key])
             json_params[key] = '<metadata>'
-        elif spec.qiime_type == qiime.plugin.MetadataCategory:
-            parameters[key] = qiime.Metadata.load(
+        elif spec.qiime_type == qiime2.plugin.MetadataCategory:
+            parameters[key] = qiime2.Metadata.load(
                 parameters[key][0]).get_category(parameters[key][1])
             json_params[key] = '<metadata>'
         else:
@@ -103,8 +101,8 @@ def create_job():
 
     # Add prefix just in case the file isn't unlinked, but we don't need a
     # name either way as the context manager works on file-descripters
-    stdout = tempfile.TemporaryFile(prefix='qiime-studio-stdout')
-    stderr = tempfile.TemporaryFile(prefix='qiime-studio-stderr')
+    stdout = tempfile.TemporaryFile(prefix='q2studio-stdout')
+    stderr = tempfile.TemporaryFile(prefix='q2studio-stderr')
     with redirected_stdio(stdout=stdout, stderr=stderr):
         future = action.async(**inputs)
         future.add_done_callback(

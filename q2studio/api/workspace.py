@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# Copyright (c) 2016--, QIIME development team.
+# Copyright (c) 2016-2017, QIIME 2 development team.
 #
 # Distributed under the terms of the Modified BSD License.
 #
@@ -8,11 +8,10 @@
 
 import os
 import glob
-import tempfile
 
 from flask import Blueprint, jsonify, request, abort, url_for\
 
-from qiime.sdk import Artifact, Visualization
+from qiime2.sdk import Artifact, Visualization
 from ..util import fail_gracefully
 
 workspace = Blueprint('workspace', __name__)
@@ -132,6 +131,7 @@ def inspect_visualization(uuid):
         abort(404)
 
     return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
+
 
 @workspace.route('/visualizations/<uuid>', methods=['DELETE'])
 def delete_visualization(uuid):
