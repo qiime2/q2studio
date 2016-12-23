@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# Copyright (c) 2016--, QIIME development team.
+# Copyright (c) 2016-2017, QIIME 2 development team.
 #
 # Distributed under the terms of the Modified BSD License.
 #
@@ -9,9 +9,9 @@
 import collections
 
 from flask import Blueprint, jsonify, url_for
-import qiime.sdk
+import qiime2.sdk
 
-PLUGIN_MANAGER = qiime.sdk.PluginManager()
+PLUGIN_MANAGER = qiime2.sdk.PluginManager()
 plugins = Blueprint('plugins', __name__)
 
 

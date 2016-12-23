@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# Copyright (c) 2016--, QIIME development team.
+# Copyright (c) 2016-2017, QIIME 2 development team.
 #
 # Distributed under the terms of the Modified BSD License.
 #
@@ -7,18 +7,18 @@
 # ----------------------------------------------------------------------------
 
 from flask import Blueprint, jsonify, request
-import qiime.sdk
+import qiime2.sdk
 
 types = Blueprint('types', __name__)
 
-PLUGIN_MANAGER = qiime.sdk.PluginManager()
+PLUGIN_MANAGER = qiime2.sdk.PluginManager()
 
 
 @types.route('/subtype', methods=['POST'])
 def is_subtype():
     request_body = request.get_json()
-    list_a = list(map(qiime.sdk.parse_type, request_body['a']))
-    list_b = list(map(qiime.sdk.parse_type, request_body['b']))
+    list_a = list(map(qiime2.sdk.parse_type, request_body['a']))
+    list_b = list(map(qiime2.sdk.parse_type, request_body['b']))
 
     yes = {}
     no = {}
