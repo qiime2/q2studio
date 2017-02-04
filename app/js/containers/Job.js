@@ -90,7 +90,7 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
                 router.push(`${uri}/running/${jobJSON.uuid}`);
             }
         })
-        .catch((error) => {
+        .catch(({ message: error }) => {
             alert(error);
         });
         if (actionType === 'methods') { router.push('/'); }
