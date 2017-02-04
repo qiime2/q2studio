@@ -50,7 +50,7 @@ export const createArtifact = (formData) => {
     return (dispatch, getState) => {
         const { connection: { uri, secretKey } } = getState();
         fetchAPI(secretKey, 'POST', `http://${uri}/api/workspace/artifacts`, formData)
-        .catch((error) => alert(error))
+        .catch(({ message: error }) => alert(error))
         .then(() => dispatch(actions.refreshArtifacts()));
     };
 };
