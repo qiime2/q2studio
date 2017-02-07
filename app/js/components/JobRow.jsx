@@ -7,8 +7,10 @@
 // ----------------------------------------------------------------------------
 
 import React from 'react';
-import Timer from './Timer';
 import moment from 'moment';
+
+import Timer from './Timer';
+
 
 const JobRow = ({ data, onClick }) => (
     <tr>
@@ -22,11 +24,11 @@ const JobRow = ({ data, onClick }) => (
         </td>
         {data.finished ?
             <td>
-            { moment(data.finished).format('YY-MM-DD hh:mm:ss') }
+                { moment(data.finished).format('YY-MM-DD hh:mm:ss') }
             </td>
             :
             <td>
-                <Timer start={ data.started } />
+                <Timer start={data.started} />
             </td>
     }
     </tr>

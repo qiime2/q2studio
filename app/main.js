@@ -49,7 +49,7 @@ const startRestAPI = (callback) => {
     api.stdout.on('data', (data) => {
         if (!started) {
             started = true;
-            callback.apply(null, data.toString('utf8').split(' '));
+            callback(...data.toString('utf8').split(' '));
         } else {
             process.stdout.write(`API: ${data}`);
         }
@@ -126,6 +126,6 @@ ipc.on('open-new-page', (event, data) => {
 // a reducer is attempted to be hotswapped (requires kill signals sent to shutdown)
 ipc.on('renderer-reload', (event) => {
     delete require.cache[require.resolve('../app/js/reducers')];
-    store.replaceReducer(require('../app/js/reducers').default);
+    store.replaceReducer(require('../app/js/reducers').default); // eslint-disable-line global-require
     event.returnValue = true; // eslint-disable-line no-param-reassign
 });

@@ -38,8 +38,7 @@ class Visualization extends React.Component {
                                     });
                                 }
                             }}
-                        >
-                        </webview>
+                        />
                         :
                         'no filepath?'
                     }

@@ -15,8 +15,7 @@ const Loading = ({ loaded, status }) => (
         null :
         <div className={style.wrapper}>
             <div className={style.loaderBox}>
-                <div className={style.loader}>
-                </div>
+                <div className={style.loader} />
                 <p className={style.label}>
                     { status }
                 </p>

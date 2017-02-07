@@ -17,98 +17,98 @@ const ArtifactGenerator = ({
     selectDirectory,
     sysPath
 }) => (
-    <form onSubmit={(e) => createArtifact(e, active)}>
+    <form onSubmit={e => createArtifact(e, active)}>
         <table className="table">
             <thead>
                 <tr>
-                    <th className="col-xs-1"></th>
-                    <th className="col-xs-5"></th>
-                    <th className="col-xs-3"></th>
-                    <th className="col-xs-3"></th>
+                    <th className="col-xs-1" />
+                    <th className="col-xs-5" />
+                    <th className="col-xs-3" />
+                    <th className="col-xs-3" />
                 </tr>
             </thead>
             <tbody>
-        { active === 0 ?
-            <tr>
-                <td><button
-                    type="button"
-                    className="btn btn-xs btn-success pull-left"
-                    aria-label="Create Artifact"
-                    onClick={() => toggleCreation(active)}
-                >
-                    <span
-                        style={{ color: 'white' }}
-                        className="glyphicon glyphicon-plus"
-                        aria-hidden="true"
-                    ></span>
-                </button></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr> :
-            <tr>
-                <td style={style}>
-                    <button
-                        type="button"
-                        className="btn btn-xs btn-danger pull-left"
-                        aria-label="Close Artifact Creation"
-                        onClick={() => toggleCreation(active)}
-                    >
-                        <span
-                            style={{ color: 'white' }}
-                            className="glyphicon glyphicon-remove"
-                            aria-hidden="true"
-                        ></span>
-                    </button>
-                </td>
-                <td style={style}>
-                    <div className="input-group">
-                        <span className="input-group-btn">
+                { active === 0 ?
+                    <tr>
+                        <td><button
+                            type="button"
+                            className="btn btn-xs btn-success pull-left"
+                            aria-label="Create Artifact"
+                            onClick={() => toggleCreation(active)}
+                        >
+                            <span
+                                style={{ color: 'white' }}
+                                className="glyphicon glyphicon-plus"
+                                aria-hidden="true"
+                            />
+                        </button></td>
+                        <td />
+                        <td />
+                        <td />
+                    </tr> :
+                    <tr>
+                        <td style={style}>
                             <button
                                 type="button"
-                                className="btn btn-primary pull-left"
-                                onClick={selectDirectory}
+                                className="btn btn-xs btn-danger pull-left"
+                                aria-label="Close Artifact Creation"
+                                onClick={() => toggleCreation(active)}
                             >
                                 <span
-                                    className="glyphicon glyphicon-import"
-                                ></span>
-                                <span> Import</span>
+                                    style={{ color: 'white' }}
+                                    className="glyphicon glyphicon-remove"
+                                    aria-hidden="true"
+                                />
                             </button>
-                        </span>
-                        <input
-                            name="path"
-                            type="text"
-                            className="form-control"
-                            style={{ width: '100%' }}
-                            placeholder="Data Directory Path"
-                            value={sysPath || ''}
-                        />
-                    </div>
-                </td>
-                <td style={style}>
-                    <input
-                        name="name"
-                        type="text"
-                        className="form-control"
-                        placeholder="Name"
-                    />
-                </td>
-                <td style={style}>
-                    <div className="input-group">
-                        <input
-                            name="type"
-                            className="form-control"
-                            type="text"
-                            placeholder="Semantic Type"
-                        />
-                        <span className="input-group-btn">
-                            <button type="submit" className="btn btn-success">
+                        </td>
+                        <td style={style}>
+                            <div className="input-group">
+                                <span className="input-group-btn">
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary pull-left"
+                                        onClick={selectDirectory}
+                                    >
+                                        <span
+                                            className="glyphicon glyphicon-import"
+                                        />
+                                        <span> Import</span>
+                                    </button>
+                                </span>
+                                <input
+                                    name="path"
+                                    type="text"
+                                    className="form-control"
+                                    style={{ width: '100%' }}
+                                    placeholder="Data Directory Path"
+                                    value={sysPath || ''}
+                                />
+                            </div>
+                        </td>
+                        <td style={style}>
+                            <input
+                                name="name"
+                                type="text"
+                                className="form-control"
+                                placeholder="Name"
+                            />
+                        </td>
+                        <td style={style}>
+                            <div className="input-group">
+                                <input
+                                    name="type"
+                                    className="form-control"
+                                    type="text"
+                                    placeholder="Semantic Type"
+                                />
+                                <span className="input-group-btn">
+                                    <button type="submit" className="btn btn-success">
                                 Go!
                             </button>
-                        </span>
-                    </div>
-                </td>
-            </tr>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
         }
             </tbody>
         </table>

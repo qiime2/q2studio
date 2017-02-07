@@ -27,7 +27,7 @@ import JobRunning from './components/JobRunning';
 
 import actions from './actions';
 
-import '!style-loader!css-loader!bootstrap-css-only';
+import '!style-loader!css-loader!bootstrap-css-only'; // eslint-disable-line
 
 
 const enhancerSettings = {
@@ -58,7 +58,7 @@ if (process.env.NODE_ENV === 'development') {
     if (module.hot) {
         module.hot.accept('./reducers', () => {
             ipc.sendSync('renderer-reload');
-            store.replaceReducer(require('./reducers'));
+            store.replaceReducer(require('./reducers')); // eslint-disable-line global-require
         });
     }
 }

@@ -21,16 +21,16 @@ const mapStateToProps = ({
     currentIndex
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    dispatchDeleteArtifact: (id) => dispatch(actions.deleteArtifact(id)),
-    dispatchDeleteVisualization: (id) => dispatch(actions.deleteVisualization(id)),
-    dispatchDeleteMetadata: (fp) => dispatch(actions.deleteMetadata(fp)),
+const mapDispatchToProps = dispatch => ({
+    dispatchDeleteArtifact: id => dispatch(actions.deleteArtifact(id)),
+    dispatchDeleteVisualization: id => dispatch(actions.deleteVisualization(id)),
+    dispatchDeleteMetadata: fp => dispatch(actions.deleteMetadata(fp)),
     refreshArtifacts: () => {
         dispatch(actions.refreshArtifacts());
         dispatch(actions.refreshVisualizations());
         dispatch(actions.refreshMetadata());
     },
-    changeArtifactTab: (idx) => dispatch(actions.changeTab('artifacts', idx))
+    changeArtifactTab: idx => dispatch(actions.changeTab('artifacts', idx))
 });
 
 export default connect(

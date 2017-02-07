@@ -44,7 +44,7 @@ export const directoryChangeDialog = (currPath) => {
     };
 };
 
-const setArtifactDir = (path) => ({
+const setArtifactDir = path => ({
     type: 'SET_ARTIFACT_PATH',
     path
 });

@@ -9,7 +9,7 @@
 import { connect } from 'react-redux';
 
 import actions from '../actions';
-import JobListFrame from '../components/JobListFrame.jsx';
+import JobListFrame from '../components/JobListFrame';
 
 const mapStateToProps = ({
     jobs: { activeJobs, completedJobs, failedJobs },
@@ -20,8 +20,8 @@ const mapStateToProps = ({
         currentIndex
     });
 
-const mapDispatchToProps = (dispatch) => ({
-    changeJobTab: (idx) => dispatch(actions.changeTab('jobs', idx))
+const mapDispatchToProps = dispatch => ({
+    changeJobTab: idx => dispatch(actions.changeTab('jobs', idx))
 });
 
 export default connect(

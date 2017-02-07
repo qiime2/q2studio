@@ -23,7 +23,7 @@ const JobList = ({ jobs, jobTab }) => (
             </tr>
         </thead>
         <tbody>
-            {jobs.length ?
+            {jobs.length ? (
                 jobs.map(job =>
                     <JobRow
                         data={job}
@@ -32,7 +32,7 @@ const JobList = ({ jobs, jobTab }) => (
                             url: `job/${job.uuid}`
                         })}
                     />
-                ) : <tr><td>{`No ${jobTab} jobs...`}</td></tr>
+                )) : (<tr><td>{`No ${jobTab} jobs...`}</td></tr>)
             }
         </tbody>
     </table>

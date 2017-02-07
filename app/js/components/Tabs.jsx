@@ -16,7 +16,8 @@ const Tabs = (props) => {
             <div className="panel-heading">
                 <ul className="nav nav-pills">
                     {tabs.map((tab, idx) => (
-                        <li key={tab}
+                        <li
+                            key={tab}
                             role="presentation"
                             className={idx === currentIndex ? 'active' : null}
                         >
@@ -38,7 +39,7 @@ const Tabs = (props) => {
                                 <span
                                     className="glyphicon glyphicon-refresh"
                                     aria-hidden="true"
-                                ></span>
+                                />
                             </button>
                         </li>)
                         :
@@ -55,7 +56,6 @@ const Tabs = (props) => {
 
 Tabs.propTypes = {
     tabs: React.PropTypes.array,
-    counts: React.PropTypes.array,
     contents: React.PropTypes.array,
     currentIndex: React.PropTypes.number,
     changeTab: React.PropTypes.func,

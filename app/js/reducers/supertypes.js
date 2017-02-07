@@ -6,8 +6,6 @@
 // The full license is in the file LICENSE, distributed with this software.
 // ----------------------------------------------------------------------------
 
-import deepFreeze from 'deep-freeze';
-
 const initialState = {
     knownTypes: new Set(),
     yes: {},
@@ -28,7 +26,6 @@ const mergeObjects = (from, to) => {
 };
 
 const reducer = (state = initialState, action) => {
-    deepFreeze(state);
     switch (action.type) {
     case 'MEMOIZE_SUBTYPE': {
         const newState = {

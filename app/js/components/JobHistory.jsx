@@ -11,7 +11,8 @@ import { highlightBlock } from 'highlight.js';
 import ReactMarkdown from 'react-markdown';
 
 import JobHistoryData from './JobHistoryData';
-import '!style-loader!css-loader!../../css/hljs.css';
+
+import '!style-loader!css-loader!../../css/hljs.css'; // eslint-disable-line
 import style from '../../css/JobHistory.css';
 
 
@@ -19,7 +20,7 @@ class JobHistory extends React.Component {
     constructor(props) {
         super(props);
         this.order = ['UUID', 'Completed', 'Error', 'Inputs', 'Params',
-                      'Outputs', 'Started', 'Finished', 'stdout', 'stderr'];
+            'Outputs', 'Started', 'Finished', 'stdout', 'stderr'];
     }
 
     componentDidMount() {
@@ -61,7 +62,7 @@ class JobHistory extends React.Component {
                         Job Code:
                     </div>
                     <div className="panel-body">
-                        <ReactMarkdown className="python" source={ this.props.job.code } />
+                        <ReactMarkdown className="python" source={this.props.job.code} />
                     </div>
                 </div>
             </div>

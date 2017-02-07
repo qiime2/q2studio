@@ -24,14 +24,14 @@ const ArtifactsListFrame = ({
     const lookup = [artifacts, visualizations];
     const names = ['artifact', 'visualization', 'metadata'];
     return (<Tabs
-        tabs={ ['Artifacts', 'Visualizations', 'Metadata'] }
-        getCount={ (idx) => (idx < 2 ? lookup[idx].length : metadata.length) }
-        contents={ lookup.map((listing, idx) => (
-            <Artifacts data={ listing } type={ names[idx] } { ...props } />)
-        ).concat(<Metadata metadata={ metadata } />) }
-        currentIndex={ currentIndex }
-        changeTab={ changeArtifactTab }
-        refresh={ refreshArtifacts }
+        tabs={['Artifacts', 'Visualizations', 'Metadata']}
+        getCount={idx => (idx < 2 ? lookup[idx].length : metadata.length)}
+        contents={lookup.map((listing, idx) => (
+            <Artifacts data={listing} type={names[idx]} {...props} />)
+        ).concat(<Metadata metadata={metadata} />)}
+        currentIndex={currentIndex}
+        changeTab={changeArtifactTab}
+        refresh={refreshArtifacts}
     />);
 };
 
