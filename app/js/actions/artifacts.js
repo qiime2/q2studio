@@ -6,6 +6,8 @@
 // The full license is in the file LICENSE, distributed with this software.
 // ----------------------------------------------------------------------------
 
+import { remote } from 'electron';
+
 import actions from './';
 import { fetchAPI } from '../util/auth';
 
@@ -52,6 +54,22 @@ export const createArtifact = (formData) => {
         fetchAPI(secretKey, 'POST', `http://${uri}/api/workspace/artifacts`, formData)
         .catch(({ message: error }) => alert(error))
         .then(() => dispatch(actions.refreshArtifacts()));
+    };
+};
+
+export const exportArtifact = (uuid) => {
+    return (dispatch, getState) => {
+        remote.dialog.showSaveDialog({
+            title: 'Choose Export Location',
+            buttonlabel: 'Export'
+        }, (fps) => {
+            if (fps) {
+                const { connection: { uri, secretKey } } = getState();
+                fetchAPI(secretKey, 'POST', `http://${uri}/api/workspace/artifacts/${uuid}`, { path: fps })
+                .then(({ path }) => alert(`Succesfully exported data to:\n${path}`))
+                .catch(({ message: error }) => alert(error));
+            }
+        });
     };
 };
 

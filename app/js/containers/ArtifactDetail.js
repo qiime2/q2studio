@@ -19,7 +19,8 @@ const mapStateToProps = (state, { params: { uuid } }) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    getVisualization: (vis) => dispatch(actions.getVisualization(vis))
+    getVisualization: vis => dispatch(actions.getVisualization(vis)),
+    exportArtifact: ({ uuid }) => dispatch(actions.exportArtifact(uuid))
 });
 
 export default connect(

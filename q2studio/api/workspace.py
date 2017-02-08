@@ -84,6 +84,14 @@ def create_artifact():
     return ''
 
 
+@workspace.route('/artifacts/<uuid>', methods=['POST'])
+@fail_gracefully
+def export_artifact(uuid):
+    output = request.get_json().get('path')
+    Artifact.load(ARTIFACTS[uuid]).export_data(output)
+    return jsonify({ 'path': output })
+
+
 @workspace.route('/artifacts/<uuid>', methods=['GET'])
 def inspect_artifact(uuid):
     try:
