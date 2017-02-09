@@ -89,7 +89,7 @@ def create_artifact():
 def export_artifact(uuid):
     output = request.get_json().get('path')
     Artifact.load(ARTIFACTS[uuid]).export_data(output)
-    return jsonify({ 'path': output })
+    return jsonify({'path': output})
 
 
 @workspace.route('/artifacts/<uuid>', methods=['GET'])

@@ -57,15 +57,16 @@ export const createArtifact = (formData) => {
     };
 };
 
-export const exportArtifact = (uuid) => {
+export const exportArtifact = (artifact) => {
     return (dispatch, getState) => {
         remote.dialog.showSaveDialog({
             title: 'Choose Export Location',
-            buttonlabel: 'Export'
+            buttonlabel: 'Export',
+            defaultPath: artifact.name
         }, (fps) => {
             if (fps) {
                 const { connection: { uri, secretKey } } = getState();
-                fetchAPI(secretKey, 'POST', `http://${uri}/api/workspace/artifacts/${uuid}`, { path: fps })
+                fetchAPI(secretKey, 'POST', `http://${uri}/api/workspace/artifacts/${artifact.uuid}`, { path: fps })
                 .then(({ path }) => alert(`Succesfully exported data to:\n${path}`))
                 .catch(({ message: error }) => alert(error));
             }
