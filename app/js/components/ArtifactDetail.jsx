@@ -47,7 +47,13 @@ class ArtifactDetail extends React.Component {
                     </div>
                 </div>
                 { this.props.artifact.type === 'Visualization' ?
-                    <Visualization {...this.props} /> : null
+                    <Visualization {...this.props} /> :
+                    <button
+                        className="btn btn-primary pull-right"
+                        onClick={() => this.props.exportArtifact(this.props.artifact)}
+                    >
+                        <span className="glyphicon glyphicon-export" /> Export
+                    </button>
                 }
             </div>);
     }
@@ -55,7 +61,8 @@ class ArtifactDetail extends React.Component {
 
 ArtifactDetail.propTypes = {
     artifact: React.PropTypes.object,
-    getVisualization: React.PropTypes.func
+    getVisualization: React.PropTypes.func,
+    exportArtifact: React.PropTypes.func
 };
 
 export default ArtifactDetail;
