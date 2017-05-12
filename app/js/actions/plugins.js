@@ -9,7 +9,7 @@
 import { fetchAPI } from '../util/auth';
 import actions from './';
 
-const foundPlugin = (plugin) => ({
+const foundPlugin = plugin => ({
     type: 'FOUND_PLUGIN',
     plugin
 });
@@ -32,7 +32,7 @@ export const loadVisualizers = (name, endpoint) => {
         const url = `http://${uri}${endpoint}`;
         fetchAPI(secretKey, 'GET', url)
             .then(({ visualizers }) => Object.keys(visualizers).forEach(
-                key => {
+                (key) => {
                     dispatch(foundVisualizer(name, visualizers[key]));
                     dispatch(actions.foundTypes(
                         visualizers[key].inputs.map(input => input.type)));
@@ -46,7 +46,7 @@ export const loadMethods = (name, endpoint) => {
         const url = `http://${uri}${endpoint}`;
         fetchAPI(secretKey, 'GET', url)
             .then(({ methods }) => Object.keys(methods).forEach(
-                key => {
+                (key) => {
                     dispatch(foundMethod(name, methods[key]));
                     dispatch(actions.foundTypes(
                         methods[key].inputs.map(input => input.type)));

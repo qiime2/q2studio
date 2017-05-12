@@ -12,17 +12,17 @@ import { fetchAPI } from '../util/auth';
 // global variable to set and clear intervals for scanning for jobs.
 let jobInterval;
 
-export const newActiveJob = (job) => ({
+export const newActiveJob = job => ({
     type: 'NEW_ACTIVE_JOB',
     job
 });
 
-export const jobCompleted = (job) => ({
+export const jobCompleted = job => ({
     type: 'JOB_COMPLETED',
     job
 });
 
-export const registerPath = (visualization) => ({
+export const registerPath = visualization => ({
     type: 'REGISTER_PATH',
     visualization
 });
@@ -47,7 +47,7 @@ export const watchForVisualization = (jobUUID, router, url) => {
                     };
                     return dispatch(actions.registerPath(vis));
                 })
-                .then((action) => router.push(`${url}/${action.visualization.uuid}`));
+                .then(action => router.push(`${url}/${action.visualization.uuid}`));
             } else {
                 setTimeout(update, 1000);
             }
@@ -58,7 +58,7 @@ export const watchForVisualization = (jobUUID, router, url) => {
 
 const pollJobStatus = (dispatch, getState) => {
     const { connection: { uri, secretKey }, jobs: { activeJobs } } = getState();
-    activeJobs.forEach(job => {
+    activeJobs.forEach((job) => {
         fetchAPI(secretKey, 'GET', `http://${uri}/api/jobs/${job.uuid}`)
         .then((json) => {
             if (json.completed) {

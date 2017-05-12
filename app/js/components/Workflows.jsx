@@ -17,7 +17,7 @@ const Workflows = ({ plugin, listing, openWorkflow }) => (
                 key={action.name}
                 flow={action}
                 disabled={action.requires.length !== 0}
-                onClick = {() => openWorkflow(plugin, action)}
+                onClick={() => openWorkflow(plugin, action)}
             />
         ))}
     </div>

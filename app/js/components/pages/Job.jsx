@@ -19,20 +19,20 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                 <h1>{action.name}</h1>
                 <h4>{action.description}</h4>
             </div>
-            <form onSubmit={(e) => submitJob(e, action.parameters)}>
-            { action.inputs.map(({ name }) =>
-                <fieldset
-                    className="form-group"
-                    key={ `${name}-dropdown${counter++}` }
-                >
-                    <label htmlFor={`in-${name}`}>
-                        Input Artifact: { name }
-                    </label>
-                    <select
-                        className="form-control"
-                        name={`in-${name}`}
+            <form onSubmit={e => submitJob(e, action.parameters)}>
+                { action.inputs.map(({ name }) =>
+                    <fieldset
+                        className="form-group"
+                        key={`${name}-dropdown${counter++}`}
                     >
-                        { inputs[name] !== undefined ?
+                        <label htmlFor={`in-${name}`}>
+                        Input Artifact: { name }
+                        </label>
+                        <select
+                            className="form-control"
+                            name={`in-${name}`}
+                        >
+                            { inputs[name] !== undefined ?
                             inputs[name].map(artifact =>
                                 <option
                                     key={artifact.uuid}
@@ -42,25 +42,25 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                                 </option>
                             ) : null
                         }
-                    </select>
-                </fieldset>
+                        </select>
+                    </fieldset>
             )}
 
-            { action.parameters.map(({ name, type, ast, default: def }) =>
-                <fieldset
-                    className="form-group"
-                    key={ `${name}-text-input${counter++}` }
-                >
-                    <label htmlFor={`param-${name}`}>
+                { action.parameters.map(({ name, type, ast, default: def }) =>
+                    <fieldset
+                        className="form-group"
+                        key={`${name}-text-input${counter++}`}
+                    >
+                        <label htmlFor={`param-${name}`}>
                         Input Parameter: { name }
-                    </label>
-                    { ast.predicate.name && ast.predicate.name === 'Choices' ?
+                        </label>
+                        { ast.predicate.name && ast.predicate.name === 'Choices' ?
                         (
-                        <select
-                            className="form-control"
-                            name={`param-${name}`}
-                        >
-                            {
+                            <select
+                                className="form-control"
+                                name={`param-${name}`}
+                            >
+                                {
                                 _.sortBy(ast.predicate.choices).map(choice =>
                                     <option
                                         key={choice}
@@ -70,7 +70,7 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                                     </option>
                                 )
                             }
-                        </select>
+                            </select>
                         )
                         : type === 'Metadata' ?
                         (
@@ -112,18 +112,18 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                                     type="text-field"
                                     className="form-control"
                                     name={`metadatacat2-${name}`}
-                                    placeholder={ type }
+                                    placeholder={type}
                                 />
                             </fieldset>
                         )
                         : type === 'Bool' ?
                             <div className="checkbox">
-                                <label>
+                                <label htmlFor={`param-${name}`}>
                                     <input
                                         type="checkbox"
                                         name={`param-${name}`}
-                                        defaultValue={ def }
-                                    /> {name}
+                                        defaultValue={def}
+                                    />{name}
                                 </label>
                             </div>
                         :
@@ -132,33 +132,33 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                                 type="text-field"
                                 className="form-control"
                                 name={`param-${name}`}
-                                placeholder={ type }
-                                defaultValue={ def }
+                                placeholder={type}
+                                defaultValue={def}
                             />
                         )
                     }
 
-                </fieldset>
+                    </fieldset>
             )}
                 <br />
                 <br />
                 <br />
 
-            { action.outputs.map(({ name, type }) =>
-                <fieldset
-                    className="form-group"
-                    key={ `${name}-text-output${counter++}` }
-                >
-                    <label htmlFor={`out-${name}`}>
+                { action.outputs.map(({ name, type }) =>
+                    <fieldset
+                        className="form-group"
+                        key={`${name}-text-output${counter++}`}
+                    >
+                        <label htmlFor={`out-${name}`}>
                         Output Name: { name }
-                    </label>
-                    <input
-                        type="text-field"
-                        className="form-control"
-                        name={`out-${name}`}
-                        placeholder={ type }
-                    />
-                </fieldset>
+                        </label>
+                        <input
+                            type="text-field"
+                            className="form-control"
+                            name={`out-${name}`}
+                            placeholder={type}
+                        />
+                    </fieldset>
             )}
                 <button
                     type="button"
@@ -179,13 +179,12 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
             <br />
             { children }
         </div>
-  );
+    );
 };
 
 Job.propTypes = {
     inputs: React.PropTypes.object,
     action: React.PropTypes.object,
-    actionType: React.PropTypes.string,
     children: React.PropTypes.element,
     metadata: React.PropTypes.array,
     submitJob: React.PropTypes.func,

@@ -16,8 +16,8 @@ const mapStateToProps = ({ tabState: { createArtifact: { currentIndex } }, ...st
     active: currentIndex
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    toggleCreation: (idx) => dispatch(actions.changeTab('createArtifact', (idx + 1) % 2)),
+const mapDispatchToProps = dispatch => ({
+    toggleCreation: idx => dispatch(actions.changeTab('createArtifact', (idx + 1) % 2)),
     selectDirectory: () => dispatch(actions.selectArtifactDirectory()),
     createArtifact: (e, idx) => {
         e.preventDefault();

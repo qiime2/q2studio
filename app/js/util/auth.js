@@ -21,7 +21,7 @@ const makeB64Digest = (secretKey, httpVerb, url, requestTime, body) => {
     if (body !== undefined) { message.push(body.length); }
 
     const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, byteArray);
-    message.forEach(value => {
+    message.forEach((value) => {
         hmac.update(value.toString());
     });
     const hash = hmac.finalize().toString(CryptoJS.enc.Base64);

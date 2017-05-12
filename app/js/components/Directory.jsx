@@ -18,10 +18,10 @@ const Directory = ({ path, dispatchChangeDirectory }) => (
             onClick={() => dispatchChangeDirectory(path)}
         >
             <span>Change Directory </span>
-            <span className="glyphicon glyphicon-folder-open"></span>
+            <span className="glyphicon glyphicon-folder-open" />
         </button>
-        <br></br>
-        <br></br>
+        <br />
+        <br />
     </div>
 );
 

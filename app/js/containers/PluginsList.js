@@ -8,7 +8,7 @@
 
 import { connect } from 'react-redux';
 
-import Plugins from '../components/Plugins.jsx';
+import Plugins from '../components/Plugins';
 
 const mapStateToProps = (state) => {
     return {

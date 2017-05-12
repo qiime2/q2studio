@@ -20,11 +20,11 @@ const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualiza
                     <th className="col-xs-3">Name</th>
                     <th className="col-xs-5">UUID</th>
                     <th className="col-xs-2">Type</th>
-                    <th className="col-xs-2"></th>
+                    <th className="col-xs-2" />
                 </tr>
             </thead>
             <tbody>
-                {data.length ?
+                {data.length ? (
                     data.map(item => (
                         <Artifact
                             key={item.uuid}
@@ -33,8 +33,7 @@ const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualiza
                                 url: `artifact/${item.uuid}`
                             })}
                             deleteThis={() => {
-                                if (confirm(
-                                    'Are you sure you want to delete this Artifact?')) {
+                                if (confirm('Are you sure you want to delete this Artifact?')) {
                                     if (type === 'artifact') {
                                         dispatchDeleteArtifact(item.uuid);
                                     } else if (type === 'visualization') {
@@ -45,7 +44,7 @@ const Artifacts = ({ data, type, dispatchDeleteArtifact, dispatchDeleteVisualiza
                                 }
                             }}
                         />
-                    )) : <tr><td>{`No available ${type}s...`}</td></tr>
+                    ))) : (<tr><td>{`No available ${type}s...`}</td></tr>)
                 }
             </tbody>
         </table>
@@ -57,8 +56,7 @@ Artifacts.propTypes = {
     data: React.PropTypes.array,
     type: React.PropTypes.string,
     dispatchDeleteArtifact: React.PropTypes.func,
-    dispatchDeleteVisualization: React.PropTypes.func,
-    getVisualization: React.PropTypes.func
+    dispatchDeleteVisualization: React.PropTypes.func
 };
 
 export default Artifacts;

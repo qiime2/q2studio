@@ -11,27 +11,27 @@ import { remote } from 'electron';
 import actions from './';
 import { fetchAPI } from '../util/auth';
 
-export const newArtifact = (artifact) => ({
+export const newArtifact = artifact => ({
     type: 'NEW_ARTIFACT',
     artifact
 });
 
-export const newVisualization = (visualization) => ({
+export const newVisualization = visualization => ({
     type: 'NEW_VISUALIZATION',
     visualization
 });
 
-export const newMetadata = (metadata) => ({
+export const newMetadata = metadata => ({
     type: 'NEW_METADATA',
     metadata
 });
 
-export const removedArtifact = (uuid) => ({
+export const removedArtifact = uuid => ({
     type: 'DELETE_ARTIFACT',
     uuid
 });
 
-export const removedVisualization = (uuid) => ({
+export const removedVisualization = uuid => ({
     type: 'DELETE_VISUALIZATION',
     uuid
 });
