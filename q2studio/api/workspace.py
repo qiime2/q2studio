@@ -9,7 +9,7 @@
 import os
 import glob
 
-from flask import Blueprint, jsonify, request, abort, url_for\
+from flask import Blueprint, jsonify, request, abort, url_for
 
 from qiime2.sdk import Artifact, Visualization
 from ..util import fail_gracefully
@@ -42,12 +42,13 @@ def change_workspace():
         abort(500)
 
 
-def _result_record(metadata, name, route):
+def _result_record(metadata, name, route, source_format=None):
     return {
         'name': name,
         'uuid': metadata.uuid,
         'type': metadata.type,
-        'uri': url_for(route, uuid=metadata.uuid)
+        'uri': url_for(route, uuid=metadata.uuid),
+        'source_format': source_format
     }
 
 
@@ -76,7 +77,8 @@ def get_artifacts():
 def create_artifact():
     request_body = request.get_json()
     artifact = Artifact.import_data(request_body['type'],
-                                    request_body['path'])
+                                    request_body['path'],
+                                    request_body['source_format'])
     path = os.path.join(os.getcwd(), request_body['name'])
     if not path.endswith('.qza'):
         path += '.qza'
@@ -99,7 +101,9 @@ def inspect_artifact(uuid):
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
+    return jsonify({'uuid': metadata.uuid,
+                    'type': metadata.type,
+                    'source_format': metadata.source_format})
 
 
 @workspace.route('/artifacts/<uuid>', methods=['DELETE'])
@@ -138,7 +142,9 @@ def inspect_visualization(uuid):
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
+    return jsonify({'uuid': metadata.uuid,
+                    'type': metadata.type,
+                    'source_format': metadata.source_format})
 
 
 @workspace.route('/visualizations/<uuid>', methods=['DELETE'])
