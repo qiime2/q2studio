@@ -24,7 +24,7 @@ const mapDispatchToProps = dispatch => ({
         const fd = new FormData(e.target);
         const data = {};
         for (const [key, value] of fd) {
-            if (value === '' || value === undefined) {
+            if (key !== 'source_format' && (value === '' || value === undefined)) {
                 alert(`${key} must not be blank!`);
                 return false;
             }
