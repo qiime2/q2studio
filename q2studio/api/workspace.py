@@ -76,9 +76,12 @@ def get_artifacts():
 @fail_gracefully
 def create_artifact():
     request_body = request.get_json()
+    _format = None
+    if request_body['source_format']:
+        _format = request_body['source_format']
     artifact = Artifact.import_data(request_body['type'],
                                     request_body['path'],
-                                    request_body['source_format'])
+                                    _format)
     path = os.path.join(os.getcwd(), request_body['name'])
     if not path.endswith('.qza'):
         path += '.qza'
