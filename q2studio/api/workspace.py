@@ -47,8 +47,7 @@ def _result_record(metadata, name, route, source_format=None):
         'name': name,
         'uuid': metadata.uuid,
         'type': metadata.type,
-        'uri': url_for(route, uuid=metadata.uuid),
-        'source_format': source_format
+        'uri': url_for(route, uuid=metadata.uuid)
     }
 
 
@@ -76,12 +75,9 @@ def get_artifacts():
 @fail_gracefully
 def create_artifact():
     request_body = request.get_json()
-    _format = None
-    if request_body['source_format']:
-        _format = request_body['source_format']
     artifact = Artifact.import_data(request_body['type'],
                                     request_body['path'],
-                                    _format)
+                                    request_body['source_format'])
     path = os.path.join(os.getcwd(), request_body['name'])
     if not path.endswith('.qza'):
         path += '.qza'
@@ -104,9 +100,7 @@ def inspect_artifact(uuid):
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': metadata.uuid,
-                    'type': metadata.type,
-                    'source_format': metadata.source_format})
+    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
 @workspace.route('/artifacts/<uuid>', methods=['DELETE'])
@@ -145,9 +139,7 @@ def inspect_visualization(uuid):
     except Exception:
         abort(404)
 
-    return jsonify({'uuid': metadata.uuid,
-                    'type': metadata.type,
-                    'source_format': metadata.source_format})
+    return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
 @workspace.route('/visualizations/<uuid>', methods=['DELETE'])
