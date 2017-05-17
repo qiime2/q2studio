@@ -22,7 +22,8 @@ const ArtifactGenerator = ({
             <thead>
                 <tr>
                     <th className="col-xs-1" />
-                    <th className="col-xs-5" />
+                    <th className="col-xs-3" />
+                    <th className="col-xs-2" />
                     <th className="col-xs-3" />
                     <th className="col-xs-3" />
                 </tr>
@@ -91,6 +92,14 @@ const ArtifactGenerator = ({
                                 type="text"
                                 className="form-control"
                                 placeholder="Name"
+                            />
+                        </td>
+                        <td style={style}>
+                            <input
+                                name="source_format"
+                                type="text"
+                                className="form-control"
+                                placeholder="Source Format (optional)"
                             />
                         </td>
                         <td style={style}>

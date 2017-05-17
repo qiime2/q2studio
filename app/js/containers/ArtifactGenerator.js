@@ -24,11 +24,12 @@ const mapDispatchToProps = dispatch => ({
         const fd = new FormData(e.target);
         const data = {};
         for (const [key, value] of fd) {
-            if (value === '' || value === undefined) {
+            if (key === 'source_format' && value === '') {
+                data[key] = null;
+            } else if (value === '' || value === undefined) {
                 alert(`${key} must not be blank!`);
                 return false;
-            }
-            data[key] = value;
+            } else data[key] = value;
         }
         dispatch(actions.createArtifact(data));
         dispatch(actions.changeTab('createArtifact', (idx + 1) % 2));
