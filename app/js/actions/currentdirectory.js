@@ -67,24 +67,22 @@ export const selectArtifactDirectory = () => {
         };
         if (process.platform !== 'darwin') {
             // linux or windows
-            remote.dialog.showMessageBox({
+            const callback = remote.dialog.showMessageBox({
                 type: 'question',
                 buttons: ['File', 'Directory', 'Cancel'],
                 title: 'Artifact Selection',
                 message: 'What would you like to select?',
                 calcelId: 2
-            }, (callback) => {
-                remote.dialog.showErrorBox(callback.response);
-                if (callback.response === 0) {
-                    curProps = ['openFile'];
-                    curTitle = 'Choose Artifact File';
-                    dispatch(openSelectArtifactDirectoryDialog());
-                } else if (callback.response === 1) {
-                    curProps = ['openDirectory'];
-                    curTitle = 'Choose Artifact Directory';
-                    dispatch(openSelectArtifactDirectoryDialog());
-                }
             });
+            if (callback === 0) {
+                curProps = ['openFile'];
+                curTitle = 'Choose Artifact File';
+                dispatch(openSelectArtifactDirectoryDialog());
+            } else if (callback === 1) {
+                curProps = ['openDirectory'];
+                curTitle = 'Choose Artifact Directory';
+                dispatch(openSelectArtifactDirectoryDialog());
+            }
         } else dispatch(openSelectArtifactDirectoryDialog());
     };
 };
