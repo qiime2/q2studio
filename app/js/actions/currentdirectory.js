@@ -74,14 +74,16 @@ export const selectArtifactDirectory = () => {
                 message: 'What would you like to select?',
                 calcelId: 2
             }, (callback) => {
-                if (callback.response === 1) {
+                if (callback.response === 0) {
                     curProps = ['openFile'];
                     curTitle = 'Choose Artifact File';
-                } else if (callback.response === 2) {
+                    remote.dialog.showErrorBox(curTitle);
+                    // dispatch(openSelectArtifactDirectoryDialog());
+                } else if (callback.response === 1) {
                     curProps = ['openDirectory'];
                     curTitle = 'Choose Artifact Directory';
+                    dispatch(openSelectArtifactDirectoryDialog());
                 }
-                dispatch(openSelectArtifactDirectoryDialog());
             });
         } else dispatch(openSelectArtifactDirectoryDialog());
     };
