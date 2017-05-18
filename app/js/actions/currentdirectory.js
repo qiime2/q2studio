@@ -52,10 +52,27 @@ const setArtifactDir = path => ({
 export const selectArtifactDirectory = () => {
     return (dispatch, getState) => {
         const currPath = getState().currentDirectory;
+        let props = ['openFile', 'openDirectory'];
+        if (process.platform !== 'darwin') {
+            // linux or windows
+            remote.dialog.showMessageBox({
+                type: 'question',
+                buttons: ['File', 'Directory', 'Cancel'],
+                title: 'Artifact Selection',
+                message: 'What would you like to select?',
+                calcelId: 2
+            }, (callback) => {
+                if (callback.response === 0) {
+                    props = ['openFile'];
+                } else if (callback.response === 1) {
+                    props = ['openDirectory'];
+                }
+            });
+        }
         remote.dialog.showOpenDialog({
             title: 'Choose Artifact Directory or File',
             defaultpath: currPath,
-            properties: ['openFile', 'openDirectory']
+            properties: props
         }, (fps) => {
             if (fps) {
                 dispatch(setArtifactDir(fps[0]));
