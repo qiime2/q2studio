@@ -52,7 +52,19 @@ const setArtifactDir = path => ({
 export const selectArtifactDirectory = () => {
     return (dispatch, getState) => {
         const currPath = getState().currentDirectory;
-        let props = ['openFile', 'openDirectory'];
+        let curProps = ['openFile', 'openDirectory'];
+        let curTitle = 'Choose Artifact Directory or File';
+        const openSelectArtifactDirectoryDialog = () => {
+            remote.dialog.showOpenDialog({
+                title: curTitle,
+                defaultpath: currPath,
+                properties: curProps
+            }, (fps) => {
+                if (fps) {
+                    dispatch(setArtifactDir(fps[0]));
+                }
+            });
+        };
         if (process.platform !== 'darwin') {
             // linux or windows
             remote.dialog.showMessageBox({
@@ -63,20 +75,14 @@ export const selectArtifactDirectory = () => {
                 calcelId: 2
             }, (callback) => {
                 if (callback.response === 0) {
-                    props = ['openFile'];
+                    curProps = ['openFile'];
+                    curTitle = 'Choose Artifact File';
                 } else if (callback.response === 1) {
-                    props = ['openDirectory'];
+                    curProps = ['openDirectory'];
+                    curTitle = 'Choose Artifact Directory';
                 }
+                dispatch(openSelectArtifactDirectoryDialog());
             });
-        }
-        remote.dialog.showOpenDialog({
-            title: 'Choose Artifact Directory or File',
-            defaultpath: currPath,
-            properties: props
-        }, (fps) => {
-            if (fps) {
-                dispatch(setArtifactDir(fps[0]));
-            }
-        });
+        } else dispatch(openSelectArtifactDirectoryDialog());
     };
 };
