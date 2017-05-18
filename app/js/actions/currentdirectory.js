@@ -74,10 +74,10 @@ export const selectArtifactDirectory = () => {
                 message: 'What would you like to select?',
                 calcelId: 2
             }, (callback) => {
-                if (callback.response === 0) {
+                if (callback.response === 1) {
                     curProps = ['openFile'];
                     curTitle = 'Choose Artifact File';
-                } else if (callback.response === 1) {
+                } else if (callback.response === 2) {
                     curProps = ['openDirectory'];
                     curTitle = 'Choose Artifact Directory';
                 }
