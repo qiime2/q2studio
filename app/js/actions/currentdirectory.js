@@ -53,7 +53,7 @@ export const selectArtifactDirectory = () => {
     return (dispatch, getState) => {
         const currPath = getState().currentDirectory;
         let curProps = ['openFile', 'openDirectory'];
-        let curTitle = 'Choose Artifact Directory or File';
+        let curTitle = 'Choose Directory or File to Import';
         const openSelectArtifactDirectoryDialog = () => {
             remote.dialog.showOpenDialog({
                 title: curTitle,
@@ -67,20 +67,20 @@ export const selectArtifactDirectory = () => {
         };
         if (process.platform !== 'darwin') {
             // linux or windows
-            const callback = remote.dialog.showMessageBox({
+            const response = remote.dialog.showMessageBox({
                 type: 'question',
                 buttons: ['File', 'Directory', 'Cancel'],
                 title: 'Artifact Selection',
-                message: 'What would you like to select?',
+                message: 'Are you importing a single file or directory?',
                 calcelId: 2
             });
-            if (callback === 0) {
+            if (response === 0) {
                 curProps = ['openFile'];
-                curTitle = 'Choose Artifact File';
+                curTitle = 'Choose File to Import';
                 dispatch(openSelectArtifactDirectoryDialog());
-            } else if (callback === 1) {
+            } else if (response === 1) {
                 curProps = ['openDirectory'];
-                curTitle = 'Choose Artifact Directory';
+                curTitle = 'Choose Directory to Import';
                 dispatch(openSelectArtifactDirectoryDialog());
             }
         } else dispatch(openSelectArtifactDirectoryDialog());
