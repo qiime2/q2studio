@@ -8,6 +8,7 @@
 
 const initialState = {
     knownTypes: new Set(),
+    importableTypes: [],
     yes: {},
     no: {}
 };
@@ -42,6 +43,15 @@ const reducer = (state = initialState, action) => {
                 ...state.knownTypes,
                 ...action.typeList
             ])
+        };
+        return newState;
+    }
+    case 'IMPORTABLE_TYPES': {
+        const newState = {
+            ...state,
+            importableTypes: action.importableTypesList.map((item) => {
+                return { value: item, label: item };
+            })
         };
         return newState;
     }

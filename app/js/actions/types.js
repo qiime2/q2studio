@@ -14,6 +14,11 @@ export const foundTypes = typeList => ({
     typeList
 });
 
+export const importTypes = importableTypesList => ({
+    type: 'IMPORTABLE_TYPES',
+    importableTypesList
+});
+
 
 const memoizeSubtype = results => ({
     type: 'MEMOIZE_SUBTYPE',
@@ -69,5 +74,19 @@ export const checkTypes = () => {
         fetchAPI(secretKey, 'POST', url, body)
         .then(json => dispatch(memoizeSubtype(json)))
         .then(() => dispatch(refreshValidation()));
+    };
+};
+
+
+export const checkImportableTypes = () => {
+    return (dispatch, getState) => {
+        const {
+            connection: { uri, secretKey },
+            superTypes: { importableTypes }
+        } = getState();
+        const url = `http://${uri}/api/types/importabletypes`;
+        // TODO: don't hit the server if there is nothing new to ask...
+        fetchAPI(secretKey, 'POST', url, Array.from(importableTypes))
+        .then(json => dispatch(importTypes(json)));
     };
 };

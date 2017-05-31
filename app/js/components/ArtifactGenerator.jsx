@@ -7,6 +7,7 @@
 // ----------------------------------------------------------------------------
 
 import React from 'react';
+import ReactReduxSelect from './ReactReduxSelect';
 
 const style = { verticalAlign: 'middle' };
 
@@ -15,6 +16,7 @@ const ArtifactGenerator = ({
     toggleCreation,
     createArtifact,
     selectDirectory,
+    importableTypes,
     sysPath
 }) => (
     <form onSubmit={e => createArtifact(e, active)}>
@@ -104,16 +106,14 @@ const ArtifactGenerator = ({
                         </td>
                         <td style={style}>
                             <div className="input-group">
-                                <input
+                                <ReactReduxSelect
                                     name="type"
-                                    className="form-control"
-                                    type="text"
-                                    placeholder="Semantic Type"
+                                    options={importableTypes}
                                 />
                                 <span className="input-group-btn">
                                     <button type="submit" className="btn btn-success">
-                                Go!
-                            </button>
+                                    Go!
+                                    </button>
                                 </span>
                             </div>
                         </td>
@@ -124,9 +124,11 @@ const ArtifactGenerator = ({
     </form>
 );
 
+
 ArtifactGenerator.propTypes = {
     active: React.PropTypes.number,
     toggleCreation: React.PropTypes.func,
+    importableTypes: React.PropTypes.array,
     sysPath: React.PropTypes.string,
     selectDirectory: React.PropTypes.func,
     createArtifact: React.PropTypes.func
