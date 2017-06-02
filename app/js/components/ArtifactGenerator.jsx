@@ -17,6 +17,7 @@ const ArtifactGenerator = ({
     createArtifact,
     selectDirectory,
     importableTypes,
+    importableFormats,
     sysPath
 }) => (
     <form onSubmit={e => createArtifact(e, active)}>
@@ -97,11 +98,10 @@ const ArtifactGenerator = ({
                             />
                         </td>
                         <td style={style}>
-                            <input
+                            <ReactSelect
                                 name="source_format"
-                                type="text"
-                                className="form-control"
                                 placeholder="Source Format (optional)"
+                                options={importableFormats}
                             />
                         </td>
                         <td style={style}>
@@ -130,6 +130,7 @@ ArtifactGenerator.propTypes = {
     active: React.PropTypes.number,
     toggleCreation: React.PropTypes.func,
     importableTypes: React.PropTypes.array,
+    importableFormats: React.PropTypes.array,
     sysPath: React.PropTypes.string,
     selectDirectory: React.PropTypes.func,
     createArtifact: React.PropTypes.func

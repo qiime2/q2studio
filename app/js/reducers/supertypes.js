@@ -9,6 +9,7 @@
 const initialState = {
     knownTypes: new Set(),
     importableTypes: [],
+    importableFormats: [],
     yes: {},
     no: {}
 };
@@ -50,6 +51,15 @@ const reducer = (state = initialState, action) => {
         const newState = {
             ...state,
             importableTypes: action.importableTypesList.map(
+                item => ({ value: item, label: item })
+            )
+        };
+        return newState;
+    }
+    case 'IMPORTABLE_FORMATS': {
+        const newState = {
+            ...state,
+            importableFormats: action.importableFormatsList.map(
                 item => ({ value: item, label: item })
             )
         };
