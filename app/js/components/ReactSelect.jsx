@@ -20,8 +20,9 @@ class ReactReduxSelect extends React.Component {
         return (
             <Select
                 name={this.props.name}
-                value={this.state.selected}
+                value={this.state.selected || this.props.placeholder}
                 options={this.props.options}
+                placeholder={this.props.placeholder}
                 onChange={(selectedValue) => { this.setState({ selected: selectedValue }); }}
             />
         );
@@ -30,7 +31,8 @@ class ReactReduxSelect extends React.Component {
 
 ReactReduxSelect.propTypes = {
     name: React.PropTypes.string,
-    options: React.PropTypes.array
+    options: React.PropTypes.array,
+    placeholder: React.PropTypes.string
 };
 
 export default ReactReduxSelect;

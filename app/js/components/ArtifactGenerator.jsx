@@ -108,6 +108,7 @@ const ArtifactGenerator = ({
                             <div className="input-group">
                                 <ReactSelect
                                     name="type"
+                                    placeholder="Semantic Type"
                                     options={importableTypes}
                                 />
                                 <span className="input-group-btn">
