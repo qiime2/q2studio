@@ -13,6 +13,7 @@ import ArtifactGenerator from '../components/ArtifactGenerator';
 
 const mapStateToProps = ({ tabState: { createArtifact: { currentIndex } }, ...state }) => ({
     sysPath: state.artifacts.sysCreationPath,
+    importableTypes: state.superTypes.importableTypes,
     active: currentIndex
 });
 

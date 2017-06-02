@@ -41,6 +41,7 @@
     "react-redux": "^4.4.1",
     "react-router": "^2.4.1",
     "react-router-redux": "^4.0.2",
+    "react-select-plus": "^1.0.0-rc.5",
     "redux": "^3.5.2",
     "redux-devtools": "^3.3.2",
     "redux-devtools-dock-monitor": "^1.1.1",

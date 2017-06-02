@@ -23,5 +23,6 @@ export const establishConnection = (uri, secretKey) => {
         dispatch(establishConnectionHidden(uri, secretKey));
         dispatch(actions.loadPlugins());
         dispatch(actions.directoryChange(remote.app.getPath('home')));
+        dispatch(actions.checkImportableTypes());
     };
 };
