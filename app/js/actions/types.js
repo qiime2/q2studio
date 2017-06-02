@@ -81,8 +81,7 @@ export const checkTypes = () => {
 export const checkImportableTypes = () => {
     return (dispatch, getState) => {
         const {
-            connection: { uri, secretKey },
-            superTypes: { importableTypes }
+            connection: { uri, secretKey }
         } = getState();
         const url = `http://${uri}/api/types/importable`;
         // TODO: don't hit the server if there is nothing new to ask...

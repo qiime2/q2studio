@@ -50,7 +50,7 @@ const reducer = (state = initialState, action) => {
         const newState = {
             ...state,
             importableTypes: action.importableTypesList.map(
-                (item) => ({ value: item, label: item })
+                item => ({ value: item, label: item })
             )
         };
         return newState;

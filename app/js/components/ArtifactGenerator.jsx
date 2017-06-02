@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 import React from 'react';
-import ReactReduxSelect from './ReactReduxSelect';
+import ReactSelect from './ReactSelect';
 
 const style = { verticalAlign: 'middle' };
 
@@ -106,7 +106,7 @@ const ArtifactGenerator = ({
                         </td>
                         <td style={style}>
                             <div className="input-group">
-                                <ReactReduxSelect
+                                <ReactSelect
                                     name="type"
                                     options={importableTypes}
                                 />
