@@ -33,7 +33,7 @@ def is_subtype():
     return jsonify({'yes': yes, 'no': no})
 
 
-@types.route('/importabletypes', methods=['POST'])
+@types.route('/importable', methods=['POST'])
 def get_importable_types():
     ret = [str(t) for t in PLUGIN_MANAGER.importable_types]
     return jsonify(ret)

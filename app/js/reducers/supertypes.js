@@ -49,9 +49,9 @@ const reducer = (state = initialState, action) => {
     case 'IMPORTABLE_TYPES': {
         const newState = {
             ...state,
-            importableTypes: action.importableTypesList.map((item) => {
-                return { value: item, label: item };
-            })
+            importableTypes: action.importableTypesList.map(
+                (item) => ({ value: item, label: item })
+            )
         };
         return newState;
     }

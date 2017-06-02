@@ -31,7 +31,6 @@ const mapDispatchToProps = dispatch => ({
                 alert(`${key} must not be blank!`);
                 return false;
             } else data[key] = value;
-            console.log(key, value);
         }
         dispatch(actions.createArtifact(data));
         dispatch(actions.changeTab('createArtifact', (idx + 1) % 2));

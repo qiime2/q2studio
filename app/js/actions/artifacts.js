@@ -53,8 +53,7 @@ export const createArtifact = (formData) => {
         const { connection: { uri, secretKey } } = getState();
         fetchAPI(secretKey, 'POST', `http://${uri}/api/workspace/artifacts`, formData)
         .catch(({ message: error }) => alert(error))
-        .then(() => dispatch(actions.refreshArtifacts()))
-        .then(() => dispatch(actions.checkImportableTypes()));
+        .then(() => dispatch(actions.refreshArtifacts()));
     };
 };
 

@@ -84,9 +84,9 @@ export const checkImportableTypes = () => {
             connection: { uri, secretKey },
             superTypes: { importableTypes }
         } = getState();
-        const url = `http://${uri}/api/types/importabletypes`;
+        const url = `http://${uri}/api/types/importable`;
         // TODO: don't hit the server if there is nothing new to ask...
-        fetchAPI(secretKey, 'POST', url, Array.from(importableTypes))
+        fetchAPI(secretKey, 'POST', url)
         .then(json => dispatch(importTypes(json)));
     };
 };
