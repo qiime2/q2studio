@@ -16,6 +16,5 @@ PLUGIN_MANAGER = qiime2.sdk.PluginManager()
 
 @formats.route('/importable', methods=['POST'])
 def get_importable_formats():
-    ret = [repr(t) for t in PLUGIN_MANAGER.importable_formats]
-    print(ret)
+    ret = [t.format.__name__ for t in PLUGIN_MANAGER.importable_formats]
     return jsonify(ret)
