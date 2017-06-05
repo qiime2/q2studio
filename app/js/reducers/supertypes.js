@@ -50,7 +50,7 @@ const reducer = (state = initialState, action) => {
     case 'IMPORTABLE_TYPES': {
         const newState = {
             ...state,
-            importableTypes: action.importableTypesList.map(
+            importableTypes: action.importableTypesList.sort().map(
                 item => ({ value: item, label: item })
             )
         };
@@ -59,7 +59,7 @@ const reducer = (state = initialState, action) => {
     case 'IMPORTABLE_FORMATS': {
         const newState = {
             ...state,
-            importableFormats: action.importableFormatsList.map(
+            importableFormats: action.importableFormatsList.sort().map(
                 item => ({ value: item, label: item })
             )
         };
