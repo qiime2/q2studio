@@ -6,10 +6,15 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
-from .jobs import jobs
-from .plugins import plugins
-from .types import types
-from .formats import formats
-from .workspace import workspace
+from flask import Blueprint, jsonify
+import qiime2.sdk
 
-__all__ = ['jobs', 'plugins', 'types', 'formats', 'workspace']
+formats = Blueprint('formats', __name__)
+
+PLUGIN_MANAGER = qiime2.sdk.PluginManager()
+
+
+@formats.route('/importable', methods=['POST'])
+def get_importable_formats():
+    ret = [t.format.__name__ for t in PLUGIN_MANAGER.importable_formats]
+    return jsonify(ret)

@@ -13,6 +13,7 @@ import * as connectionActionCreators from './connection';
 import * as currentDirectoryActionCreators from './currentdirectory';
 import * as tabActionCreators from './tabstate';
 import * as typeActionCreators from './types';
+import * as formatActionCreators from './formats';
 import * as windowStateActionCreators from './windowstate';
 
 const actions = {
@@ -23,6 +24,7 @@ const actions = {
     ...currentDirectoryActionCreators,
     ...tabActionCreators,
     ...typeActionCreators,
+    ...formatActionCreators,
     ...windowStateActionCreators
 };
 

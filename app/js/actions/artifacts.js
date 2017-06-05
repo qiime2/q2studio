@@ -119,8 +119,7 @@ export const refreshArtifacts = () => {
         .then((json) => {
             json.artifacts.forEach(artifact => dispatch(newArtifact(artifact)));
         })
-        .then(() => dispatch(actions.checkTypes()))
-        .then(() => dispatch(actions.checkImportableTypes()));
+        .then(() => dispatch(actions.checkTypes()));
     };
 };
 
