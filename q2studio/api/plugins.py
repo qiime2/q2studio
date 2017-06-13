@@ -47,14 +47,17 @@ def _build_data_dict(data):
         dict_[key]['name'] = value.name
         dict_[key]['description'] = value.description
         dict_[key]['inputs'] = [
-            {'name': name, 'type': repr(spec.qiime_type)}
+            {'name': name,
+             'type': repr(spec.qiime_type),
+             'required': not spec.has_default()}
             for name, spec in value.signature.inputs.items()
         ]
         dict_[key]['parameters'] = [
             {'name': name,
              'type': repr(spec.qiime_type),
              'ast': spec.qiime_type.to_ast(),
-             'default': value.signature.defaults.get(name)}
+             'required': not spec.has_default(),
+             'default': spec.default if spec.has_default() else None}
             for name, spec in value.signature.parameters.items()
         ]
         dict_[key]['outputs'] = [

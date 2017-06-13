@@ -11,7 +11,7 @@ import React from 'react';
 import style from '../../css/JobHistory.css';
 
 const JobHistoryData = ({ name, value }) => (
-    name !== undefined && value !== undefined ?
+    name !== undefined && value !== undefined && value !== null ?
         <tr className={name === 'stderr' && value.length > 0 ? 'danger' : ''}>
             <td className="col-sm-3">{name}</td>
             <td className={style.td} style={{ whiteSpace: 'pre' }}>
