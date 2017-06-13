@@ -20,18 +20,26 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                 <h4>{action.description}</h4>
             </div>
             <form onSubmit={e => submitJob(e, action.parameters)}>
-                { action.inputs.map(({ name }) =>
+                { action.inputs.map(({ name, required }) =>
                     <fieldset
                         className="form-group"
                         key={`${name}-dropdown${counter++}`}
                     >
-                        <label htmlFor={`in-${name}`}>
+                        <label htmlFor={`in-${name}${required ? '-required' : ''}`}>
                         Input Artifact: { name }
                         </label>
                         <select
                             className="form-control"
-                            name={`in-${name}`}
+                            name={`in-${name}${required ? '-required' : ''}`}
                         >
+                            { !required &&
+                                <option
+                                    key={null}
+                                    value=""
+                                >
+                                    No Artifact
+                                </option>
+                            }
                             { inputs[name] !== undefined ?
                             inputs[name].map(artifact =>
                                 <option
@@ -46,23 +54,32 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                     </fieldset>
             )}
 
-                { action.parameters.map(({ name, type, ast, default: def }) =>
+                { action.parameters.map(({ name, type, ast, required, default: def }) =>
                     <fieldset
                         className="form-group"
                         key={`${name}-text-input${counter++}`}
                     >
-                        <label htmlFor={`param-${name}`}>
+                        <label htmlFor={`param-${name}${required ? '-required' : ''}`}>
                         Input Parameter: { name }
                         </label>
                         { ast.predicate.name && ast.predicate.name === 'Choices' ?
                         (
                             <select
                                 className="form-control"
-                                name={`param-${name}`}
+                                name={`param-${name}${required ? '-required' : ''}`}
                             >
+                                { !required && def === null &&
+                                    <option
+                                        key={null}
+                                        value=""
+                                    >
+                                        None
+                                    </option>
+                                }
                                 {
                                 _.sortBy(ast.predicate.choices).map(choice =>
                                     <option
+                                        selected={choice === def}
                                         key={choice}
                                         value={choice}
                                     >
@@ -76,8 +93,16 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                         (
                             <select
                                 className="form-control"
-                                name={`metadata-${name}`}
+                                name={`metadata-${name}${required ? '-required' : ''}`}
                             >
+                                { !required &&
+                                    <option
+                                        key={null}
+                                        value=""
+                                    >
+                                        No Metadata
+                                    </option>
+                                }
                                 { metadata ?
                                     metadata.map(entry =>
                                         <option
@@ -95,8 +120,16 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                             <fieldset>
                                 <select
                                     className="form-control"
-                                    name={`metadatacat1-${name}`}
+                                    name={`metadatacat1-${name}${required ? '-required' : ''}`}
                                 >
+                                    { !required &&
+                                        <option
+                                            key={null}
+                                            value=""
+                                        >
+                                            No Metadata
+                                        </option>
+                                    }
                                     { metadata ?
                                         metadata.map(entry =>
                                             <option
@@ -111,18 +144,18 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                                 <input
                                     type="text-field"
                                     className="form-control"
-                                    name={`metadatacat2-${name}`}
-                                    placeholder={type}
+                                    name={`metadatacat2-${name}${required ? '-required' : ''}`}
+                                    placeholder={`${type}${required ? '' : ' (optional)'}`}
                                 />
                             </fieldset>
                         )
                         : type === 'Bool' ?
                             <div className="checkbox">
-                                <label htmlFor={`param-${name}`}>
+                                <label htmlFor={`param-${name}${required ? '-required' : ''}`}>
                                     <input
                                         type="checkbox"
-                                        name={`param-${name}`}
-                                        defaultValue={def}
+                                        name={`param-${name}${required ? '-required' : ''}`}
+                                        defaultChecked={def}
                                     />{name}
                                 </label>
                             </div>
@@ -131,8 +164,8 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                             <input
                                 type="text-field"
                                 className="form-control"
-                                name={`param-${name}`}
-                                placeholder={type}
+                                name={`param-${name}${required ? '-required' : ''}`}
+                                placeholder={`${type}${required ? '' : ' (optional)'}`}
                                 defaultValue={def}
                             />
                         )

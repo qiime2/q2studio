@@ -42,11 +42,11 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
         };
         let catbuffer = [];
         for (const [key, value] of formData.entries()) {
-            if (value.trim().length === 0) {
-                alert(`${key} must not be blank.`);
+            const [type, name, required] = key.split('-');
+            if (value.trim().length === 0 && required) {
+                alert(`Pleas provide a value for ${name} (must not be blank).`);
                 return;
             }
-            const [type, name] = key.split('-');
             switch (type) {
             case 'in':
                 job.inputs[name] = value;
@@ -55,7 +55,7 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
                 if (booleans.find(bool => bool.name === name) && value === 'on') {
                     job.parameters[name] = 'true';
                 } else {
-                    job.parameters[name] = value;
+                    job.parameters[name] = !required && value === '' ? null : value;
                 }
                 break;
             case 'out':

@@ -11,6 +11,8 @@ import glob
 
 from flask import Blueprint, jsonify, request, abort, url_for
 
+
+import qiime2
 from qiime2.sdk import Artifact, Visualization
 from ..util import fail_gracefully
 
@@ -22,7 +24,8 @@ ACTIVE_VIS = {}
 
 
 def load_artifacts(**kwargs):
-    return {k: Artifact.load(ARTIFACTS[v]) for k, v in kwargs.items()}
+    return {k: Artifact.load(ARTIFACTS[v]) for k, v in kwargs.items()
+            if v != ''}
 
 
 @workspace.route('/', methods=['GET'])
@@ -180,9 +183,7 @@ def get_metadata():
     metadata = []
     for metadata_path in metadata_paths:
         try:
-            with open(metadata_path) as fh:
-                header = "#SampleID"
-                assert(fh.read(len(header)) == header)
+            qiime2.Metadata.load(metadata_path)
             metadata.append({
                 "name": os.path.basename(metadata_path),
                 "filepath": metadata_path
