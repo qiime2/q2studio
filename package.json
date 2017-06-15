@@ -8,6 +8,7 @@
     "type": "git",
     "url": "git://github.com/qiime2/q2studio.git"
   },
+  "main": "app/main.js",
   "scripts": {
     "lint:css": "stylelint 'app/**/*.css' --config config/stylelint.yaml",
     "lint:js": "eslint app/ config/ --ext .js,.jsx --config config/eslint.yaml",
