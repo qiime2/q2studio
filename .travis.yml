@@ -23,4 +23,4 @@ script:
     - npm test
     - npm run build
     - flake8
-    - python q2lint/q2lint.py
+    - python q2lint/q2lint.py --disable-install-requires-check
