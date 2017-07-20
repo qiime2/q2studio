@@ -43,8 +43,8 @@ const mapDispatchToProps = (dispatch, { router, params: { pluginId, jobId, actio
         let catbuffer = [];
         for (const [key, value] of formData.entries()) {
             const [type, name, required] = key.split('-');
-            if (value.trim().length === 0 && required) {
-                alert(`Pleas provide a value for ${name} (must not be blank).`);
+            if (value.trim().length === 0 && (required || type === 'out')) {
+                alert(`Please provide a value for ${name} (must not be blank).`);
                 return;
             }
             switch (type) {
