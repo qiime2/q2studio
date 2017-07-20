@@ -14,7 +14,11 @@ const mapStateToProps = (state) => {
     return {
         plugins: [...state.plugins.filter(
                     plugin => plugin.methods.length || plugin.visualizers.length)]
-                                       .sort((a, b) => a.name > b.name)
+                                       .sort((a, b) => {
+                                           if (a.name > b.name) return 1;
+                                           if (a.name < b.name) return -1;
+                                           return 0;
+                                       })
     };
 };
 
