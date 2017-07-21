@@ -12,7 +12,7 @@ import Workflow from './Workflow';
 
 const Workflows = ({ plugin, listing, openWorkflow }) => (
     <div>
-        { [...listing].sort((a, b) => a.name > b.name).map(action => (
+        { listing.map(action => (
             <Workflow
                 key={action.name}
                 flow={action}

@@ -45,12 +45,14 @@ export const refreshValidation = () => {
             plugin.methods.forEach((method) => {
                 dispatch(missingTypes(plugin.name, 'methods', method,
                     method.inputs.filter(input =>
-                        !artifacts.find(({ type }) => yes[input.type].has(type)))));
+                        input.required && !artifacts.find(({ type }) => yes[input.type].has(type))
+                    )));
             });
             plugin.visualizers.forEach((visualizer) => {
                 dispatch(missingTypes(plugin.name, 'visualizers', visualizer,
                       visualizer.inputs.filter(input =>
-                          !artifacts.find(({ type }) => yes[input.type].has(type)))));
+                          input.required && !artifacts.find(({ type }) => yes[input.type].has(type))
+                      )));
             });
         });
     };
