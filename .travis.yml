@@ -15,12 +15,9 @@ install:
     - pip install git+https://github.com/qiime2/qiime2.git
     - pip install flake8
     - pip install .
-    - npm install .
-    - git clone https://github.com/qiime2/q2lint
+    - pip install -q https://github.com/qiime2/q2lint/archive/master.zip
 before_script:
     - export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start
 script:
-    - npm test
-    - npm run build
-    - flake8
-    - python q2lint/q2lint.py --disable-install-requires-check
+    - make test-cov
+    - make lint
