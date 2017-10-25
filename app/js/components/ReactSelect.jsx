@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 import React from 'react';
-import Select from 'react-select-plus';
+import Select from 'react-select-plus'; // eslint-disable-line
 import style from '!style-loader!css-loader!react-select-plus/dist/react-select-plus.css'; // eslint-disable-line
 
 
