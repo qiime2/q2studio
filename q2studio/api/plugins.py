@@ -73,6 +73,7 @@ def get_plugin_methods(plugin_name):
     plugin = PLUGIN_MANAGER.plugins[plugin_name]
 
     methods_dict = _build_data_dict(plugin.methods)
+    methods_dict.update(_build_data_dict(plugin.pipelines))
 
     return jsonify({'methods': methods_dict})
 

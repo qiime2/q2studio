@@ -54,13 +54,12 @@ def create_job():
     request_body = request.get_json()
     plugin = request_body['plugin']
     action = request_body['action']
-    action_type = request_body['actionType']
     inputs = request_body['inputs']
     parameters = request_body['parameters']
     outputs = request_body['outputs']
 
     plugin = PLUGIN_MANAGER.plugins[plugin]
-    action = getattr(plugin, action_type)[action]
+    action = plugin.actions[action]
 
     # TODO: make this better
     json_params = {}
