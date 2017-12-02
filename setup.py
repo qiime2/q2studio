@@ -13,10 +13,10 @@ with open("README.md") as fh:
 
 setup(
     name='q2studio',
-    version='2017.11.0',
+    version='2017.12.0.dev0',
     license='BSD-3-Clause',
     url='https://qiime2.org',
     long_description=long_description,
     packages=find_packages(),
-    install_requires=['click', 'flask', 'gevent', 'qiime2 == 2017.11.*']
+    install_requires=['click', 'flask', 'gevent', 'qiime2 == 2017.12.*']
 )
