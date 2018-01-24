@@ -16,7 +16,7 @@ import time
 from flask import Blueprint, jsonify, request, abort, url_for
 import qiime2
 import qiime2.sdk
-import qiime2.plugin
+from qiime2.plugin import Metadata, MetadataColumn, Categorical, Numeric
 from qiime2.util import redirected_stdio
 
 from .workspace import load_artifacts
@@ -64,20 +64,49 @@ def create_job():
     # TODO: make this better
     json_params = {}
     for key, spec in action.signature.parameters.items():
-        if spec.qiime_type == qiime2.plugin.Metadata:
+        if spec.qiime_type == Metadata:
             if parameters[key] == "":
                 parameters[key] = None
                 json_params[key] = None
             else:
                 parameters[key] = qiime2.Metadata.load(parameters[key])
                 json_params[key] = '<metadata>'
-        elif spec.qiime_type == qiime2.plugin.MetadataCategory:
+        # TODO is there a better way to check whether `spec.qiime_type` is some
+        # kind of `MetadataColumn` subtype using the type system API? The
+        # current approach here matches more or less what q2cli is doing.
+        elif spec.qiime_type.name == 'MetadataColumn':
+            if spec.qiime_type == MetadataColumn[Categorical]:
+                column_types = ('categorical',)
+            elif spec.qiime_type == MetadataColumn[Numeric]:
+                column_types = ('numeric',)
+            elif spec.qiime_type == MetadataColumn[Categorical | Numeric]:
+                column_types = ('categorical', 'numeric')
+            else:
+                raise NotImplementedError(
+                    "Parameter %r is type %r, which is not currently "
+                    "supported by this interface." % (key, spec.qiime_type))
+
             if parameters[key][0] == "" or parameters[key][1] == "":
                 parameters[key] = None
                 json_params[key] = None
             else:
-                parameters[key] = qiime2.Metadata.load(
-                    parameters[key][0]).get_category(parameters[key][1])
+                column_name = parameters[key][1]
+                metadata_column = qiime2.Metadata.load(
+                    parameters[key][0]).get_column(column_name)
+
+                if metadata_column.type not in column_types:
+                    if len(column_types) == 1:
+                        suffix = '%s.' % column_types[0]
+                    else:
+                        suffix = ('one of the following types: %s' %
+                                  ', '.join(column_types))
+                    raise TypeError(
+                        "Metadata column %r is %s. Parameter %r expects the "
+                        "column to be %s" %
+                        (column_name, metadata_column.type, key,
+                         suffix))
+
+                parameters[key] = metadata_column
                 json_params[key] = '<metadata>'
         else:
             json_params[key] = parameters[key]

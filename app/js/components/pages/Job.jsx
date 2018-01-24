@@ -115,7 +115,14 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                                 }
                             </select>
                         )
-                        : type === 'MetadataCategory' ?
+                        /* TODO how should unsupported MetadataColumn type
+                           expressions be handled here? On the Python side
+                           (`q2studio.api.jobs`), an error is raised if an
+                           unsupported MetadataColumn type expression is
+                           detected. Here, any type expression string starting
+                           with 'MetadataColumn' is assumed to be valid.
+                        */
+                        : type.startsWith('MetadataColumn') ?
                         (
                             <fieldset>
                                 <select
