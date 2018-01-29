@@ -37,13 +37,23 @@ const Metadata = ({ metadata, dispatchDeleteMetadata }) => (
             </tbody>
         </table>
         <span>
-            Metadata files must be valid QIIME 1 mapping files (see
+            {/* TODO it would be neat to use the currently installed QIIME 2
+              release variable (Python: `qiime2.__release__`) in the URL so
+              that users can be linked directly to the metadata docs.
+            */}
+            Metadata files must match the QIIME 2 metadata requirements described at {' '}
+            <a
+                onClick={(e) => {
+                    e.preventDefault();
+                    shell.openExternal('https://docs.qiime2.org/');
+                }}
+            >docs.qiime2.org</a>. QIIME 2 metadata files can be validated with Keemei at {' '}
             <a
                 onClick={(e) => {
                     e.preventDefault();
                     shell.openExternal('http://keemei.qiime.org/');
                 }}
-            > keemei.qiime.org</a>).
+            >keemei.qiime.org</a>.
         </span>
     </div>
 );
