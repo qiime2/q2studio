@@ -51,9 +51,9 @@ const Metadata = ({ metadata, dispatchDeleteMetadata }) => (
             <a
                 onClick={(e) => {
                     e.preventDefault();
-                    shell.openExternal('http://keemei.qiime.org/');
+                    shell.openExternal('https://keemei.qiime2.org/');
                 }}
-            >keemei.qiime.org</a>.
+            >keemei.qiime2.org</a>.
         </span>
     </div>
 );
