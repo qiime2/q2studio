@@ -13,7 +13,7 @@ with open("README.md") as fh:
 
 setup(
     name='q2studio',
-    version='2018.4.0.dev0',
+    version='2018.4.0',
     license='BSD-3-Clause',
     url='https://qiime2.org',
     long_description=long_description,
