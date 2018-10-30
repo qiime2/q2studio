@@ -140,7 +140,7 @@ def create_job():
     stdout = tempfile.TemporaryFile(prefix='q2studio-stdout')
     stderr = tempfile.TemporaryFile(prefix='q2studio-stderr')
     with redirected_stdio(stdout=stdout, stderr=stderr):
-        future = action.async(**inputs)
+        future = action.asynchronous(**inputs)
         future.add_done_callback(
             _callback_factory(job_id, outputs, stdout, stderr))
     return jsonify({
