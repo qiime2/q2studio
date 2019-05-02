@@ -18,7 +18,7 @@ PLUGIN_MANAGER = qiime2.sdk.PluginManager()
 def is_subtype():
     request_body = request.get_json()
     list_a = list(map(qiime2.sdk.parse_type, request_body['a']))
-    list_b = list(map(qiime2.sdk.parse_type, request_body['b']))
+    list_b = list(map(qiime2.sdk.type_from_ast, request_body['b']))
 
     yes = {}
     no = {}

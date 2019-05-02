@@ -70,7 +70,7 @@ export const checkTypes = () => {
         const url = `http://${uri}/api/types/subtype`;
         const body = {
             a: artifactTypes,
-            b: Array.from(knownTypes)
+            b: Object.values(knownTypes)
         };
         // TODO: don't hit the server if there is nothing new to ask...
         fetchAPI(secretKey, 'POST', url, body)

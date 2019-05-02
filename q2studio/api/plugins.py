@@ -49,6 +49,7 @@ def _build_data_dict(data):
         dict_[key]['inputs'] = [
             {'name': name,
              'type': repr(spec.qiime_type),
+             'ast': spec.qiime_type.to_ast(),
              'required': not spec.has_default()}
             for name, spec in value.signature.inputs.items()
         ]
