@@ -62,7 +62,7 @@ const Job = ({ action, inputs, metadata, submitJob, cancelJob, children }) => {
                         <label htmlFor={`param-${name}${required ? '-required' : ''}`}>
                         Input Parameter: { name }
                         </label>
-                        { ast.predicate.name && ast.predicate.name === 'Choices' ?
+                        { ast.predicate && ast.predicate.name === 'Choices' ?
                         (
                             <select
                                 className="form-control"
