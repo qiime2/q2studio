@@ -35,7 +35,10 @@ export const loadVisualizers = (name, endpoint) => {
                 (key) => {
                     dispatch(foundVisualizer(name, visualizers[key]));
                     dispatch(actions.foundTypes(
-                        visualizers[key].inputs.map(input => input.type)));
+                        visualizers[key].inputs.reduce((obj, input) => {
+                            obj[input.type] = input.ast;  // eslint-disable-line no-param-reassign
+                            return obj;
+                        }, {})));
                 }));
     };
 };
@@ -49,7 +52,10 @@ export const loadMethods = (name, endpoint) => {
                 (key) => {
                     dispatch(foundMethod(name, methods[key]));
                     dispatch(actions.foundTypes(
-                        methods[key].inputs.map(input => input.type)));
+                        methods[key].inputs.reduce((obj, input) => {
+                            obj[input.type] = input.ast;  // eslint-disable-line no-param-reassign
+                            return obj;
+                        }, {})));
                 }));
     };
 };

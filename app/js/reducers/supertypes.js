@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 
 const initialState = {
-    knownTypes: new Set(),
+    knownTypes: {},
     importableTypes: [],
     importableFormats: [],
     yes: {},
@@ -40,10 +40,7 @@ const reducer = (state = initialState, action) => {
     case 'FOUND_TYPES': {
         const newState = {
             ...state,
-            knownTypes: new Set([
-                ...state.knownTypes,
-                ...action.typeList
-            ])
+            knownTypes: { ...state.knownTypes, ...action.typeList }
         };
         return newState;
     }
