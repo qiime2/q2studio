@@ -20,5 +20,5 @@ install:
     - pip install -q https://github.com/qiime2/q2lint/archive/master.zip
     - make clean
 script:
-    - make test-cov
+    - xvfb-run make test-cov
     - make lint
