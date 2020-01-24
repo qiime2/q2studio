@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# Copyright (c) 2016-2019, QIIME 2 development team.
+# Copyright (c) 2016-2020, QIIME 2 development team.
 #
 # Distributed under the terms of the Modified BSD License.
 #
@@ -13,7 +13,7 @@ with open("README.md") as fh:
 
 setup(
     name='q2studio',
-    version='2020.1.0.dev0',
+    version='2020.2.0.dev0',
     license='BSD-3-Clause',
     url='https://qiime2.org',
     long_description=long_description,
