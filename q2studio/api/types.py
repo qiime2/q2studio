@@ -35,5 +35,5 @@ def is_subtype():
 
 @types.route('/importable', methods=['POST'])
 def get_importable_types():
-    ret = [repr(t) for t in PLUGIN_MANAGER.importable_types]
+    ret = [repr(t).strip("'") for t in PLUGIN_MANAGER.importable_types]
     return jsonify(ret)
