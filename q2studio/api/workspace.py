@@ -78,10 +78,7 @@ def get_artifacts():
 @fail_gracefully
 def create_artifact():
     request_body = request.get_json()
-    try:
-        source_format = request_body['source_format']
-    except KeyError:
-        source_format = None
+    source_format = request_body.get('source_format')
     artifact = Artifact.import_data(request_body['type'],
                                     request_body['path'],
                                     source_format)
