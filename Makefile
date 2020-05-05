@@ -11,6 +11,7 @@ test: all
 
 test-cov: all
 	npm test
+	pytest
 
 install: all
 	npm run build
