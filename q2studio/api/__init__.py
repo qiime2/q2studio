@@ -10,6 +10,6 @@ from .jobs import jobs
 from .plugins import plugins
 from .types import types
 from .formats import formats
-from .workspace import workspace
+from .workspace import bp
 
-__all__ = ['jobs', 'plugins', 'types', 'formats', 'workspace']
+__all__ = ['jobs', 'plugins', 'types', 'formats', 'bp']

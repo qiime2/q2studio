@@ -16,7 +16,7 @@ import qiime2
 from qiime2.sdk import Artifact, Visualization
 from ..util import fail_gracefully
 
-workspace = Blueprint('workspace', __name__)
+bp = Blueprint('workspace', __name__)
 
 ARTIFACTS = {}
 VISUALIZATIONS = {}
@@ -28,12 +28,12 @@ def load_artifacts(**kwargs):
             if v != ''}
 
 
-@workspace.route('/', methods=['GET'])
+@bp.route('/', methods=['GET'])
 def get_workspace():
     return jsonify({'workspace': os.getcwd()})
 
 
-@workspace.route('/', methods=['PUT'])
+@bp.route('/', methods=['PUT'])
 def change_workspace():
     request_body = request.get_json()
     new_dir = request_body['workspace']
@@ -54,7 +54,7 @@ def _result_record(metadata, name, route, source_format=None):
     }
 
 
-@workspace.route('/artifacts', methods=['GET'])
+@bp.route('/artifacts', methods=['GET'])
 def get_artifacts():
     global ARTIFACTS
     ARTIFACTS = {}
@@ -74,7 +74,7 @@ def get_artifacts():
     return jsonify({'artifacts': artifacts})
 
 
-@workspace.route('/artifacts', methods=['POST'])
+@bp.route('/artifacts', methods=['POST'])
 @fail_gracefully
 def create_artifact():
     request_body = request.get_json()
@@ -89,7 +89,7 @@ def create_artifact():
     return ''
 
 
-@workspace.route('/artifacts/<uuid>', methods=['POST'])
+@bp.route('/artifacts/<uuid>', methods=['POST'])
 @fail_gracefully
 def export_artifact(uuid):
     output = request.get_json().get('path')
@@ -97,7 +97,7 @@ def export_artifact(uuid):
     return jsonify({'path': output})
 
 
-@workspace.route('/artifacts/<uuid>', methods=['GET'])
+@bp.route('/artifacts/<uuid>', methods=['GET'])
 def inspect_artifact(uuid):
     try:
         metadata = Artifact.peek(ARTIFACTS[uuid])
@@ -107,7 +107,7 @@ def inspect_artifact(uuid):
     return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
-@workspace.route('/artifacts/<uuid>', methods=['DELETE'])
+@bp.route('/artifacts/<uuid>', methods=['DELETE'])
 def delete_artifact(uuid):
     try:
         os.remove(ARTIFACTS[uuid])
@@ -116,7 +116,7 @@ def delete_artifact(uuid):
         abort(404)
 
 
-@workspace.route('/visualizations', methods=['GET'])
+@bp.route('/visualizations', methods=['GET'])
 def get_visualizations():
     global VISUALIZATIONS
     VISUALIZATIONS = {}
@@ -136,7 +136,7 @@ def get_visualizations():
     return jsonify({'visualizations': visualizations})
 
 
-@workspace.route('/visualizations/<uuid>', methods=['GET'])
+@bp.route('/visualizations/<uuid>', methods=['GET'])
 def inspect_visualization(uuid):
     try:
         metadata = Visualization.peek(VISUALIZATIONS[uuid])
@@ -146,7 +146,7 @@ def inspect_visualization(uuid):
     return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
-@workspace.route('/visualizations/<uuid>', methods=['DELETE'])
+@bp.route('/visualizations/<uuid>', methods=['DELETE'])
 def delete_visualization(uuid):
     try:
         os.remove(VISUALIZATIONS[uuid])
@@ -155,7 +155,7 @@ def delete_visualization(uuid):
         abort(404)
 
 
-@workspace.route('/view/<uuid>', methods=['GET'])
+@bp.route('/view/<uuid>', methods=['GET'])
 def view_visualization(uuid):
     try:
         vis = Visualization.load(VISUALIZATIONS[uuid])
@@ -167,7 +167,7 @@ def view_visualization(uuid):
     return jsonify({'filePath': filePath})
 
 
-@workspace.route('/view/<uuid>', methods=['DELETE'])
+@bp.route('/view/<uuid>', methods=['DELETE'])
 def unview_visualization(uuid):
     try:
         del ACTIVE_VIS[uuid]
@@ -176,7 +176,7 @@ def unview_visualization(uuid):
         abort(404)
 
 
-@workspace.route('/metadata', methods=['GET'])
+@bp.route('/metadata', methods=['GET'])
 def get_metadata():
     path = os.getcwd()
     metadata_paths = list(glob.glob(os.path.join(path, '*.txt')))
