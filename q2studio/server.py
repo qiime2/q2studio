@@ -22,13 +22,14 @@ studio.register_blueprint(jobs, url_prefix='/api/jobs')
 studio.register_blueprint(plugins, url_prefix='/api/plugins')
 studio.register_blueprint(types, url_prefix='/api/types')
 studio.register_blueprint(formats, url_prefix='/api/formats')
-studio.before_request(validate_request_authentication)
 studio.register_blueprint(bp, url_prefix='/api/workspace')
 studio.after_request(add_cors_headers)
 
 
 def start_server():
     studio.debug = True
+    if not studio.config["TESTING"]:
+        studio.before_request(validate_request_authentication)
     # setup secret key
     studio.config['SECRET_KEY'] = secret_key = os.urandom(33)
     secret_key = base64.b64encode(secret_key).decode('ascii')
