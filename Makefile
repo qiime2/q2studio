@@ -12,7 +12,7 @@ test: all
 
 test-cov: all
 	npm test
-	pytest
+	QIIMETEST= pytest
 
 install: all
 	npm run build

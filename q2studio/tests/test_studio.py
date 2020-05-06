@@ -15,8 +15,9 @@ import pytest
 
 @pytest.fixture
 def client():
-    studio.config['TESTING'] = True
     with studio.test_client() as client:
+        # reset the middleware funcs to unload security checks
+        client.application.before_request_funcs = {}
         yield client
 
 
