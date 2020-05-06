@@ -13,16 +13,17 @@ import base64
 from flask import Flask
 from gevent.pywsgi import WSGIServer
 
-from q2studio.api import jobs, plugins, types, formats, bp
+from q2studio.api import (
+    jobs_bp, plugins_bp, types_bp, formats_bp, workspace_bp)
 from q2studio.security import validate_request_authentication
 from q2studio.headers import add_cors_headers
 
 studio = Flask('q2studio')
-studio.register_blueprint(jobs, url_prefix='/api/jobs')
-studio.register_blueprint(plugins, url_prefix='/api/plugins')
-studio.register_blueprint(types, url_prefix='/api/types')
-studio.register_blueprint(formats, url_prefix='/api/formats')
-studio.register_blueprint(bp, url_prefix='/api/workspace')
+studio.register_blueprint(jobs_bp, url_prefix='/api/jobs')
+studio.register_blueprint(plugins_bp, url_prefix='/api/plugins')
+studio.register_blueprint(types_bp, url_prefix='/api/types')
+studio.register_blueprint(formats_bp, url_prefix='/api/formats')
+studio.register_blueprint(workspace_bp, url_prefix='/api/workspace')
 studio.after_request(add_cors_headers)
 
 

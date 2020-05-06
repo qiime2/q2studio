@@ -36,18 +36,13 @@ def test_get_importable_types(client):
 
 
 def test_create_artifact(client, monkeypatch):
-    monkeypatch.setattr("q2studio.api.workspace.Artifact", Mock())
-
     data = {"path": "path",
             "name": "out",
             "type": "EMPSingleEndSequences",
             "source_format": ""}
 
-    response = client.post("/api/workspace/artifacts", json=data)
-    assert response.status_code == 200
+    with monkeypatch.context() as m:
+        m.setattr("q2studio.api.workspace.Artifact", Mock())
+        response = client.post("/api/workspace/artifacts", json=data)
 
-    # Make sure the request succeeds when the
-    # optional `source_format` is missing
-    data.pop("source_format")
-    response = client.post("/api/workspace/artifacts", json=data)
     assert response.status_code == 200

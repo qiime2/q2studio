@@ -24,7 +24,8 @@ const mapDispatchToProps = dispatch => ({
     createArtifact: (e, idx) => {
         e.preventDefault();
         const fd = new FormData(e.target);
-        const data = {};
+        // Set default for source_format, in case not present in form data
+        const data = { source_format: null };
         for (const [key, value] of fd) {
             if (key === 'source_format' && value === '') {
                 data[key] = null;

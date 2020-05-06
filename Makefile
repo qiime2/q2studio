@@ -8,6 +8,7 @@ lint:
 
 test: all
 	npm test
+	QIIMETEST= py.test
 
 test-cov: all
 	npm test

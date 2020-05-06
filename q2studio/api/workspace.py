@@ -16,7 +16,7 @@ import qiime2
 from qiime2.sdk import Artifact, Visualization
 from ..util import fail_gracefully
 
-bp = Blueprint('workspace', __name__)
+workspace = Blueprint('workspace', __name__)
 
 ARTIFACTS = {}
 VISUALIZATIONS = {}
@@ -28,12 +28,12 @@ def load_artifacts(**kwargs):
             if v != ''}
 
 
-@bp.route('/', methods=['GET'])
+@workspace.route('/', methods=['GET'])
 def get_workspace():
     return jsonify({'workspace': os.getcwd()})
 
 
-@bp.route('/', methods=['PUT'])
+@workspace.route('/', methods=['PUT'])
 def change_workspace():
     request_body = request.get_json()
     new_dir = request_body['workspace']
@@ -54,7 +54,7 @@ def _result_record(metadata, name, route, source_format=None):
     }
 
 
-@bp.route('/artifacts', methods=['GET'])
+@workspace.route('/artifacts', methods=['GET'])
 def get_artifacts():
     global ARTIFACTS
     ARTIFACTS = {}
@@ -74,14 +74,13 @@ def get_artifacts():
     return jsonify({'artifacts': artifacts})
 
 
-@bp.route('/artifacts', methods=['POST'])
+@workspace.route('/artifacts', methods=['POST'])
 @fail_gracefully
 def create_artifact():
     request_body = request.get_json()
-    source_format = request_body.get('source_format')
     artifact = Artifact.import_data(request_body['type'],
                                     request_body['path'],
-                                    source_format)
+                                    request_body['source_format'])
     path = os.path.join(os.getcwd(), request_body['name'])
     if not path.endswith('.qza'):
         path += '.qza'
@@ -89,7 +88,7 @@ def create_artifact():
     return ''
 
 
-@bp.route('/artifacts/<uuid>', methods=['POST'])
+@workspace.route('/artifacts/<uuid>', methods=['POST'])
 @fail_gracefully
 def export_artifact(uuid):
     output = request.get_json().get('path')
@@ -97,7 +96,7 @@ def export_artifact(uuid):
     return jsonify({'path': output})
 
 
-@bp.route('/artifacts/<uuid>', methods=['GET'])
+@workspace.route('/artifacts/<uuid>', methods=['GET'])
 def inspect_artifact(uuid):
     try:
         metadata = Artifact.peek(ARTIFACTS[uuid])
@@ -107,7 +106,7 @@ def inspect_artifact(uuid):
     return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
-@bp.route('/artifacts/<uuid>', methods=['DELETE'])
+@workspace.route('/artifacts/<uuid>', methods=['DELETE'])
 def delete_artifact(uuid):
     try:
         os.remove(ARTIFACTS[uuid])
@@ -116,7 +115,7 @@ def delete_artifact(uuid):
         abort(404)
 
 
-@bp.route('/visualizations', methods=['GET'])
+@workspace.route('/visualizations', methods=['GET'])
 def get_visualizations():
     global VISUALIZATIONS
     VISUALIZATIONS = {}
@@ -136,7 +135,7 @@ def get_visualizations():
     return jsonify({'visualizations': visualizations})
 
 
-@bp.route('/visualizations/<uuid>', methods=['GET'])
+@workspace.route('/visualizations/<uuid>', methods=['GET'])
 def inspect_visualization(uuid):
     try:
         metadata = Visualization.peek(VISUALIZATIONS[uuid])
@@ -146,7 +145,7 @@ def inspect_visualization(uuid):
     return jsonify({'uuid': metadata.uuid, 'type': metadata.type})
 
 
-@bp.route('/visualizations/<uuid>', methods=['DELETE'])
+@workspace.route('/visualizations/<uuid>', methods=['DELETE'])
 def delete_visualization(uuid):
     try:
         os.remove(VISUALIZATIONS[uuid])
@@ -155,7 +154,7 @@ def delete_visualization(uuid):
         abort(404)
 
 
-@bp.route('/view/<uuid>', methods=['GET'])
+@workspace.route('/view/<uuid>', methods=['GET'])
 def view_visualization(uuid):
     try:
         vis = Visualization.load(VISUALIZATIONS[uuid])
@@ -167,7 +166,7 @@ def view_visualization(uuid):
     return jsonify({'filePath': filePath})
 
 
-@bp.route('/view/<uuid>', methods=['DELETE'])
+@workspace.route('/view/<uuid>', methods=['DELETE'])
 def unview_visualization(uuid):
     try:
         del ACTIVE_VIS[uuid]
@@ -176,7 +175,7 @@ def unview_visualization(uuid):
         abort(404)
 
 
-@bp.route('/metadata', methods=['GET'])
+@workspace.route('/metadata', methods=['GET'])
 def get_metadata():
     path = os.getcwd()
     metadata_paths = list(glob.glob(os.path.join(path, '*.txt')))
