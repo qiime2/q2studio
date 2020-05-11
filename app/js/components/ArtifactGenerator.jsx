@@ -94,7 +94,7 @@ const ArtifactGenerator = ({
                                 name="name"
                                 type="text"
                                 className="form-control"
-                                placeholder="Name"
+                                placeholder="Output name"
                             />
                         </td>
                         <td style={style}>

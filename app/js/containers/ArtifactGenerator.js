@@ -24,15 +24,28 @@ const mapDispatchToProps = dispatch => ({
     createArtifact: (e, idx) => {
         e.preventDefault();
         const fd = new FormData(e.target);
-        const data = {};
-        for (const [key, value] of fd) {
-            if (key === 'source_format' && value === '') {
-                data[key] = null;
-            } else if (value === '' || value === undefined) {
+
+        const path = fd.get('path');
+        const name = fd.get('name');
+        const sourceFormat = fd.get('source_format');
+        const type = fd.get('type');
+
+        const isEmpty = (key, val) => {
+            if (val === '' || val === undefined || val === null) {
                 alert(`${key} must not be blank!`);
-                return false;
-            } else data[key] = value;
+                return true;
+            }
+            return false;
+        };
+
+        if (isEmpty('Data directory path', path) ||
+            isEmpty('Output name', name) ||
+            isEmpty('Semantic Type', type)) {
+            return false;
         }
+
+        const data = { path, name, source_format: sourceFormat, type };
+
         dispatch(actions.createArtifact(data));
         dispatch(actions.changeTab('createArtifact', (idx + 1) % 2));
         return true;

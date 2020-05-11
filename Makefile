@@ -8,9 +8,11 @@ lint:
 
 test: all
 	npm test
+	QIIMETEST= py.test
 
 test-cov: all
 	npm test
+	QIIMETEST= pytest
 
 install: all
 	npm run build
