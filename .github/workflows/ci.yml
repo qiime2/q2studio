@@ -30,8 +30,6 @@ jobs:
 
   verify:
     runs-on: ubuntu-latest
-    env:
-      DISPLAY: :0
     steps:
     - name: checkout source
       uses: actions/checkout@v2
