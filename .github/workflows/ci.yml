@@ -24,7 +24,7 @@ jobs:
     - name: lint
       run: |
         pip install -q https://github.com/qiime2/q2lint/archive/master.zip
-        q2lint
+        q2lint --disable-install-requires-check
         pip install -q flake8
         flake8
 
@@ -44,7 +44,7 @@ jobs:
 
     - name: install system dependencies
       run: |
-        sudo apt install -y libgconf xvfb
+        sudo apt install -y libgconf-2-4 xvfb
 
     - name: build
       shell: bash -l {0}
