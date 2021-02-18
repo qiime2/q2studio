@@ -44,9 +44,10 @@ jobs:
       run: |
         sudo apt install -y libgconf-2-4 xvfb libgtk2.0-0
 
-    - name: build
+    - name: build and test
       shell: bash -l {0}
       run: |
         source "$CONDA/etc/profile.d/conda.sh"
         conda activate ../test-env
+        pip install .
         make test
