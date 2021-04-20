@@ -1,6 +1,6 @@
 {
   "name": "q2studio",
-  "version": "2021.4.0-dev0",
+  "version": "2021.4.0",
   "description": "A graphical user interface for QIIME 2.",
   "author": "QIIME 2 Development Team",
   "license": "BSD-3-Clause",
