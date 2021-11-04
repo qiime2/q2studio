@@ -18,7 +18,7 @@ install: all
 	npm run build
 
 node_modules:
-	npm install
+	npm install --legacy-peer-deps
 
 dev: all
 	pip install -e .
