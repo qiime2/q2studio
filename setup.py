@@ -18,5 +18,5 @@ setup(
     url='https://qiime2.org',
     long_description=long_description,
     packages=find_packages(),
-    install_requires=['click', 'flask', 'gevent', 'qiime2 == 2021.11.*']
+    install_requires=['click', 'flask', 'gevent', 'qiime2 == 2022.2.*']
 )
